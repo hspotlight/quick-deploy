@@ -1,0 +1,4286 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KNOW Rescue Kit — Sell What You Know</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@500;600;700;800&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FDF4EE; --white:#FFFFFF;
+    --navy:#1B2A5C; --navy-soft:#4A5170; --navy-faint:#8A90AC;
+    --k:#D6294F; --k-tint:#FDEAEE;
+    --n:#2C5FDB; --n-tint:#EAF0FE;
+    --o:#0E86B8; --o-tint:#E6F5FA;
+    --w:#1B2A5C; --w-tint:#EAEBF3;
+    --money:#8A6400; --money-tint:#FFF4D6;
+    --time:#2F6FED; --time-tint:#EAF0FE;
+    --quality:#1E8E5A; --quality-tint:#E3F5EA;
+    --border:#F0DDD3;
+    --shadow: 0 10px 30px rgba(27,42,92,0.08);
+    --shadow-sm: 0 4px 14px rgba(27,42,92,0.06);
+    --radius-lg: 22px; --radius-md: 16px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Sarabun','Noto Sans Thai',sans-serif;
+    background:
+      radial-gradient(circle at 92% -4%, #E9F1FF 0%, rgba(233,241,255,0) 42%),
+      radial-gradient(circle at -6% 18%, #FBE3E9 0%, rgba(251,227,233,0) 40%),
+      var(--cream);
+    color:var(--navy-soft); min-height:100vh; line-height:1.6;
+  }
+  h1,h2,h3,.display{ font-family:'Prompt','Noto Sans Thai',sans-serif; color:var(--navy); margin:0; }
+  .wrap{max-width:920px;margin:0 auto;padding:28px 20px 90px;}
+  .view{display:none;}
+  .view.active{display:block; animation:fadeIn .35s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+  .brandbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:26px;flex-wrap:wrap;gap:10px;}
+  .brand{display:flex;align-items:center;gap:10px;}
+  .brand-badge{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--k),var(--n));display:flex;align-items:center;justify-content:center;color:white;font-family:'Prompt';font-weight:800;font-size:15px;box-shadow:var(--shadow-sm);}
+  .brand-name{font-family:'Prompt';font-weight:700;color:var(--navy);font-size:15px;}
+  .brand-name span{color:var(--k);}
+  .eyebrow{font-family:'Prompt';font-weight:600;font-size:12px;letter-spacing:.08em;color:var(--navy-faint); text-transform:uppercase;}
+
+  .hero{text-align:left;padding:8px 0 6px;}
+  .hero h1{font-size:clamp(30px,5vw,44px);font-weight:800;line-height:1.15;margin-top:8px;}
+  .hero h1 .accent{color:var(--k);}
+  .hero p.sub{font-size:16px;color:var(--navy-soft);margin-top:10px;max-width:580px;}
+
+  .chipflow{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:24px 0;}
+  .chip{display:flex;align-items:center;gap:8px;background:var(--white);border:1px solid var(--border); border-radius:999px; padding:8px 14px 8px 8px;box-shadow:var(--shadow-sm); font-size:13.5px; font-weight:600; color:var(--navy);}
+  .chip .dot{width:24px;height:24px;border-radius:50%;color:white;font-family:'Prompt';font-weight:800;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;}
+  .chip.k .dot{background:var(--k);} .chip.n .dot{background:var(--n);}
+  .chip.o .dot{background:var(--o);} .chip.w .dot{background:var(--w);}
+  .arrow-sep{color:var(--navy-faint);font-size:14px;}
+
+  .alertbox{background:var(--k-tint); border-radius:var(--radius-md);padding:16px 18px; display:flex; gap:12px; align-items:flex-start;margin:20px 0 30px; font-size:14.5px; color:#8a1734;}
+  .alertbox svg{flex-shrink:0;margin-top:2px;}
+
+  .modegrid{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  @media(max-width:680px){.modegrid{grid-template-columns:1fr;}}
+  .modecard{background:var(--white); border-radius:var(--radius-lg); padding:26px 24px;box-shadow:var(--shadow); border:1px solid var(--border);display:flex;flex-direction:column;gap:14px;}
+  .modecard .tag{font-family:'Prompt';font-weight:700;font-size:11.5px;letter-spacing:.05em;text-transform:uppercase; color:var(--n); background:var(--n-tint);padding:5px 11px;border-radius:999px;width:fit-content;}
+  .modecard.alt .tag{color:var(--o);background:var(--o-tint);}
+  .modecard h3{font-size:20px;font-weight:700;}
+  .modecard p{font-size:14.5px;color:var(--navy-soft);margin:0;flex-grow:1;}
+  .btn{font-family:'Prompt'; font-weight:600; font-size:15px; border:none; cursor:pointer;border-radius:12px; padding:13px 20px; display:inline-flex; align-items:center; justify-content:center;gap:8px; transition:transform .15s ease, box-shadow .15s ease; text-decoration:none;}
+  .btn:active{transform:scale(0.97);}
+  .btn-primary{background:var(--k); color:white; box-shadow:0 8px 18px rgba(214,41,79,0.28);}
+  .btn-primary:hover{box-shadow:0 10px 22px rgba(214,41,79,0.36);}
+  .btn-secondary{background:var(--navy); color:white; box-shadow:0 8px 18px rgba(27,42,92,0.22);}
+  .btn-ghost{background:var(--white); color:var(--navy); border:1.5px solid var(--border);}
+  .btn-ghost:hover{border-color:var(--navy-faint);}
+  .btn-block{width:100%;}
+  .btn-sm{padding:9px 14px;font-size:13.5px;border-radius:9px;}
+
+  .backrow{margin-bottom:18px;}
+  .backbtn{font-family:'Prompt'; font-weight:600; font-size:14px; color:var(--navy-soft);background:none;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px;padding:6px 0;}
+  .backbtn:hover{color:var(--navy);}
+
+  .selectgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:18px;}
+  @media(max-width:560px){.selectgrid{grid-template-columns:1fr;}}
+  .personpill{background:var(--white); border:1.5px solid var(--border); border-radius:var(--radius-md);padding:16px 18px; text-align:left; cursor:pointer; display:flex; flex-direction:column; gap:4px;transition:border-color .15s ease, transform .15s ease, box-shadow .15s ease;}
+  .personpill:hover{border-color:var(--n); box-shadow:var(--shadow-sm); transform:translateY(-2px);}
+  .personpill .nick{font-family:'Prompt';font-weight:700;font-size:16.5px;color:var(--navy);}
+  .personpill .role{font-size:12.5px;color:var(--navy-faint);}
+
+  .formcard{background:var(--white);border-radius:var(--radius-lg);padding:26px 24px;box-shadow:var(--shadow);border:1px solid var(--border);}
+  .field{margin-bottom:18px;}
+  .field label{display:block;font-family:'Prompt';font-weight:600;font-size:14.5px;color:var(--navy);margin-bottom:7px;}
+  .field .hint{font-size:12.5px;color:var(--navy-faint);margin-bottom:7px;display:block;}
+  .field input, .field textarea{width:100%; border:1.5px solid var(--border); border-radius:10px; padding:11px 13px;font-family:'Sarabun'; font-size:14.5px; color:var(--navy); resize:vertical; background:#FFFEFC;}
+  .field textarea{min-height:64px;}
+  .field input:focus, .field textarea:focus{outline:none;border-color:var(--n);}
+  .formnote{font-size:12.5px;color:var(--navy-faint);margin:-6px 0 18px;}
+  .formerr{background:var(--k-tint);color:#8a1734;padding:10px 14px;border-radius:10px;font-size:13.5px;margin-bottom:16px;display:none;}
+
+  .loadingwrap{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 20px;text-align:center;}
+  .spinner{width:52px;height:52px;border-radius:50%;border:4px solid var(--border); border-top-color:var(--k);animation:spin 0.9s linear infinite; margin-bottom:22px;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .loadingtext{font-family:'Prompt';font-weight:600;color:var(--navy);font-size:15.5px;min-height:24px;}
+
+  .errorwrap{background:var(--white);border-radius:var(--radius-lg);padding:32px 26px;text-align:center;box-shadow:var(--shadow);border:1px solid var(--border);}
+  .errorwrap h3{font-size:19px;margin-bottom:8px;}
+  .errorwrap p{font-size:14.5px;margin-bottom:22px;}
+  .errorbtns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+
+  .resulttop{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:10px;}
+  .insightcard{background:linear-gradient(135deg,var(--navy) 0%, #2A3E7E 100%);color:white; border-radius:var(--radius-lg); padding:24px 26px; margin-bottom:22px;box-shadow:var(--shadow);}
+  .insightcard .nick{font-family:'Prompt';font-weight:800;font-size:26px;}
+  .insightcard .role{font-size:13.5px;color:#C9CFEA;margin-top:2px;}
+  .insightcard .hint2{font-size:13px;color:#DCE1F5;margin-top:14px;}
+  .progressdots{display:flex;gap:8px;margin-top:14px;}
+  .pdot{width:30px;height:6px;border-radius:4px;background:rgba(255,255,255,0.22);transition:background .3s ease;}
+  .pdot.done{background:#fff;}
+
+  .knowsection{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);margin-bottom:14px;overflow:hidden;box-shadow:var(--shadow-sm);}
+  .know-head{width:100%;background:none;border:none;cursor:pointer;padding:18px 20px;display:flex; align-items:center; gap:14px; text-align:left; font-family:'Sarabun';}
+  .know-badge{width:42px;height:42px;border-radius:12px;flex-shrink:0;color:white;font-family:'Prompt';font-weight:800;font-size:17px;display:flex;align-items:center;justify-content:center;}
+  .knowsection.k .know-badge{background:var(--k);}
+  .knowsection.n .know-badge{background:var(--n);}
+  .knowsection.o .know-badge{background:var(--o);}
+  .knowsection.w .know-badge{background:var(--w);}
+  .know-titles{flex-grow:1;}
+  .know-titles .t1{font-family:'Prompt';font-weight:700;font-size:16.5px;color:var(--navy);}
+  .know-titles .t2{font-size:12.5px;color:var(--navy-faint);margin-top:1px;}
+  .know-lock{flex-shrink:0;color:var(--navy-faint);transition:transform .3s ease;}
+  .knowsection.open .know-lock{transform:rotate(180deg);color:var(--navy);}
+
+  .know-content{display:grid;grid-template-rows:0fr;transition:grid-template-rows .35s ease;}
+  .knowsection.open .know-content{grid-template-rows:1fr;}
+  .know-content-inner{overflow:hidden;}
+  .know-body{padding:0 20px 22px 20px;}
+
+  .subhead{font-family:'Prompt';font-weight:700;font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--navy-faint); margin:20px 0 10px; display:flex; align-items:center; gap:6px;}
+  .subhead:first-child{margin-top:0;}
+
+  .skillrow{display:flex; align-items:center; gap:12px; padding:9px 0; border-top:1px solid #F5EEE8;}
+  .skillrow:first-child{border-top:none;}
+  .skillrow .num{width:22px;height:22px;border-radius:50%;background:var(--k-tint);color:var(--k);font-family:'Prompt';font-weight:700;font-size:11px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+  .skillrow .txt{font-size:14px;color:var(--navy);}
+
+  .candidatecard{border:1px solid var(--border); border-radius:10px; padding:10px 13px; margin-bottom:8px; background:#FFFEFC;}
+  .candidatecard:last-child{margin-bottom:0;}
+  .candidatecard .cname{font-family:'Prompt';font-weight:700;font-size:13.5px;color:var(--k);}
+  .candidatecard .csource{font-size:12px;color:var(--navy-faint);margin-top:2px;}
+
+  .contactrow{display:flex;align-items:center;gap:10px;padding:7px 0;font-size:14px;color:var(--navy);}
+  .contactrow .ck{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--border);flex-shrink:0;}
+
+  .optiongroup{margin-bottom:2px;}
+  .optioncard{position:relative; border:1.5px solid var(--border); border-radius:12px;padding:12px 42px 12px 15px; margin-bottom:9px; cursor:pointer; background:#FFFEFC;transition:border-color .15s ease, background .15s ease, transform .1s ease;}
+  .optioncard:last-child{margin-bottom:0;}
+  .optioncard:hover{transform:translateX(1px);}
+  .pickmark{position:absolute; top:12px; right:12px; width:20px;height:20px;border-radius:50%;border:1.5px solid var(--border); background:white; display:flex; align-items:center; justify-content:center;font-size:12px; color:white; flex-shrink:0;}
+  .knowsection.k .optioncard.selected{border-color:var(--k);background:var(--k-tint);}
+  .knowsection.k .optioncard.selected .pickmark{background:var(--k);border-color:var(--k);}
+  .knowsection.n .optioncard.selected{border-color:var(--n);background:var(--n-tint);}
+  .knowsection.n .optioncard.selected .pickmark{background:var(--n);border-color:var(--n);}
+  .knowsection.o .optioncard.selected{border-color:var(--o);background:var(--o-tint);}
+  .knowsection.o .optioncard.selected .pickmark{background:var(--o);border-color:var(--o);}
+  .knowsection.w .optioncard.selected{border-color:var(--w);background:var(--w-tint);}
+  .knowsection.w .optioncard.selected .pickmark{background:var(--w);border-color:var(--w);}
+  .optioncard.selected .pickmark::after{content:'✓';}
+
+  .combocard{padding-right:15px;}
+  .combocard .pickmark{top:14px;}
+
+  .oc-title{font-family:'Prompt';font-weight:700;font-size:14.5px;color:var(--navy);margin-bottom:3px;padding-right:26px;}
+  .oc-combine{font-size:12px;color:var(--navy-faint);font-style:italic;margin-bottom:6px;}
+  .oc-desc{font-size:13.5px;color:var(--navy-soft);}
+  .oc-quote{font-size:14px;color:var(--navy);font-style:italic;}
+  .oc-price{font-family:'Prompt';font-weight:700;font-size:13px;color:var(--navy);margin-top:7px;}
+  .oc-msgtext{font-size:14px;color:var(--navy);margin-bottom:9px;}
+  .oc-copybtn{background:white;border:1px solid var(--border);border-radius:7px;padding:5px 11px;font-family:'Prompt';font-size:11.5px;font-weight:600;color:var(--navy);cursor:pointer;}
+  .oc-copybtn:hover{border-color:var(--k);}
+
+  .patternbox{font-size:12.5px;color:var(--navy);background:var(--o-tint);border-radius:8px;padding:9px 11px;margin-top:2px;line-height:1.55;}
+
+  .outcome-badges{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 8px;}
+  .obadge{font-family:'Prompt';font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;white-space:nowrap;}
+  .obadge.money{background:var(--money-tint);color:var(--money);}
+  .obadge.time{background:var(--time-tint);color:var(--time);}
+  .obadge.quality{background:var(--quality-tint);color:var(--quality);}
+
+  .gatebox{background:var(--w-tint); border-radius:14px; padding:22px 20px; text-align:center;font-size:13.5px; color:var(--navy-soft); display:flex; flex-direction:column; align-items:center; gap:6px;}
+  .gatebox .gicon{font-size:22px;}
+  .gatebox b{color:var(--navy);}
+
+  .selfcheck{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:20px 22px;margin-top:8px;}
+  .selfcheck h4{font-family:'Prompt';font-size:14.5px;font-weight:700;color:var(--navy);margin-bottom:4px;}
+  .selfcheck .d{font-size:12.5px;color:var(--navy-faint);margin-bottom:14px;}
+  .checkgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;}
+  @media(max-width:560px){.checkgrid{grid-template-columns:1fr;}}
+  .checkitem{display:flex;align-items:center;gap:9px;font-size:13.5px;color:var(--navy-soft);cursor:pointer;}
+  .checkitem input{width:16px;height:16px;accent-color:var(--k);}
+
+  .resultfooter{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:24px;}
+
+  .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--navy);color:white;padding:11px 20px;border-radius:999px;font-size:13.5px;font-family:'Prompt';font-weight:600;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:opacity .25s ease, transform .25s ease; z-index:50; max-width:90vw; text-align:center;}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  footer.credit{text-align:center;font-size:12px;color:var(--navy-faint);margin-top:50px;}
+
+  @media print{
+    body{background:white;}
+    .no-print{display:none!important;}
+    .know-content{grid-template-rows:1fr!important;}
+    .knowsection{box-shadow:none;border:1px solid #ddd; break-inside:avoid;}
+    .insightcard{background:var(--navy)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .wrap{padding:10px;}
+    .gatebox{display:none!important;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="brandbar no-print">
+    <div class="brand">
+      <div class="brand-badge">K</div>
+      <div class="brand-name">Sell What You <span>Know</span></div>
+    </div>
+    <div class="eyebrow">KNOW Rescue Kit</div>
+  </div>
+
+  <!-- ================= HOME ================= -->
+  <section class="view active" id="view-home">
+    <div class="hero">
+      <div class="eyebrow">ใช้ตอนคิดไม่ออก ไม่ใช่ตอนเริ่ม</div>
+      <h1>KNOW Rescue Kit <span class="accent">🔓</span></h1>
+      <p class="sub">ดูสกิลทั้งหมด → เลือก Skill Candidate ที่ประกอบเป็น Skill Combo → แต่ละ Combo บอกด้วยว่าสังเกตเห็น pattern อะไรซ้ำ แล้วมี DNA, Buyer, Pain, Offer, Message หลายไอเดียให้เลือกเอง ไม่มีคำตอบเดียวที่ถูก</p>
+    </div>
+
+    <div class="chipflow">
+      <div class="chip k"><span class="dot">K</span>รู้ว่ามีอะไร</div>
+      <span class="arrow-sep">→</span>
+      <div class="chip n"><span class="dot">N</span>รู้ว่าใครต้องการ</div>
+      <span class="arrow-sep">→</span>
+      <div class="chip o"><span class="dot">O</span>ทำให้ซื้อได้</div>
+      <span class="arrow-sep">→</span>
+      <div class="chip w"><span class="dot">W</span>เริ่มคุยกับคนจริง</div>
+    </div>
+
+    <div class="alertbox">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 9v4M12 16.5h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z" stroke="#D6294F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div><b>ใช้ตอนติดจริง ๆ นะคะ</b> — ลองคิดเองในกิจกรรมก่อน ถ้านึกไม่ออกจริง ๆ ค่อยเปิดมาดู ทุกหมวดมีหลายไอเดียให้เลือกเอง เครื่องมือนี้ไม่เลือกให้คุณ</div>
+    </div>
+
+    <div class="modegrid">
+      <div class="modecard">
+        <span class="tag">มี Pre-survey แล้ว</span>
+        <h3>กรอกแบบฟอร์มมาก่อนวันงาน</h3>
+        <p>เลือกชื่อของคุณ แล้วดู Skill Candidate ทั้งหมด เลือก Skill Combo ที่ใช่ แล้วดูไอเดีย DNA/Buyer/Offer/Message หลายแบบให้เลือกเอง</p>
+        <button class="btn btn-primary btn-block" onclick="goSelect()">เลือกชื่อของฉัน →</button>
+      </div>
+      <div class="modecard alt">
+        <span class="tag">ยังไม่ได้กรอกฟอร์ม</span>
+        <h3>เล่าให้ฟังสั้น ๆ ตอนนี้เลย</h3>
+        <p>ตอบ 5 คำถามสั้น ๆ แล้วรับ Prompt พร้อมคัดลอกไปวางในแชท AI ที่คุณใช้อยู่ (ChatGPT, Claude ฯลฯ) เพื่อรับ Skill Candidate และ Skill Combo หลายไอเดียแบบเดียวกัน</p>
+        <button class="btn btn-secondary btn-block" onclick="goForm()">เริ่มเล่าเลย →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SELECT ================= -->
+  <section class="view" id="view-select">
+    <div class="backrow no-print"><button class="backbtn" onclick="goHome()">‹ กลับหน้าแรก</button></div>
+    <h2 style="font-size:24px;font-weight:700;margin-bottom:4px;">คุณคือใครในห้องนี้ 👋</h2>
+    <p style="font-size:14.5px;color:var(--navy-soft);margin-top:0;">แตะชื่อของคุณ แล้วดูตัวเลือกที่เตรียมไว้ให้จากคำตอบใน Pre-survey</p>
+    <div class="selectgrid" id="selectGrid"></div>
+  </section>
+
+  <!-- ================= FORM ================= -->
+  <section class="view" id="view-form">
+    <div class="backrow no-print"><button class="backbtn" onclick="goHome()">‹ กลับหน้าแรก</button></div>
+    <h2 style="font-size:24px;font-weight:700;margin-bottom:4px;">เล่าให้ฟังสั้น ๆ</h2>
+    <p style="font-size:14.5px;color:var(--navy-soft);margin-top:0;margin-bottom:20px;">ไม่ต้องเรียบเรียงสวย เขียนตามที่นึกออกเลย ระบบจะสร้างเป็น Prompt ให้คัดลอกไปวางในแชท AI ต่อ</p>
+    <div class="formcard">
+      <div class="formerr" id="formErr">กรุณาตอบอย่างน้อยข้อ 1–4 ก่อนนะคะ เพื่อให้ร่างออกมาได้แม่นขึ้น</div>
+      <div class="field">
+        <label>ชื่อเล่นของคุณ (ไม่บังคับ)</label>
+        <input type="text" id="q0" placeholder="เช่น มิ้นท์, เอิร์ธ">
+      </div>
+      <div class="field">
+        <label>1) คนรอบตัวมักมาขอให้คุณช่วยเรื่องอะไรบ่อยที่สุด</label>
+        <span class="hint">เพื่อนร่วมงาน เพื่อน หรือคนในครอบครัวมาถามอะไรคุณซ้ำ ๆ</span>
+        <textarea id="q1" placeholder="เช่น เพื่อนมักถามวิธีจัดการเวลา เพื่อนร่วมงานถามเรื่องเขียนสไลด์"></textarea>
+      </div>
+      <div class="field">
+        <label>2) เคยเจอปัญหาอะไรแล้วแก้ได้เอง</label>
+        <span class="hint">ปัญหาชีวิต งาน หรือธุรกิจที่คุณผ่านมันมาได้ด้วยตัวเอง</span>
+        <textarea id="q2" placeholder="เช่น เคยจัดการหนี้บัตรเครดิตจนหมดใน 1 ปี"></textarea>
+      </div>
+      <div class="field">
+        <label>3) มี skill หรือประสบการณ์อะไรบ้าง (3–5 อย่าง)</label>
+        <textarea id="q3" placeholder="เช่น การตลาดออนไลน์, สอนคนอื่นเป็น, จัดการโปรเจกต์"></textarea>
+      </div>
+      <div class="field">
+        <label>4) อยากช่วยคนแบบไหน</label>
+        <textarea id="q4" placeholder="เช่น อยากช่วยคนที่เพิ่งเริ่มทำธุรกิจของตัวเอง"></textarea>
+      </div>
+      <div class="field">
+        <label>5) มีอะไรที่ไม่อยากทำบ้าง (ถ้ามี)</label>
+        <span class="hint">จะได้ไม่แนะนำสิ่งที่คุณไม่อยากทำ</span>
+        <textarea id="q5" placeholder="เช่น ไม่อยากออกกล้อง ไม่อยากขายของที่ต้องสต๊อกสินค้า"></textarea>
+      </div>
+      <button class="btn btn-primary btn-block" onclick="submitForm()">✨ สร้าง Prompt ให้ก๊อปไปใช้</button>
+      <p class="formnote">ระบบจะไม่ประมวลผลให้ในหน้านี้ แต่จะสร้าง Prompt ให้คุณคัดลอกไปวางในแชท AI ที่ใช้อยู่ (ChatGPT, Claude ฯลฯ) แทน</p>
+    </div>
+  </section>
+
+  <!-- ================= PROMPT RESULT ================= -->
+  <section class="view" id="view-promptresult">
+    <div class="backrow no-print"><button class="backbtn" onclick="goForm()">‹ แก้คำตอบ</button></div>
+    <h2 style="font-size:24px;font-weight:700;margin-bottom:4px;">Prompt ของคุณพร้อมแล้ว 🎉</h2>
+    <p style="font-size:14.5px;color:var(--navy-soft);margin-top:0;margin-bottom:18px;">คัดลอกไปวางในแชท AI ที่คุณใช้อยู่ (ChatGPT, Claude หรืออื่น ๆ) จะได้ผลลัพธ์ครบชุดแบบเดียวกับที่คนกรอก Pre-survey เห็นในเครื่องมือนี้</p>
+    <div class="formcard">
+      <pre id="promptOutput" style="white-space:pre-wrap;word-break:break-word;font-family:'Sarabun';font-size:13.5px;color:var(--navy);background:#FFFEFC;border:1.5px solid var(--border);border-radius:12px;padding:16px;max-height:420px;overflow-y:auto;margin:0 0 16px;"></pre>
+      <button class="btn btn-primary btn-block" onclick="copyGeneratedPrompt()">📋 คัดลอก Prompt ทั้งหมด</button>
+      <p class="formnote" style="margin-top:14px;margin-bottom:10px;">หรือเปิดแชท AI แล้ววางเลย:</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-ghost" onclick="openExternal('https://claude.ai/new')">เปิด Claude ↗</button>
+        <button class="btn btn-ghost" onclick="openExternal('https://chatgpt.com/')">เปิด ChatGPT ↗</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ERROR ================= -->
+  <section class="view" id="view-error">
+    <div class="errorwrap">
+      <h3>เกิดข้อผิดพลาด 🙏</h3>
+      <p id="errorMsg">ลองใหม่อีกครั้ง</p>
+      <div class="errorbtns">
+        <button class="btn btn-ghost" onclick="goForm()">แก้คำตอบ</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= RESULT ================= -->
+  <section class="view" id="view-result">
+    <div class="resulttop no-print">
+
+      <button class="backbtn" onclick="goBackFromResult()">‹ <span id="backLabel">เลือกคนอื่น</span></button>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-ghost btn-sm" onclick="printResult()">🖨️ พิมพ์ / บันทึกเป็น PDF</button>
+      </div>
+    </div>
+
+    <div class="insightcard">
+      <div class="nick" id="rNick">—</div>
+      <div class="role" id="rRole">—</div>
+      <div class="hint2">เลือก Skill Combo 1 อันใน K แล้ว N-O-W จะเปิดตัวเลือกให้เลือกต่อ (ไม่ใช่คำตอบเดียว)</div>
+      <div class="progressdots" id="progressDots">
+        <div class="pdot" data-k></div><div class="pdot" data-n></div><div class="pdot" data-o></div><div class="pdot" data-w></div>
+      </div>
+    </div>
+
+    <!-- K -->
+    <div class="knowsection k" id="sec-k">
+      <button class="know-head" onclick="toggleSection('k')">
+        <div class="know-badge">K</div>
+        <div class="know-titles">
+          <div class="t1">ความรู้ (Knowledge)</div>
+          <div class="t2">รู้ว่าคุณมีอะไรอยู่แล้วบ้าง</div>
+        </div>
+        <svg class="know-lock" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="know-content"><div class="know-content-inner"><div class="know-body">
+        <div class="subhead">🧩 สกิล/ประสบการณ์ทั้งหมดที่คุณมี</div>
+        <div id="rRawSkills"></div>
+
+        <div class="subhead">🎯 Skill Candidate — สกิลที่พร้อมขายได้</div>
+        <div id="rCandidates"></div>
+
+        <div class="subhead">🔗 Skill Combo — เลือก 1 ที่ใช่ที่สุด (แล้ว N-O-W ด้านล่างจะเปิดตัวเลือกให้)</div>
+        <div id="rCombos" class="optiongroup"></div>
+
+        <div id="dnaWrap" style="display:none;">
+          <div class="subhead">🧬 My DNA — เลือกแบบที่ตรงกับคุณที่สุด</div>
+          <div id="rDnaOptions" class="optiongroup"></div>
+        </div>
+      </div></div></div>
+    </div>
+
+    <!-- N -->
+    <div class="knowsection n" id="sec-n">
+      <button class="know-head" onclick="toggleSection('n')">
+        <div class="know-badge">N</div>
+        <div class="know-titles">
+          <div class="t1">ความต้องการ (Need)</div>
+          <div class="t2">รู้ว่าใครต้องการสิ่งนี้</div>
+        </div>
+        <svg class="know-lock" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="know-content"><div class="know-content-inner"><div class="know-body">
+        <div class="gatebox" id="gate-n"><span class="gicon">🔒</span>เลือก <b>Skill Combo</b> ใน K ก่อน เพื่อดู Buyer และ Pain หลายไอเดียของคอมโบนั้น</div>
+        <div id="content-n" style="display:none;">
+          <div class="subhead">🎯 Buyer — เลือกกลุ่มที่อยากเริ่มก่อน</div>
+          <div id="rBuyers" class="optiongroup"></div>
+          <div class="subhead">💬 Pain Language — เลือกประโยคที่ใกล้เคียงที่สุด</div>
+          <div id="rPainOptions" class="optiongroup"></div>
+        </div>
+      </div></div></div>
+    </div>
+
+    <!-- O -->
+    <div class="knowsection o" id="sec-o">
+      <button class="know-head" onclick="toggleSection('o')">
+        <div class="know-badge">O</div>
+        <div class="know-titles">
+          <div class="t1">ข้อเสนอ (Offer)</div>
+          <div class="t2">ทำให้เป็นสิ่งที่ซื้อได้</div>
+        </div>
+        <svg class="know-lock" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="know-content"><div class="know-content-inner"><div class="know-body">
+        <div class="gatebox" id="gate-o"><span class="gicon">🔒</span>เลือก <b>Skill Combo</b> ใน K ก่อน เพื่อดูไอเดีย Offer ของคอมโบนั้น</div>
+        <div id="content-o" style="display:none;">
+          <div class="subhead">📦 Offer Idea — เลือกไอเดียที่อยากลองก่อน</div>
+          <div id="rOffers" class="optiongroup"></div>
+        </div>
+      </div></div></div>
+    </div>
+
+    <!-- W -->
+    <div class="knowsection w" id="sec-w">
+      <button class="know-head" onclick="toggleSection('w')">
+        <div class="know-badge">W</div>
+        <div class="know-titles">
+          <div class="t1">การขายจริง (Win)</div>
+          <div class="t2">เริ่มคุยกับคนจริงใน 7 วัน</div>
+        </div>
+        <svg class="know-lock" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="know-content"><div class="know-content-inner"><div class="know-body">
+        <div class="gatebox" id="gate-w"><span class="gicon">🔒</span>เลือก <b>Skill Combo</b> ใน K ก่อน เพื่อดู Message และ 7-Day Action ของคอมโบนั้น</div>
+        <div id="content-w" style="display:none;">
+          <div class="subhead">✉️ First Message — เลือกแบบที่ใช่สไตล์คุณ</div>
+          <div id="rMessages" class="optiongroup"></div>
+          <div class="subhead">📇 First Contact List — ส่งให้คนกลุ่มนี้ก่อน</div>
+          <div id="rContacts"></div>
+          <div class="subhead">🗓️ ภายใน 7 วัน — เลือกไอเดียที่จะเริ่มทำ</div>
+          <div id="rSevenOptions" class="optiongroup"></div>
+        </div>
+      </div></div></div>
+    </div>
+
+    <div class="selfcheck no-print">
+      <h4>เช็คตัวเอง — ตอนนี้คุณมีครบหรือยัง</h4>
+      <div class="d">กาช่องที่คุณ “เลือก” และมีของจริงของตัวเองแล้ว (ไม่ใช่แค่ในไกด์นี้)</div>
+      <div class="checkgrid">
+        <label class="checkitem"><input type="checkbox">Skill Candidate</label>
+        <label class="checkitem"><input type="checkbox">Skill Combo</label>
+        <label class="checkitem"><input type="checkbox">My DNA</label>
+        <label class="checkitem"><input type="checkbox">Buyer</label>
+        <label class="checkitem"><input type="checkbox">Pain Language</label>
+        <label class="checkitem"><input type="checkbox">Offer Idea</label>
+        <label class="checkitem"><input type="checkbox">First Message</label>
+        <label class="checkitem"><input type="checkbox">7-Day Action</label>
+      </div>
+    </div>
+
+    <div class="resultfooter no-print">
+      <button class="btn btn-ghost" onclick="goHome()">🏠 กลับหน้าแรก</button>
+    </div>
+  </section>
+
+  <footer class="credit no-print">Sell What You Know Workshop · KNOW Rescue Kit — ใช้ประกอบกิจกรรมในห้องเท่านั้น</footer>
+</div>
+
+<div class="toast" id="toast">คัดลอกแล้ว</div>
+
+<script>
+/* ============ helpers ============ */
+const OUTCOME_LABEL = {money:'💰 เงินเพิ่มขึ้น', time:'⏱️ เวลาน้อยลง', quality:'🌱 คุณภาพชีวิตดีขึ้น'};
+function outcomeBadges(arr){
+  return (arr||[]).map(o=>`<span class="obadge ${o}">${OUTCOME_LABEL[o]||o}</span>`).join('');
+}
+function outcomeTag(o){ return OUTCOME_LABEL[o] ? OUTCOME_LABEL[o].split(' ')[0] : ''; }
+
+/* ============ DATA: 9 pre-survey participants ============ */
+const PEOPLE =
+[
+  {
+    "id": "bird",
+    "nickname": "Bird",
+    "fullname": "Krittika Hinthong",
+    "role": "Marketing Analyst · ทำงานสายนี้ 3–5 ปี",
+    "raw_skills": [
+      "Marketing / Business acumen",
+      "Analytical & Logical thinking",
+      "Human insight synthesis → แปลงเป็น business action",
+      "Root cause analysis",
+      "Communication & Presentation (พรีเซนต์สดได้เลย)",
+      "จับประเด็นปัญหาซับซ้อนแบบมี structure ในหัวตลอดเวลา",
+      "Read between the line / Read the room",
+      "Improvise แก้ปัญหาหน้างาน",
+      "ความอยากรู้อยากเห็น / Life-long learner",
+      "ประสบการณ์ข้ามสายงานมาทำ Marketing (4 ปี)"
+    ],
+    "skill_candidates": [
+      {
+        "name": "นักวิเคราะห์ปัญหาซับซ้อน",
+        "source": "Analytical thinking, Root cause analysis, จับประเด็นแบบมี structure"
+      },
+      {
+        "name": "โค้ชข้ามสายงาน",
+        "source": "ประสบการณ์ข้ามสายมาทำ Marketing 4 ปี, Improvise หน้างาน"
+      },
+      {
+        "name": "ผู้ช่วยงานด้วย AI",
+        "source": "ใช้ AI ช่วยงานวิเคราะห์, Human insight synthesis"
+      },
+      {
+        "name": "นักพรีเซนต์สด",
+        "source": "Communication/Presentation, พรีเซนต์สดไม่ต้องเตรียม"
+      },
+      {
+        "name": "นักฟังที่อ่านคนออก",
+        "source": "Read the room, Marketing/Business acumen, Life-long learner"
+      }
+    ],
+    "skill_combos": [
+      {
+        "name": "4 ปีที่ข้ามสายแบบตั้งฉาก",
+        "candidates": [
+          "โค้ชข้ามสายงาน",
+          "นักวิเคราะห์ปัญหาซับซ้อน"
+        ],
+        "pattern": "สังเกตจาก: น้อง ๆ ถามซ้ำว่า “ผ่านมาได้ยังไง” แต่คุณอธิบาย thinking process ไม่ได้ → สัญญาณว่าคุณมีของที่ช่วยลดเวลาทรมานของคนข้ามสายได้ แค่ยังไม่เคยแพ็ก",
+        "outcome": [
+          "quality",
+          "time"
+        ],
+        "dna_options": [
+          "คนที่เคยข้ามสายแบบตั้งฉากจนเป็นศูนย์ แล้วรอดได้ใน 4 ปี อยากถอดวิธีคิดให้คนตามได้จริง",
+          "คนที่ผ่านความเจ็บปวดตอนข้ามสายมาเอง เลยรู้ว่าคำปลอบใจใช้ไม่ได้ ต้องมีขั้นตอนจริงเท่านั้น",
+          "โค้ชที่ไม่ได้เก่งสอนมาแต่ไหน แต่เก่งเพราะเพิ่งผ่านมันมาเองไม่นาน จำความรู้สึกได้แม่น"
+        ],
+        "buyers": [
+          {
+            "group": "รุ่นน้อง/เพื่อนร่วมงานที่กำลังข้ามสายมาทำ Marketing",
+            "why": "ทักได้ใน 7 วันจาก network ที่มี"
+          },
+          {
+            "group": "คนที่กำลังจะย้ายสายงานแบบอื่นที่กลัว learning curve สูงชัน",
+            "why": "pain แบบเดียวกัน ไม่จำกัดแค่ marketing"
+          },
+          {
+            "group": "HR/Manager ที่อยากมี onboarding guide ให้คนข้ามสาย",
+            "why": "ใช้ในองค์กรตัวเองได้เลย"
+          }
+        ],
+        "pain": [
+          "“ข้ามสายมาทำงานนี้ รู้สึกเหมือนเริ่มจากศูนย์แบบตั้งฉาก”",
+          "“อยากรู้ว่าพี่ผ่านมาได้ยังไง แต่พี่อธิบายไม่ถูก”",
+          "“กลัวว่าจะตามคนอื่นในทีมไม่ทันตลอดไป”"
+        ],
+        "offers": [
+          {
+            "format": "Mini Workbook",
+            "desc": "ถอด thinking process 4 ปีเป็นแผนที่ 1 หน้า",
+            "price": "300–600 บาท",
+            "outcome": "time"
+          },
+          {
+            "format": "Mini Session 1:1",
+            "desc": "ซ้อมคิดแบบมี structure ก่อนเริ่มงานใหม่",
+            "price": "800–1,500 บาท",
+            "outcome": "quality"
+          },
+          {
+            "format": "Guide",
+            "desc": "5 milestone แรกที่ต้องผ่านตอนข้ามสาย",
+            "price": "250–500 บาท",
+            "outcome": "time"
+          }
+        ],
+        "messages": [
+          "“น้องเคยถามพี่ว่าข้ามสายมาได้ยังไง พี่เขียนเป็นแผนที่ 1 หน้าให้แล้ว ลองอ่านก่อนไหม”",
+          "“จำได้ไหมที่เคยขอให้พี่ถอดความคิดออกมา พี่ทำเป็นเอกสารจริงจังแล้วนะ”",
+          "“เห็นว่ากำลังจะย้ายสายงานใช่ไหม พี่มีแผนที่ช่วยลดช็อกตอนเริ่มใหม่”"
+        ],
+        "contacts": [
+          "รุ่นน้องที่เคยถามคำถามนี้ตรง ๆ",
+          "เพื่อนร่วมงานที่เคยถามวิธีคิด",
+          "น้อง Gen Z ที่ขอให้ถอดความคิด"
+        ],
+        "seven_day": [
+          "เขียน thinking process ที่อธิบายบ่อยที่สุดเป็น 1 หน้า ส่งให้คนที่เคยถามจริง",
+          "โพสต์ถามในกลุ่มคนเปลี่ยนสายงานว่าอยากได้แผนที่แบบนี้ไหม",
+          "ชวนน้อง 1 คนมาคุย 20 นาที ทดสอบว่าแผนที่นี้ช่วยได้จริงไหม"
+        ]
+      },
+      {
+        "name": "AI ผู้ช่วยงานวิเคราะห์ตัวจริง",
+        "candidates": [
+          "ผู้ช่วยงานด้วย AI",
+          "นักวิเคราะห์ปัญหาซับซ้อน"
+        ],
+        "pattern": "สังเกตจาก: เพื่อนร่วมงานถามซ้ำ ๆ ว่า “ใช้ AI กับงานวิเคราะห์ยังไง” → สัญญาณว่าทีมอยากประหยัดเวลาแต่ยังไม่มีคนสอนแบบใช้ได้จริง",
+        "outcome": [
+          "time"
+        ],
+        "dna_options": [
+          "คนที่ใช้ AI เป็นผู้ช่วยจับประเด็น ไม่ใช่ให้ AI คิดแทน",
+          "นักวิเคราะห์ที่ทดลอง prompt ทุกวันจนรู้ว่าแบบไหนใช้ได้จริงกับงานจริง",
+          "คนที่เชื่อว่า AI ต้องช่วยประหยัดเวลา ไม่ใช่สร้างงานเพิ่มจากการแก้คำตอบที่ผิด"
+        ],
+        "buyers": [
+          {
+            "group": "เพื่อนร่วมงานที่เคยถามเรื่อง AI กับงานวิเคราะห์ตรง ๆ",
+            "why": "เจอกันทุกวัน ทดสอบไวที่สุด"
+          },
+          {
+            "group": "ทีมที่ยังกลัวใช้ AI เพราะเคยได้คำตอบที่ใช้ไม่ได้",
+            "why": "อยากเห็นตัวอย่างที่ใช้ได้จริงก่อน"
+          },
+          {
+            "group": "น้องจบใหม่ที่อยากทำงานวิเคราะห์ให้เร็วขึ้นด้วย AI",
+            "why": "ยังไม่มีทางลัดที่ถูกต้อง"
+          }
+        ],
+        "pain": [
+          "“ใช้ AI ช่วยงานแล้ว คำตอบเอาไปใช้จริงไม่ได้”",
+          "“ไม่รู้จะ prompt ยังไงให้ AI เข้าใจบริบทงานจริง”",
+          "“กลัวพึ่ง AI มากเกินจนคิดเองไม่เป็น”"
+        ],
+        "offers": [
+          {
+            "format": "Prompt Pack",
+            "desc": "เฉพาะงานวิเคราะห์ที่ใช้จริงทุกวัน",
+            "price": "300–500 บาท",
+            "outcome": "time"
+          },
+          {
+            "format": "Mini Session 1 ชม.",
+            "desc": "แก้ปัญหางานจริงด้วย AI ให้ดูสด ๆ",
+            "price": "800–1,500 บาท",
+            "outcome": "time"
+          },
+          {
+            "format": "Checklist",
+            "desc": "เช็คก่อนเชื่อคำตอบจาก AI ทุกครั้ง",
+            "price": "200–350 บาท",
+            "outcome": "quality"
+          }
+        ],
+        "messages": [
+          "“เพื่อนเคยถามพี่เรื่องใช้ AI ช่วยวิเคราะห์งาน พี่ทำ prompt ที่ใช้จริงมาแชร์ให้”",
+          "“อยากดู workflow ที่พี่ใช้ AI ช่วยงานจริง ๆ ไหม ไม่ใช่ทฤษฎี”",
+          "“มี checklist เช็คคำตอบ AI ก่อนเชื่อ อยากลองดูไหม”"
+        ],
+        "contacts": [
+          "เพื่อนร่วมงานที่เคยถามเรื่อง AI ตรง ๆ",
+          "ทีมที่นั่งใกล้กัน",
+          "น้องจบใหม่ในทีม"
+        ],
+        "seven_day": [
+          "รวบรวม prompt ที่ใช้บ่อยที่สุด 5 อัน ส่งให้เพื่อน 1 คนลองใช้",
+          "เสนอสอน 15 นาทีในทีมประชุมถัดไปเรื่อง AI กับงานวิเคราะห์",
+          "โพสต์แชร์ prompt 1 อันในกลุ่มทีมงาน ดูว่าใครสนใจอยากได้เพิ่ม"
+        ]
+      },
+      {
+        "name": "โค้ชสัมภาษณ์งานสาย Analyst",
+        "candidates": [
+          "นักพรีเซนต์สด",
+          "โค้ชข้ามสายงาน"
+        ],
+        "pattern": "สังเกตจาก: น้อง Gen Z ถามเรื่องสัมภาษณ์งานตรง ๆ และขอให้ “ถอดความคิดออกมา” → สัญญาณว่าคนอยากได้ความมั่นใจ ไม่ใช่แค่ทฤษฎี",
+        "outcome": [
+          "money",
+          "quality"
+        ],
+        "dna_options": [
+          "คนที่พรีเซนต์สดได้เลยไม่ต้องเตรียม อยากส่งต่อความมั่นใจนั้นให้น้อง Gen Z",
+          "คนที่เคยสัมภาษณ์แบบไม่มั่นใจมาก่อน เลยรู้ว่าน้อง ๆ ต้องการอะไรจริง ๆ",
+          "โค้ชที่ซ้อมสัมภาษณ์แบบเจอสถานการณ์จริงมาก่อน ไม่ใช่แค่ท่องคำตอบ"
+        ],
+        "buyers": [
+          {
+            "group": "น้อง Gen Z ที่เคยถามเรื่องสัมภาษณ์งานตรง ๆ",
+            "why": "ถามเรื่องนี้อยู่แล้วเป็นประจำ"
+          },
+          {
+            "group": "คนที่กำลังเปลี่ยนสายมาทำ analyst และต้องสัมภาษณ์",
+            "why": "pain เดียวกับที่เธอเคยผ่าน"
+          },
+          {
+            "group": "นักศึกษาจบใหม่ที่จะสัมภาษณ์งานสายข้อมูล/การตลาด",
+            "why": "หาได้จากกลุ่มมหาวิทยาลัย"
+          }
+        ],
+        "pain": [
+          "“สัมภาษณ์งานสาย analyst แล้วตอบไม่เป็น structure”",
+          "“กลัวโดนถามคำถามที่ตอบไม่ได้”",
+          "“ไม่เคยซ้อมพูดกับคนฟังจริง ๆ เลยไม่รู้ว่าตัวเองมั่นใจแค่ไหน”"
+        ],
+        "offers": [
+          {
+            "format": "Mock Interview 45 นาที",
+            "desc": "ซ้อมตอบแบบมี structure พร้อม feedback",
+            "price": "800–1,500 บาท",
+            "outcome": "money"
+          },
+          {
+            "format": "Checklist",
+            "desc": "คำถามที่มักโดนถามสาย analyst",
+            "price": "200–400 บาท",
+            "outcome": "quality"
+          },
+          {
+            "format": "Guide",
+            "desc": "โครงคำตอบ STAR แบบสาย analyst",
+            "price": "200–350 บาท",
+            "outcome": "quality"
+          }
+        ],
+        "messages": [
+          "“น้องเคยถามพี่เรื่องสัมภาษณ์งานใช่ไหม พี่เปิด mock interview ให้ลองซ้อมจริงได้นะ”",
+          "“มีสัมภาษณ์งานเร็ว ๆ นี้ไหม พี่มี checklist คำถามที่เจอบ่อยมาแชร์ให้”",
+          "“อยากซ้อมตอบแบบมี structure ก่อนสัมภาษณ์ไหม พี่ช่วยได้นะ”"
+        ],
+        "contacts": [
+          "น้อง Gen Z ที่เคยถามเรื่องสัมภาษณ์งาน",
+          "คนรู้จักที่กำลังเปลี่ยนสายมาทำ analyst",
+          "น้องมหาลัยที่กำลังหางาน"
+        ],
+        "seven_day": [
+          "ชวนน้อง 1 คนมาซ้อม mock interview ฟรีก่อน เพื่อขอ feedback",
+          "โพสต์ในกลุ่มมหาลัยว่าเปิดซ้อมสัมภาษณ์สาย analyst ฟรีรอบแรก",
+          "ทำ checklist คำถาม 1 หน้าส่งให้น้อง 2 คนลองอ่าน"
+        ]
+      },
+      {
+        "name": "นักฟังที่อ่านเกมออกก่อนใคร",
+        "candidates": [
+          "นักฟังที่อ่านคนออก",
+          "ผู้ช่วยงานด้วย AI"
+        ],
+        "pattern": "สังเกตจาก: เคยคิดว่า “เรื่องนี้มัน obvious คนอื่นก็คงรู้” แต่จริง ๆ ไม่ใช่ → สัญญาณว่าคุณเห็นสิ่งที่คนอื่นในทีมมองไม่เห็น",
+        "outcome": [
+          "quality"
+        ],
+        "dna_options": [
+          "คนที่อ่านสถานการณ์ทีมออกก่อนคนอื่น แล้วแปลงเป็นแอคชันที่ใช้ได้จริง",
+          "คนที่ฟังสิ่งที่ไม่ได้พูดออกมา แล้วจับสัญญาณที่ซ่อนอยู่ได้แม่น",
+          "นักสังเกตที่คิดว่าตัวเองธรรมดา แต่จริง ๆ เห็นในสิ่งที่คนอื่นมองข้าม"
+        ],
+        "buyers": [
+          {
+            "group": "Manager/หัวหน้าทีมที่อยากรู้ insight จากทีมแต่ทีมไม่กล้าพูดตรง ๆ",
+            "why": "ใช้ในที่ทำงานตัวเองได้เลย"
+          },
+          {
+            "group": "เพื่อนร่วมงานที่จับสัญญาณลูกค้าไม่ค่อยออก",
+            "why": "pain ที่เจอด้วยกันในทีม"
+          },
+          {
+            "group": "ทีมที่เพิ่งเปลี่ยนโครงสร้างและสื่อสารกันไม่เข้าใจ",
+            "why": "ต้องการคนอ่านสถานการณ์เร็ว"
+          }
+        ],
+        "pain": [
+          "“ประชุมเสร็จแล้วไม่รู้จะสรุปเป็นแอคชันได้ยังไง”",
+          "“รู้สึกว่ามีบางอย่างผิดปกติในทีมแต่จับไม่ได้ว่าคืออะไร”",
+          "“ลูกค้าพูดอย่างแต่ต้องการอีกอย่าง จับสัญญาณไม่ทัน”"
+        ],
+        "offers": [
+          {
+            "format": "Meeting-to-Action Summary",
+            "desc": "สรุปประชุมให้เป็น action items",
+            "price": "300–600 บาท",
+            "outcome": "time"
+          },
+          {
+            "format": "Insight Debrief Session",
+            "desc": "ฟังสถานการณ์แล้วช่วยอ่านสัญญาณที่ซ่อนอยู่",
+            "price": "800–1,500 บาท",
+            "outcome": "quality"
+          },
+          {
+            "format": "Consult ด่วน",
+            "desc": "ช่วยอ่านสถานการณ์ลูกค้า/ทีมก่อนตัดสินใจ",
+            "price": "500–1,000 บาท",
+            "outcome": "quality"
+          }
+        ],
+        "messages": [
+          "“ประชุมนี้พี่ช่วยสรุปเป็น action ให้ได้นะ ลองส่ง note มาดูก่อนไหม”",
+          "“รู้สึกว่ามีบางอย่างในทีมที่จับไม่ถูกใช่ไหม ลองคุยกับพี่ดูก่อน”",
+          "“ลูกค้าพูดแปลก ๆ ใช่ไหม พี่ช่วยอ่านสัญญาณให้ได้นะ”"
+        ],
+        "contacts": [
+          "Manager ที่เคยขอความเห็นเรื่องทีม",
+          "เพื่อนร่วมงานที่เคยคุยปัญหาทีมด้วยกัน",
+          "ทีมที่เพิ่งเปลี่ยนโครงสร้าง"
+        ],
+        "seven_day": [
+          "เสนอช่วยสรุป action items จากประชุมล่าสุด 1 ครั้งให้ทีมฟรี",
+          "ถามเพื่อนร่วมงาน 1 คนว่ามีสถานการณ์ทีมที่อยากให้ช่วยอ่านไหม",
+          "จดสิ่งที่สังเกตจากประชุมที่ผ่านมา 1 เรื่อง แล้วแชร์ให้ทีมฟัง"
+        ]
+      },
+      {
+        "name": "ที่ปรึกษาเริ่มธุรกิจฉบับคนไม่มีของ",
+        "candidates": [
+          "นักฟังที่อ่านคนออก",
+          "นักวิเคราะห์ปัญหาซับซ้อน"
+        ],
+        "pattern": "สังเกตจาก: เพื่อนสมัยเรียนถามซ้ำ ๆ ว่า “อยากทำธุรกิจ XX เริ่มยังไงดี” → สัญญาณว่าคนมองว่าคุณมี business sense ที่ช่วยตัดสินใจก่อนเสียเงิน",
+        "outcome": [
+          "money",
+          "time"
+        ],
+        "dna_options": [
+          "คนที่เพื่อนสมัยเรียนถามเรื่องเริ่มธุรกิจซ้ำ ๆ เพราะเชื่อว่าคุณช่วยตัดสินใจได้ก่อนเสียเงิน",
+          "นักวิเคราะห์ที่มองธุรกิจแบบ root cause ไม่ใช่แค่ไอเดียสวย ๆ",
+          "คนที่ชอบช่วยเพื่อนคิดธุรกิจ ทั้งที่ตัวเองยังไม่เคยทำธุรกิจของตัวเองเลย"
+        ],
+        "buyers": [
+          {
+            "group": "เพื่อนสมัยเรียน/คนรู้จักที่คิดอยากทำธุรกิจแต่ยังไม่เริ่ม",
+            "why": "ถามเรื่องนี้อยู่แล้วเป็นประจำ"
+          },
+          {
+            "group": "คนที่มีไอเดียธุรกิจหลายอันแต่ไม่รู้จะโฟกัสอันไหนก่อน",
+            "why": "ใช้ root cause analysis ช่วยตัดตัวเลือกได้"
+          },
+          {
+            "group": "คนที่กำลังจะลาออกไปทำธุรกิจของตัวเอง",
+            "why": "อยากได้คนช่วยเช็คก่อนตัดสินใจสำคัญ"
+          }
+        ],
+        "pain": [
+          "“อยากทำธุรกิจของตัวเอง แต่ไม่รู้จะเริ่มจากตรงไหนก่อนดี”",
+          "“มีไอเดียเยอะ แต่กลัวเลือกผิดแล้วเสียเงิน/เวลาไปเปล่า ๆ”",
+          "“อยากลาออกไปทำธุรกิจ แต่ไม่มั่นใจว่าไอเดียนี้ไปได้จริงไหม”"
+        ],
+        "offers": [
+          {
+            "format": "1:1 Root Cause Session",
+            "desc": "วิเคราะห์ไอเดียธุรกิจก่อนลงทุนจริง",
+            "price": "1,000–2,000 บาท",
+            "outcome": "money"
+          },
+          {
+            "format": "Checklist",
+            "desc": "ตั้งคำถามก่อนเริ่มธุรกิจจาก business acumen",
+            "price": "300–500 บาท",
+            "outcome": "time"
+          },
+          {
+            "format": "Decision Matrix Guide",
+            "desc": "เทียบไอเดียธุรกิจหลายอันให้เลือกง่ายขึ้น",
+            "price": "300–600 บาท",
+            "outcome": "time"
+          }
+        ],
+        "messages": [
+          "“เคยถามพี่เรื่องอยากเริ่มธุรกิจใช่ไหม พี่เปิด session ช่วยดูไอเดียก่อนลงทุนจริงได้นะ”",
+          "“มี checklist ตั้งคำถามก่อนเริ่มธุรกิจที่พี่ใช้เอง อยากลองดูก่อนไหม”",
+          "“มีไอเดียธุรกิจหลายอันใช่ไหม พี่ช่วยเทียบให้เลือกง่ายขึ้นได้นะ”"
+        ],
+        "contacts": [
+          "เพื่อนสมัยเรียนที่เคยถามเรื่องเริ่มธุรกิจ",
+          "คนรู้จักที่มีไอเดียธุรกิจแต่ยังไม่เริ่ม",
+          "คนที่กำลังคิดจะลาออกไปทำธุรกิจ"
+        ],
+        "seven_day": [
+          "ส่ง checklist ให้เพื่อนที่เคยถามเรื่องอยากทำธุรกิจ 1 คน ขอ feedback",
+          "ชวนเพื่อน 1 คนที่มีหลายไอเดียมาคุย ลองใช้ decision matrix ด้วยกัน",
+          "โพสต์ถามในกลุ่มเพื่อนว่าใครกำลังคิดเริ่มธุรกิจอยู่บ้าง"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "gg",
+    "nickname": "จีจี้",
+    "fullname": "สุภัฎฎา โพธิ์แก้ว",
+    "role": "วิศวกร (Cloud Architecture / Network) · 6–10 ปี",
+    "raw_skills": [
+      "Cloud Architecture",
+      "Network",
+      "สอนหลักสูตรสิงคโปร์ (มาตรฐานสากล)",
+      "สอนน้องมหาลัย",
+      "เข้าสังคมเก่ง ทำให้คนกล้าเข้าหา",
+      "จัดการอารมณ์ร้อน/ความรีบร้อนของตัวเองได้"
+    ],
+    "skill_candidates": [
+      {
+        "name": "ผู้เชี่ยวชาญ Cloud/Network",
+        "source": "Cloud Architecture, Network"
+      },
+      {
+        "name": "ครูมาตรฐานสากล",
+        "source": "สอนหลักสูตรสิงคโปร์"
+      },
+      {
+        "name": "ครูที่เป็นกันเอง",
+        "source": "สอนน้องมหาลัย, เข้าสังคมเก่ง"
+      },
+      {
+        "name": "นักจัดการอารมณ์",
+        "source": "จัดการอารมณ์ร้อน/รีบร้อนได้เอง"
+      },
+      {
+        "name": "นักฟังปัญหาหน้างาน",
+        "source": "“ช่วยฟังเรื่องที่เล่าเมื่อเจอปัญหา”"
+      }
+    ],
+    "skill_combos": [
+      {
+        "name": "ครูเทคนิคที่เคยสอนมาตรฐานสิงคโปร์",
+        "candidates": [
+          "ผู้เชี่ยวชาญ Cloud/Network",
+          "ครูมาตรฐานสากล"
+        ],
+        "pattern": "สังเกตจาก: คุณเคยสอนหลักสูตรระดับสากลมาแล้วจริง → สัญญาณว่ามีของที่พร้อมขายในราคาที่สูงกว่าคอร์สทั่วไปได้",
+        "outcome": [
+          "money",
+          "quality"
+        ],
+        "dna_options": [
+          "วิศวกรที่เคยสอนหลักสูตรสิงคโปร์มาแล้ว แต่ยังพูดภาษาเดียวกับมือใหม่ได้",
+          "คนที่เชื่อว่ามาตรฐานสากลไม่จำเป็นต้องพูดยาก ถ้าอธิบายดี ๆ",
+          "ครูที่ผ่านมาตรฐานสากลมาแล้ว เลยรู้ว่าอะไรคือแก่นจริง ๆ ที่ต้องสอน"
+        ],
+        "buyers": [
+          {
+            "group": "คนเตรียมสอบ/สมัครงานสาย Cloud ที่อยากได้มาตรฐานสากล",
+            "why": "หาได้ในกลุ่มคอมมูนิตี้สาย Cloud"
+          },
+          {
+            "group": "คนที่เคยเรียนหลักสูตรสิงคโปร์ด้วยกัน อยากต่อยอด",
+            "why": "ติดต่อได้ทันที มีความสัมพันธ์อยู่แล้ว"
+          },
+          {
+            "group": "บริษัทที่อยาก upskill ทีมด้วยมาตรฐานสากลแต่งบจำกัด",
+            "why": "เสนอราคาที่เข้าถึงได้กว่าจ้างต่างชาติ"
+          }
+        ],
+        "pain": [
+          "“อยากได้ความรู้ Cloud มาตรฐานสากล แต่คอร์สแพงหรือหายากในไทย”",
+          "“เรียน Cloud จากหลายที่มาแล้วแต่ยังไม่มั่นใจว่าพื้นฐานแน่นพอ”",
+          "“อยากยกระดับทีมแต่งบไม่พอจ้างวิทยากรต่างชาติ”"
+        ],
+        "offers": [
+          {
+            "format": "Mini Workshop",
+            "desc": "สรุปหัวใจหลักสูตรสิงคโปร์ให้เข้าถึงง่ายขึ้น",
+            "price": "800–1,500 บาท",
+            "outcome": "money"
+          },
+          {
+            "format": "Mini Session",
+            "desc": "เช็คพื้นฐาน Cloud ว่าขาดตรงไหน",
+            "price": "500–1,000 บาท",
+            "outcome": "quality"
+          },
+          {
+            "format": "Corporate Package",
+            "desc": "อัปสกิลทีมด้วยมาตรฐานสากลราคาย่อมเยา",
+            "price": "3,000 บาทขึ้นไป",
+            "outcome": "money"
+          }
+        ],
+        "messages": [
+          "“พี่เคยสอนหลักสูตร Cloud ระดับสิงคโปร์มา สรุปมาให้ลองดูก่อนได้ อยากดูไหม”",
+          "“อยากเช็คว่าพื้นฐาน Cloud ของตัวเองแน่นพอไหม พี่ช่วยดูให้ได้นะ”",
+          "“อยากอัปสกิลทีมด้วยมาตรฐานสากลไหม พี่เสนอราคาที่เข้าถึงได้กว่า”"
+        ],
+        "contacts": [
+          "คนที่เคยเรียนหลักสูตรสิงคโปร์ด้วยกัน",
+          "น้องมหาลัยที่เคยสอน",
+          "HR ที่เคยรู้จัก"
+        ],
+        "seven_day": [
+          "สรุปหัวข้อหลักของหลักสูตรสิงคโปร์เป็น 1 หน้า ส่งให้คนที่เคยเรียนด้วยกัน",
+          "โพสต์ในกลุ่มคอมมูนิตี้ Cloud แนะนำ mini workshop ที่กำลังจะเปิด",
+          "ทักบริษัทเล็ก 1 แห่งเสนอ corporate package ราคาทดลอง"
+        ]
+      },
+      {
+        "name": "Safe Space ถามเรื่องที่ไม่กล้าถามใคร",
+        "candidates": [
+          "ครูที่เป็นกันเอง",
+          "ผู้เชี่ยวชาญ Cloud/Network"
+        ],
+        "pattern": "สังเกตจาก: คนบอกว่าคุณ “เข้าสังคมเก่ง” → สัญญาณว่าคุณลดความกลัวในการถามคำถามพื้นฐานของคนอื่นได้",
+        "outcome": [
+          "time",
+          "quality"
+        ],
+        "dna_options": [
+          "คนที่ทำให้คำถามพื้นฐานที่คนอื่นอายจะถาม กลายเป็นเรื่องถามได้สบาย ๆ",
+          "วิศวกรที่จำได้ว่าตัวเองเคยกลัวถามคำถามโง่ ๆ เหมือนกัน",
+          "คนที่เชื่อว่าไม่มีคำถามโง่ มีแต่คนที่ไม่กล้าถาม"
+        ],
+        "buyers": [
+          {
+            "group": "Junior/มือใหม่ในทีมที่อายจะถามคำถามพื้นฐาน",
+            "why": "ทดสอบในองค์กรตัวเองได้ก่อน"
+          },
+          {
+            "group": "น้องมหาลัยที่เพิ่งเริ่มสนใจสาย Cloud",
+            "why": "เคยสอนกลุ่มนี้อยู่แล้ว"
+          },
+          {
+            "group": "คนเปลี่ยนสายมาทำ Cloud ที่รู้สึกโง่เวลาถาม",
+            "why": "pain ที่ตรงกับสไตล์เป็นกันเองของเธอ"
+          }
+        ],
+        "pain": [
+          "“กลัวถามคำถามพื้นฐานในทีมเพราะอายว่าคนอื่นรู้กันหมดแล้ว”",
+          "“ไม่มีใครในทีมที่รู้สึกปลอดภัยพอจะถามคำถามโง่ ๆ ได้”",
+          "“เปลี่ยนสายมาทำ Cloud แล้วรู้สึกงี่เง่าทุกครั้งที่ถาม”"
+        ],
+        "offers": [
+          {
+            "format": "Office Hour ส่วนตัว 30 นาที",
+            "desc": "ถามอะไรก็ได้ ไม่มีคำถามโง่",
+            "price": "500–1,000 บาท",
+            "outcome": "time"
+          },
+          {
+            "format": "LINE กลุ่มเล็ก รายเดือน",
+            "desc": "ถามได้ตลอดสัปดาห์ ไม่ต้องรอนัด",
+            "price": "500–1,500 บาท/เดือน",
+            "outcome": "time"
+          },
+          {
+            "format": "Newbie Survival Session",
+            "desc": "สำหรับคนเปลี่ยนสายมาทำ Cloud โดยเฉพาะ",
+            "price": "800–1,500 บาท",
+            "outcome": "quality"
+          }
+        ],
+        "messages": [
+          "“มีคำถามเรื่อง Cloud/Network ที่อายจะถามไหม ทักพี่มาได้เลย ไม่มีคำถามโง่หรอก”",
+          "“เปิด office hour เล็ก ๆ ถามอะไรก็ได้ 30 นาที ลองดูไหม”",
+          "“เปลี่ยนสายมาทำ Cloud อยู่ใช่ไหม พี่เข้าใจ ลองคุยกันได้นะ”"
+        ],
+        "contacts": [
+          "Junior ในทีมที่ดูเก้ ๆ กัง ๆ",
+          "น้องมหาลัยที่เพิ่งเริ่มสนใจ Cloud",
+          "คนเปลี่ยนสายมาทำ Cloud ที่รู้จัก"
+        ],
+        "seven_day": [
+          "ชวน Junior ในทีม 1 คนคุยแบบไม่เป็นทางการ 15 นาที",
+          "โพสต์ในกลุ่มน้องมหาลัยว่าเปิด office hour ฟรีรอบแรก",
+          "ทักคนเปลี่ยนสายที่รู้จัก 1 คนถามว่ามีคำถามอะไรอยากถามไหม"
+        ]
+      },
+      {
+        "name": "โค้ชจัดการอารมณ์ร้อนสำหรับวิศวกร",
+        "candidates": [
+          "นักจัดการอารมณ์",
+          "ผู้เชี่ยวชาญ Cloud/Network"
+        ],
+        "pattern": "สังเกตจาก: คุณแก้ปัญหาอารมณ์ร้อน/รีบร้อนของตัวเองได้เอง → สัญญาณว่าคุณมีวิธีที่ใช้ได้จริงกับความกดดันหน้างานเทค",
+        "outcome": [
+          "quality"
+        ],
+        "dna_options": [
+          "วิศวกรที่แก้ปัญหาอารมณ์ร้อนของตัวเองได้ อยากส่งต่อวิธีนั้นให้เพื่อนสายเดียวกัน",
+          "คนที่เคยพังเพราะรีบร้อนมาก่อน จนหาวิธีสงบสติได้ในที่สุด",
+          "โค้ชที่ไม่ได้เรียนจิตวิทยามา แต่ผ่านสนามจริงจนรู้ว่าอะไรใช้ได้ผล"
+        ],
+        "buyers": [
+          {
+            "group": "วิศวกร/คนสายเทคที่เครียดง่ายเวลาระบบมีปัญหากะทันหัน",
+            "why": "เจอ pain เดียวกันในทีม"
+          },
+          {
+            "group": "Junior ที่รู้ตัวว่าใจร้อน/รีบจนทำงานพลาดบ่อย",
+            "why": "อยากแก้ก่อนกลายเป็นนิสัย"
+          },
+          {
+            "group": "หัวหน้าทีมที่อยากให้ทีมรับมือความกดดันได้ดีขึ้น",
+            "why": "ใช้ในองค์กรตัวเองได้"
+          }
+        ],
+        "pain": [
+          "“เครียดมากทุกครั้งที่ระบบมีปัญหากะทันหัน ควบคุมอารมณ์ตัวเองไม่ได้”",
+          "“รู้ตัวว่าใจร้อน/รีบจนทำงานพลาดบ่อย แต่ไม่รู้จะแก้ยังไง”",
+          "“ทีมเครียดง่ายเวลามีปัญหาด่วน จนตัดสินใจผิดพลาด”"
+        ],
+        "offers": [
+          {
+            "format": "Mini Session",
+            "desc": "แชร์วิธีจัดการอารมณ์ร้อนที่ใช้จริง",
+            "price": "500–1,000 บาท",
+            "outcome": "quality"
+          },
+          {
+            "format": "Checklist",
+            "desc": "สงบสติก่อนแก้ปัญหาหน้างาน อ่านจบใน 3 นาที",
+            "price": "200–400 บาท",
+            "outcome": "time"
+          },
+          {
+            "format": "Team Workshop",
+            "desc": "ฝึกทีมรับมือความกดดันหน้างานร่วมกัน",
+            "price": "2,000–4,000 บาท",
+            "outcome": "quality"
+          }
+        ],
+        "messages": [
+          "“เคยจัดการอารมณ์ร้อน/รีบของตัวเองได้ อยากแชร์วิธีที่ใช้จริงให้ฟังไหม”",
+          "“มี checklist สงบสติก่อนแก้ปัญหาหน้างาน ลองอ่านดูก่อนได้นะ”",
+          "“อยากให้ทีมรับมือความกดดันได้ดีขึ้นไหม เสนอ workshop สั้น ๆ ได้นะ”"
+        ],
+        "contacts": [
+          "เพื่อนวิศวกรที่เคยบ่นเรื่องเครียดหน้างาน",
+          "Junior ที่เคยทำงานพลาดเพราะรีบ",
+          "หัวหน้าทีมที่ดูแลทีมเทค"
+        ],
+        "seven_day": [
+          "แชร์ checklist สงบสติให้เพื่อนวิศวกร 2 คนลองใช้",
+          "เสนอ mini session ให้ Junior 1 คนที่เคยพลาดเพราะรีบ",
+          "ถามหัวหน้าทีมว่าสนใจ workshop รับมือความกดดันให้ทีมไหม"
+        ]
+      },
+      {
+        "name": "Onboarding Buddy สายเทค",
+        "candidates": [
+          "ครูที่เป็นกันเอง",
+          "ผู้เชี่ยวชาญ Cloud/Network"
+        ],
+        "pattern": "สังเกตจาก: คุณเข้าสังคมเก่งและมีประสบการณ์ Cloud/Network 6-10 ปี → สัญญาณว่าคุณช่วยลดเวลา onboard คนใหม่ได้จริง",
+        "outcome": [
+          "time"
+        ],
+        "dna_options": [
+          "คนที่เชื่อว่าการ onboard ไม่ควรทำให้ Junior ใหม่กลัว",
+          "วิศวกรที่จำวันแรกที่งงกับระบบได้ เลยอยากทำให้คนอื่นไม่ต้องงงแบบนั้น",
+          "Buddy ที่ผสมความรู้เทคนิคกับทักษะทำให้คนสบายใจ"
+        ],
+        "buyers": [
+          {
+            "group": "บริษัท/ทีมที่มี Junior ใหม่เข้ามาบ่อย",
+            "why": "ประหยัดเวลา HR/หัวหน้าทีมได้ตรง ๆ"
+          },
+          {
+            "group": "Junior ที่เพิ่งเข้าทีมใหม่และรู้สึกหลงทาง",
+            "why": "pain ที่เจอในช่วงแรกของทุกคน"
+          },
+          {
+            "group": "บริษัท Startup ที่โตเร็วจนรับคนใหม่ถี่",
+            "why": "ต้องการระบบ onboard ที่ทำซ้ำได้"
+          }
+        ],
+        "pain": [
+          "“เข้าทีมใหม่แล้วงงกับระบบ Cloud/Network ไม่รู้จะถามใครก่อน”",
+          "“บริษัทเสียเวลา onboard คนใหม่นานเกินไป”",
+          "“รับคนใหม่ถี่จนไม่มีเวลา onboard ให้ดีทุกคน”"
+        ],
+        "offers": [
+          {
+            "format": "Onboarding Guide เฉพาะทีม",
+            "desc": "สรุประบบให้เข้าใจไวขึ้น",
+            "price": "1,000–2,500 บาท",
+            "outcome": "time"
+          },
+          {
+            "format": "Buddy Session 3 ครั้งแรก",
+            "desc": "ช่วง Junior เข้าทีมใหม่",
+            "price": "1,500–3,000 บาท",
+            "outcome": "time"
+          },
+          {
+            "format": "Onboarding Template",
+            "desc": "ใช้ซ้ำได้ทุกครั้งที่รับคนใหม่",
+            "price": "1,500–3,000 บาท",
+            "outcome": "time"
+          }
+        ],
+        "messages": [
+          "“เห็นว่ามี Junior ใหม่เข้าทีมใช่ไหม พี่ช่วยทำ onboarding guide ให้เข้าใจระบบไวขึ้นได้นะ”",
+          "“อยากมีคนช่วยพา Junior เข้าใจระบบตอนเข้าทีมใหม่ไหม พี่เป็น buddy ให้ได้”",
+          "“รับคนใหม่ถี่ใช่ไหม พี่ทำ template onboarding ใช้ซ้ำได้ให้ได้นะ”"
+        ],
+        "contacts": [
+          "หัวหน้าทีมที่กำลังจะรับคนใหม่",
+          "Junior ที่เพิ่งเข้าทีมและดูงง ๆ",
+          "HR ที่ดูแลการรับคนใหม่"
+        ],
+        "seven_day": [
+          "เสนอเป็น onboarding buddy ให้ Junior คนล่าสุด ฟรีก่อน 1 คน",
+          "ทำ onboarding guide เวอร์ชันแรกให้ทีมตัวเองใช้ก่อน",
+          "ถามหัวหน้าทีมว่าจะมีคนใหม่เข้าเร็ว ๆ นี้ไหม เสนอช่วย onboard"
+        ]
+      },
+      {
+        "name": "แปลปัญหาทีมให้ Solution ที่ทำได้จริง",
+        "candidates": [
+          "นักฟังปัญหาหน้างาน",
+          "ผู้เชี่ยวชาญ Cloud/Network"
+        ],
+        "pattern": "สังเกตจาก: สิ่งที่คนขอให้คุณช่วยบ่อยที่สุดคือ “ฟังเรื่องที่เล่าเมื่อเจอปัญหา” → สัญญาณว่าคุณเป็นที่พึ่งอันดับแรกของทีมอยู่แล้ว",
+        "outcome": [
+          "quality",
+          "time"
+        ],
+        "dna_options": [
+          "คนที่เพื่อนร่วมงานมาเล่าปัญหาให้ฟังก่อนคนอื่นเสมอ เพราะช่วยคิดทางแก้ได้จริง",
+          "นักฟังที่ไม่ได้แค่ปลอบใจ แต่ใช้ความรู้เทคนิคช่วยหาทางแก้ด้วย",
+          "คนที่เป็น “ที่พึ่งแรก” ของทีมอยู่แล้ว แค่ยังไม่เคยทำให้เป็นบริการจริงจัง"
+        ],
+        "buyers": [
+          {
+            "group": "เพื่อนร่วมงาน/ทีมที่ติดปัญหา Cloud/Network จนเครียด",
+            "why": "เป็นสิ่งที่คนขอให้ช่วยอยู่แล้วบ่อยที่สุด"
+          },
+          {
+            "group": "คนที่อยากมีที่ปรึกษาไม่เป็นทางการคุยปัญหาหน้างานตรง ๆ",
+            "why": "ไม่ต้องการความเป็นทางการมาก"
+          },
+          {
+            "group": "ทีมเล็กที่ไม่มีคน senior ให้ปรึกษา",
+            "why": "ต้องการคนที่เข้าใจ Cloud/Network จริง"
+          }
+        ],
+        "pain": [
+          "“ติดปัญหาหน้างานจนเครียด อยากมีคนฟังแล้วช่วยคิดทางแก้ด้วยกัน”",
+          "“คิดทางแก้คนเดียวมานานแล้วไม่ไปไหน”",
+          "“ทีมเล็กไม่มีใคร senior พอจะปรึกษาได้”"
+        ],
+        "offers": [
+          {
+            "format": "Consult Session 45 นาที",
+            "desc": "ฟังปัญหาหน้างาน + ช่วยหาทางแก้",
+            "price": "800–1,500 บาท",
+            "outcome": "quality"
+          },
+          {
+            "format": "Consult รายครั้ง (LINE)",
+            "desc": "ถามปัญหาได้เร็ว ไม่ต้องรอนัด",
+            "price": "300–500 บาท/ครั้ง",
+            "outcome": "time"
+          },
+          {
+            "format": "Retainer รายเดือน",
+            "desc": "ปรึกษาได้ไม่จำกัดครั้งสำหรับทีมเล็ก",
+            "price": "2,000–4,000 บาท/เดือน",
+            "outcome": "time"
+          }
+        ],
+        "messages": [
+          "“ติดปัญหา Cloud/Network อยู่ใช่ไหม ลองเล่าให้ฟังดูก่อนได้นะ”",
+          "“เปิด consult สั้น ๆ ถ้าติดปัญหาหน้างานทักมาได้เลย”",
+          "“ทีมเล็กไม่มี senior ปรึกษาใช่ไหม พี่รับเป็นที่ปรึกษาประจำได้นะ”"
+        ],
+        "contacts": [
+          "เพื่อนร่วมงานที่เคยมาเล่าปัญหาให้ฟัง",
+          "ทีมที่เคยขอความเห็นเรื่องเทคนิค",
+          "ทีมเล็กที่ไม่มี senior"
+        ],
+        "seven_day": [
+          "บอกเพื่อนร่วมงาน 2 คนว่าตอนนี้เปิด consult session แบบเป็นทางการแล้ว",
+          "เสนอ retainer ให้ทีมเล็ก 1 ทีมที่รู้จักลองใช้เดือนแรกฟรี",
+          "โพสต์ในกลุ่มงานว่าเปิดรับ consult ปัญหา Cloud/Network"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "hong",
+    "nickname": "ฮง",
+    "fullname": "ภควัต อเนกวิโรจน์",
+    "role": "โปรแกรมเมอร์ (Software Development / Vibe Coding) · 6–10 ปี",
+    "raw_skills": [
+      "การสอน (สอนคนอื่นได้)",
+      "Software Development",
+      "Vibe Coding (ใช้ AI ช่วยเขียนโค้ด)",
+      "ทักษะแก้ปัญหา (Problem-solving)",
+      "สร้างเครื่องมือแก้ปัญหาระยะยาว ไม่ใช่แค่แก้เฉพาะหน้า"
+    ],
+    "skill_candidates": [
+      {
+        "name": "Vibe Coding Practitioner",
+        "source": "Vibe Coding ใช้ AI ช่วยเขียนโค้ด"
+      },
+      {
+        "name": "นักสอนสายเทค",
+        "source": "การสอน"
+      },
+      {
+        "name": "นักแก้ปัญหา",
+        "source": "ทักษะแก้ปัญหา (Problem-solving)"
+      },
+      {
+        "name": "Tool Builder ระยะยาว",
+        "source": "สร้างเครื่องมือแก้ปัญหาระยะยาว, Software Development"
+      },
+      {
+        "name": "นักแปลภาษาเทค",
+        "source": "Software Development, การสอน (แปล requirement เป็นโค้ด)"
+      }
+    ],
+    "skill_combos": [
+      {
+        "name": "Vibe Coding เพื่อนซี้",
+        "candidates": [
+          "Vibe Coding Practitioner",
+          "นักสอนสายเทค"
+        ],
+        "pattern": "สังเกตจาก: เพื่อนถามเรื่อง “vibe coding” ซ้ำที่สุดในบรรดาทุกเรื่อง → สัญญาณว่านี่คือสิ่งที่ตลาดต้องการจากคุณมากที่สุดตอนนี้",
+        "outcome": [
+          "money",
+          "time"
+        ],
+        "dna_options": [
+          "คนที่เพื่อนถามเรื่อง vibe coding บ่อยที่สุด สอนคนไม่ใช่สายเทคสร้างเครื่องมือด้วย AI ได้จริง",
+          "โปรแกรมเมอร์ที่เชื่อว่าทุกคนสร้างเครื่องมือของตัวเองได้ ถ้ามีคนช่วยเริ่มก้าวแรก",
+          "คนที่ใช้ AI ช่วยงานทุกวันจนรู้ว่าจุดไหนคนมือใหม่มักติด"
+        ],
+        "buyers": [
+          {
+            "group": "เพื่อนที่ไม่ใช่สายเทคที่เคยถามเรื่อง vibe coding ตรง ๆ",
+            "why": "ถามเรื่องนี้อยู่แล้วเป็นประจำ"
+          },
+          {
+            "group": "ทีม/เพื่อนร่วมงานที่อยากลอง prototype เร็ว ๆ ด้วย AI",
+            "why": "ทดสอบในที่ทำงานได้ก่อน"
+          },
+          {
+            "group": "Creator/Freelancer ที่อยากมีเครื่องมือแต่ไม่มีงบจ้าง dev",
+            "why": "เข้าถึงราคาที่จับต้องได้"
+          }
+        ],
+        "pain": [
+          "“อยากสร้างเครื่องมือ/แอปมาช่วยงาน แต่ไม่ได้เขียนโค้ดเป็น”",
+          "“ลองใช้ AI เขียนโค้ดเองแล้ว error ตลอด”",
+          "“ไม่มีงบจ้าง dev แต่อยากได้เครื่องมือใช้เอง”"
+        ],
+        "offers": [
+          {
+            "format": "Mini Session 1 ชม.",
+            "desc": "จับมือสร้างเครื่องมือแรกด้วย AI ตั้งแต่ศูนย์",
+            "price": "800–1,500 บาท",
+            "outcome": "money"
+          },
+          {
+            "format": "Prompt Pack",
+            "desc": "เฉพาะที่ใช้จริงตอน vibe coding",
+            "price": "300–600 บาท",
+            "outcome": "time"
+          },
+          {
+            "format": "Group Workshop",
+            "desc": "สอนกลุ่มเล็ก 3-4 คนสร้างเครื่องมือด้วย AI",
+            "price": "1,500–3,000 บาท/กลุ่ม",
+            "outcome": "money"
+          }
+        ],
+        "messages": [
+          "“เคยถามผมเรื่อง vibe coding ใช่ไหม ลองมาสร้างเครื่องมือแรกด้วยกันไหมครับ”",
+          "“มี prompt pack ที่ผมใช้จริงตอนทำ vibe coding อยากลองดูไหมครับ”",
+          "“อยากลองจัด workshop กลุ่มเล็กสอน vibe coding ไหมครับ”"
+        ],
+        "contacts": [
+          "เพื่อนที่เคยถามเรื่อง vibe coding ตรง ๆ",
+          "ทีมที่เคยอยากลอง prototype เร็ว",
+          "Creator/Freelancer ในเครือข่าย"
+        ],
+        "seven_day": [
+          "ส่ง prompt pack ให้เพื่อนที่เคยถามเรื่อง vibe coding 1 คนลองใช้ฟรี",
+          "โพสต์ในกลุ่มเพื่อนถามว่าใครอยากลอง workshop กลุ่มเล็ก",
+          "ชวนเพื่อน 1 คนมาสร้างเครื่องมือแรกด้วยกันแบบฟรี ขอ feedback"
+        ]
+      },
+      {
+        "name": "Debug Detective",
+        "candidates": [
+          "นักแก้ปัญหา",
+          "Vibe Coding Practitioner"
+        ],
+        "pattern": "สังเกตจาก: คนชมว่าคุณเก่งแก้ปัญหา ทั้งที่คุณคิดว่าธรรมดา → สัญญาณว่านี่คือ pain ใหญ่ของคนที่เพิ่งเริ่ม vibe coding",
+        "outcome": [
+          "time"
+        ],
+        "dna_options": [
+          "คนที่คนรอบตัวชมว่าเก่งแก้ปัญหา ช่วยแก้จุดที่ AI เขียนโค้ดแล้วติด",
+          "นักแก้ปัญหาที่ไม่ตื่นตระหนกเวลาเจอ error แปลก ๆ",
+          "คนที่มองว่า error ทุกอันมีเหตุผล แค่ต้องหาให้เจอ"
+        ],
+        "buyers": [
+          {
+            "group": "คนที่ใช้ AI เขียนโค้ดเองแล้วติด error แก้ไม่ได้",
+            "why": "เจอปัญหานี้บ่อยในกลุ่มมือใหม่ vibe coding"
+          },
+          {
+            "group": "Freelancer/Creator ที่มีเครื่องมือ AI-built แต่พังกลางทาง",
+            "why": "ต้องการ maintenance ที่ไว้ใจได้"
+          },
+          {
+            "group": "เพื่อนที่เริ่มหัดเขียนโค้ดเองแล้วท้อเพราะติด error",
+            "why": "ต้องการคนช่วยแบบไม่ตัดสิน"
+          }
+        ],
+        "pain": [
+          "“AI เขียนโค้ดให้แล้ว แต่พอรันจริงมี error ไม่รู้จะแก้ตรงไหน”",
+          "“เครื่องมือที่เคยสร้างด้วย AI ใช้ไปสักพักแล้วพัง”",
+          "“เริ่มหัดเขียนโค้ดเองแล้วท้อเพราะติด error ตลอด”"
+        ],
+        "offers": [
+          {
+            "format": "Debug Session ด่วน",
+            "desc": "ช่วยแก้ error ที่ AI เขียนโค้ดแล้วติด",
+            "price": "500–1,200 บาท",
+            "outcome": "time"
+          },
+          {
+            "format": "Maintenance Check",
+            "desc": "ตรวจสุขภาพเครื่องมือที่เคยสร้างด้วย AI",
+            "price": "500–1,000 บาท",
+            "outcome": "time"
+          },
+          {
+            "format": "Debug ทางไกล (ครั้งเดียว)",
+            "desc": "ส่ง error มา แก้ให้ผ่าน call สั้น ๆ",
+            "price": "300–700 บาท",
+            "outcome": "time"
+          }
+        ],
+        "messages": [
+          "“โค้ดที่ AI เขียนให้ติด error อยู่ไหมครับ ส่งมาดูได้เลย”",
+          "“เครื่องมือที่เคยสร้างด้วย AI ยังโอเคอยู่ไหมครับ ให้ผมช่วยตรวจให้ได้นะ”",
+          "“ติด error แล้วท้อใช่ไหมครับ ส่งมาดูก่อน ไม่ยากอย่างที่คิดหรอก”"
+        ],
+        "contacts": [
+          "เพื่อนที่เคยถามเรื่อง error ตอนใช้ AI เขียนโค้ด",
+          "คนที่เคยเห็นเครื่องมือที่เขาสร้าง",
+          "เพื่อนที่เพิ่งเริ่มหัดเขียนโค้ด"
+        ],
+        "seven_day": [
+          "โพสต์ในกลุ่มเพื่อนถามว่าใครมี error จาก AI ที่ยังแก้ไม่ได้",
+          "เสนอ debug ฟรีให้เพื่อน 1 คนที่เพิ่งเริ่มหัดเขียนโค้ด",
+          "เช็คเครื่องมือที่เคยสร้างให้เพื่อน 1 คน ว่ายังทำงานปกติไหม"
+        ]
+      },
+      {
+        "name": "Tool Builder ระยะยาว",
+        "candidates": [
+          "Tool Builder ระยะยาว",
+          "นักแก้ปัญหา"
+        ],
+        "pattern": "สังเกตจาก: ปัญหาที่คุณแก้ได้เองคือการสร้างเครื่องมือแก้ปัญหาระยะยาว ไม่ใช่แค่แพตช์ → สัญญาณว่าคุณคิดเป็นระบบมากกว่าคนทั่วไป",
+        "outcome": [
+          "time",
+          "money"
+        ],
+        "dna_options": [
+          "คนที่ไม่ได้แค่แพตช์ปัญหาเฉพาะหน้า แต่สร้างเครื่องมือแก้ปัญหาระยะยาวได้",
+          "นักสร้างที่คิดถึงอนาคตของโค้ด ไม่ใช่แค่ทำให้งานเสร็จวันนี้",
+          "คนที่เชื่อว่าเวลาที่เสียไปสร้างเครื่องมือ คุ้มกว่าทำงานซ้ำ ๆ ตลอดไป"
+        ],
+        "buyers": [
+          {
+            "group": "เจ้าของธุรกิจเล็กที่มีงานซ้ำ ๆ ทุกวันแต่ไม่มีงบจ้าง dev เต็มเวลา",
+            "why": "ปัญหาชัดเจน แก้ไว เห็นผลเร็ว"
+          },
+          {
+            "group": "เพื่อนโปรแกรมเมอร์ที่ติดปัญหาเดิมซ้ำ ๆ ในงาน",
+            "why": "เข้าใจ pain กันเองไว"
+          },
+          {
+            "group": "ทีมเล็กที่ไม่มีใครดูแลเรื่อง internal tools",
+            "why": "ต้องการคนที่มองภาพระยะยาว"
+          }
+        ],
+        "pain": [
+          "“งานซ้ำ ๆ ทุกวันอยากได้ automation แต่ไม่รู้จะเริ่มจากไหน”",
+          "“มีไอเดีย tool แต่ไม่มีงบจ้าง dev แพง ๆ”",
+          "“แก้ปัญหาแบบเดิมซ้ำ ๆ ทุกเดือนจนเบื่อ”"
+        ],
+        "offers": [
+          {
+            "format": "Automation Audit",
+            "desc": "ดูงานซ้ำแล้วแนะนำจุดที่ทำ automation คุ้มที่สุด",
+            "price": "800–2,000 บาท",
+            "outcome": "money"
+          },
+          {
+            "format": "Template",
+            "desc": "เครื่องมือที่เคยสร้างไว้แก้ปัญหาระยะยาว ปรับใช้ต่อได้",
+            "price": "500–1,000 บาท",
+            "outcome": "time"
+          },
+          {
+            "format": "Custom Tool เล็ก",
+            "desc": "สร้างเครื่องมือเฉพาะปัญหาที่เจอซ้ำ ๆ",
+            "price": "1,500–3,500 บาท",
+            "outcome": "time"
+          }
+        ],
+        "messages": [
+          "“เห็นว่างานที่ทำอยู่มันซ้ำ ๆ ทุกวัน น่าจะทำ automation ได้ ลองคุยกันไหมครับ”",
+          "“ผมมีเครื่องมือที่เคยสร้างไว้แก้ปัญหาระยะยาว ปรับให้ใช้ต่อได้ อยากลองดูไหมครับ”",
+          "“แก้ปัญหาเดิมซ้ำ ๆ ทุกเดือนใช่ไหมครับ ผมช่วยสร้างเครื่องมือแก้ให้ถาวรได้”"
+        ],
+        "contacts": [
+          "เจ้าของธุรกิจเล็กที่รู้จักที่มีงานซ้ำ ๆ",
+          "เพื่อนโปรแกรมเมอร์ที่ติดปัญหาเดิมบ่อย",
+          "ทีมเล็กที่ไม่มี internal tools"
+        ],
+        "seven_day": [
+          "หา 1 งานซ้ำ ๆ ของเพื่อน/ธุรกิจที่รู้จัก แล้วเสนอ automation audit ฟรี",
+          "ถามเพื่อนโปรแกรมเมอร์ 1 คนว่ามีปัญหาซ้ำ ๆ อะไรอยากได้ tool ช่วยไหม",
+          "เสนอสร้าง custom tool เล็ก ๆ ให้เจ้าของธุรกิจ 1 คนฟรีเพื่อ portfolio"
+        ]
+      },
+      {
+        "name": "AI Prototyping Partner",
+        "candidates": [
+          "Vibe Coding Practitioner",
+          "นักแก้ปัญหา"
+        ],
+        "pattern": "สังเกตจาก: คุณใช้ Vibe Coding แก้ปัญหาได้เร็ว → สัญญาณว่าคุณช่วยคนที่มีไอเดียแต่ยังไม่กล้าลงทุนสร้างจริงได้",
+        "outcome": [
+          "time"
+        ],
+        "dna_options": [
+          "คนที่ใช้ AI พา idea ไปเป็น prototype ได้เร็ว ไม่ต้องรอทีม dev เต็มรูปแบบ",
+          "นักสร้างต้นแบบที่เชื่อว่าไอเดียต้องทดสอบก่อนลงทุนเต็มที่",
+          "คนที่ทำให้ “ลองก่อน” เป็นเรื่องง่ายและเร็วกว่าที่คิด"
+        ],
+        "buyers": [
+          {
+            "group": "Founder/Creator ที่มีไอเดีย product แต่ยังไม่แน่ใจว่าคุ้มสร้างจริงไหม",
+            "why": "ทดสอบไอเดียได้ก่อนลงทุนเต็มรูปแบบ"
+          },
+          {
+            "group": "ทีม/บริษัทที่มีไอเดียอยากทดสอบเร็ว ๆ ก่อนลงทุนสร้าง",
+            "why": "ประหยัดเวลาที่ต้องรอทีม dev"
+          },
+          {
+            "group": "นักเรียน/นักศึกษาที่มีโปรเจกต์ต้องส่งแต่เวลาน้อย",
+            "why": "ต้องการต้นแบบเร็วเพื่อทดสอบไอเดีย"
+          }
+        ],
+        "pain": [
+          "“มีไอเดีย product แต่ไม่รู้จะทดสอบว่าคนอยากได้จริงไหมก่อนลงทุนสร้าง”",
+          "“รอทีม dev สร้าง prototype นานเกินไป”",
+          "“มีโปรเจกต์ต้องส่งแต่เวลาน้อย อยากได้ต้นแบบเร็ว”"
+        ],
+        "offers": [
+          {
+            "format": "Rapid Prototype Sprint 1 วัน",
+            "desc": "สร้าง prototype ทดสอบไอเดียด้วย AI",
+            "price": "2,000–4,000 บาท",
+            "outcome": "time"
+          },
+          {
+            "format": "Consult Session",
+            "desc": "ประเมินว่าไอเดียควรสร้างจริงหรือทดสอบก่อน",
+            "price": "800–1,500 บาท",
+            "outcome": "money"
+          },
+          {
+            "format": "Weekend Prototype",
+            "desc": "ต้นแบบเร็วสำหรับโปรเจกต์เร่งด่วน",
+            "price": "1,000–2,500 บาท",
+            "outcome": "time"
+          }
+        ],
+        "messages": [
+          "“มีไอเดียอยากทดสอบก่อนลงทุนสร้างจริงไหมครับ ผมช่วยทำ prototype เร็ว ๆ ด้วย AI ได้”",
+          "“อยากรู้ไหมว่าไอเดียคุณควรสร้างจริงหรือทดสอบก่อน ลองคุยกันได้ครับ”",
+          "“มีโปรเจกต์เร่งด่วนไหมครับ ผมช่วยทำต้นแบบเร็ว ๆ ให้ได้”"
+        ],
+        "contacts": [
+          "Founder/Creator ที่รู้จักที่มีไอเดีย product",
+          "ทีมที่เคยอยากลองทำ prototype",
+          "น้อง/เพื่อนที่มีโปรเจกต์เร่งด่วน"
+        ],
+        "seven_day": [
+          "ถามเพื่อน 1 คนที่มีไอเดีย product ว่าอยากลอง prototype เร็ว ๆ ไหม",
+          "โพสต์เสนอบริการ weekend prototype ให้คนที่มีโปรเจกต์เร่งด่วน",
+          "ทำ prototype ตัวอย่าง 1 ชิ้นจากไอเดียของตัวเองโชว์เป็น portfolio"
+        ]
+      },
+      {
+        "name": "เพื่อนแปล Requirement เป็นโค้ด",
+        "candidates": [
+          "นักแปลภาษาเทค",
+          "นักสอนสายเทค"
+        ],
+        "pattern": "สังเกตจาก: คุณสอนคนอื่นได้และเป็น Software Developer → สัญญาณว่าคุณเป็นสะพานเชื่อมระหว่างคนไม่เทคกับทีม dev ได้ดี",
+        "outcome": [
+          "quality",
+          "time"
+        ],
+        "dna_options": [
+          "คนที่คุยกับคนไม่เทคแล้วแปลงสิ่งที่อยากได้ให้เป็นเครื่องมือจริงได้",
+          "นักแปลที่เข้าใจทั้งภาษาธุรกิจและภาษาโค้ด",
+          "คนที่เชื่อว่าปัญหาส่วนใหญ่ระหว่าง dev กับลูกค้าคือการสื่อสาร ไม่ใช่ฝีมือ"
+        ],
+        "buyers": [
+          {
+            "group": "เจ้าของธุรกิจ/Creator ที่อยากได้เครื่องมือแต่อธิบายเป็นภาษาเทคไม่เป็น",
+            "why": "เป็น pain ที่เจอบ่อยตอนจ้าง dev"
+          },
+          {
+            "group": "ทีม non-tech ที่ทำงานกับ dev แล้วสื่อสารกันไม่รู้เรื่อง",
+            "why": "ลดความขัดแย้งระหว่างทีม"
+          },
+          {
+            "group": "Startup เล็กที่ founder ไม่ใช่สายเทคแต่ต้องคุยกับ dev",
+            "why": "ต้องการคนกลางที่เข้าใจทั้งสองฝั่ง"
+          }
+        ],
+        "pain": [
+          "“อยากได้เครื่องมือ แต่ไม่รู้จะอธิบายให้ dev เข้าใจยังไง”",
+          "“จ้าง dev มาทำแล้วได้ของไม่ตรงกับที่คิดไว้ในหัว”",
+          "“คุยกับทีม dev ทีไรรู้สึกเหมือนพูดคนละภาษา”"
+        ],
+        "offers": [
+          {
+            "format": "Requirement Translation Session",
+            "desc": "คุยไอเดียแล้วแปลงเป็น spec ที่ dev เข้าใจ",
+            "price": "1,000–2,000 บาท",
+            "outcome": "quality"
+          },
+          {
+            "format": "MVP เล็ก ๆ",
+            "desc": "สร้างจากไอเดียที่คุยกันโดยตรง",
+            "price": "1,500–3,000 บาท",
+            "outcome": "time"
+          },
+          {
+            "format": "Spec Writing Package",
+            "desc": "เขียน spec ให้พร้อมส่งต่อทีม dev อื่น",
+            "price": "1,000–2,500 บาท",
+            "outcome": "quality"
+          }
+        ],
+        "messages": [
+          "“มีไอเดียเครื่องมือในหัวแต่อธิบายเป็นภาษาเทคไม่เป็นใช่ไหมครับ คุยกับผมได้เลย”",
+          "“อยากได้เครื่องมือเล็ก ๆ จากไอเดียที่มีไหมครับ ลองคุยกันแล้วผมลองสร้าง MVP ให้ดู”",
+          "“คุยกับทีม dev แล้วไม่เข้าใจกันใช่ไหมครับ ผมช่วยแปลให้ได้นะ”"
+        ],
+        "contacts": [
+          "เจ้าของธุรกิจ/Creator ที่มีไอเดียเครื่องมือ",
+          "ทีม non-tech ที่เคยสื่อสารกับ dev ไม่รู้เรื่อง",
+          "Startup เล็กที่ founder ไม่ใช่สายเทค"
+        ],
+        "seven_day": [
+          "ชวนคนที่เคยมีไอเดียเครื่องมือมาคุย 20 นาที ลองแปลงเป็น spec ให้ดูฟรี",
+          "เสนอช่วยเขียน spec ให้ founder ที่รู้จัก 1 คนที่กำลังจะจ้าง dev",
+          "โพสต์เสนอบริการแปล requirement ในกลุ่มเพื่อนที่ทำธุรกิจ"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "boy",
+    "nickname": "บอย",
+    "fullname": "ปริญญา ชุมรุม",
+    "role": "วิทยากรอิสระ / อาจารย์พิเศษ Presentation, Storytelling, Branding · 20+ ปี",
+    "raw_skills": [
+      "แปลงข้อมูล/ตัวเลขยาก ๆ ให้เป็น Storytelling ทรงพลัง",
+      "ออกแบบสไลด์สวยที่สื่อสารได้",
+      "พูดเรื่องเข้าใจยากให้เข้าใจง่าย",
+      "ความจำดีมาก โดยเฉพาะเรื่องราวในอดีตและเส้นทาง",
+      "สรุปข้อมูลจำนวนมากให้เข้าใจง่ายแล้ว creative ต่อได้ทันที",
+      "ความรู้เส้นทางในกรุงเทพฯ แบบละเอียด",
+      "การปล่อยวางความเครียด/ความกังวลที่เกินความจำเป็น"
+    ],
+    "skill_candidates": [
+      {
+        "name": "นักเล่าเรื่องด้วยข้อมูล",
+        "source": "แปลงข้อมูล/ตัวเลขยากให้เป็น Storytelling"
+      },
+      {
+        "name": "นักออกแบบสไลด์",
+        "source": "ออกแบบสไลด์สวยที่สื่อสารได้"
+      },
+      {
+        "name": "นักพูดบนเวที 20 ปี",
+        "source": "พูดเรื่องเข้าใจยากให้เข้าใจง่าย, ประสบการณ์เวที 20 ปี"
+      },
+      {
+        "name": "คลังความจำเรื่องราว",
+        "source": "ความจำดีเรื่องราวในอดีต/เส้นทาง"
+      },
+      {
+        "name": "นักปล่อยวางความเครียด",
+        "source": "การปล่อยวางความเครียด/ความกังวล"
+      }
+    ],
+    "skill_combos": [
+      {
+        "name": "“Slide พรีเซนต์สวย ๆ อ่ะ”",
+        "candidates": [
+          "นักออกแบบสไลด์",
+          "นักเล่าเรื่องด้วยข้อมูล"
+        ],
+        "pattern": "สังเกตจาก: เพื่อนทักตรง ๆ ว่า “อยากได้ Slide พรีเซนต์สวยๆ อ่ะ” ซ้ำที่สุด → สัญญาณว่านี่คือความต้องการที่ชัดเจนที่สุดในตลาดของคุณ",
+        "outcome": [
+          "money",
+          "quality"
+        ],
+        "dna_options": [
+          "คนที่เพื่อน ๆ ทักมาว่า “อยากได้ Slide พรีเซนต์สวยๆ” แต่ให้มากกว่าความสวย คือเรื่องที่คนจำได้",
+          "นักออกแบบที่เชื่อว่าสไลด์สวยไม่พอ ต้องเล่าเรื่องได้ด้วย",
+          "คนที่ผ่านงานพรีเซนต์มาเป็นร้อยครั้ง จนรู้ว่าอะไรทำให้คนจำได้จริง"
+        ],
+        "buyers": [
+          {
+            "group": "Founder/SME ที่ต้องเสนองาน/pitch แต่สไลด์ดูธรรมดา",
+            "why": "ตรงกับสิ่งที่เพื่อน ๆ ขอให้ช่วยบ่อยที่สุด"
+          },
+          {
+            "group": "ทีมที่ต้องพรีเซนต์ตัวเลขผลงานประจำปีให้ผู้บริหาร",
+            "why": "ปัญหาที่เจอบ่อยในองค์กร"
+          },
+          {
+            "group": "นักศึกษา/เด็กจบใหม่ที่ต้องส่ง thesis/portfolio",
+            "why": "ราคาที่เข้าถึงได้กว่าจ้าง agency"
+          }
+        ],
+        "pain": [
+          "“ต้องเสนองานพรุ่งนี้ แต่สไลด์ยังดูธรรมดามาก”",
+          "“สไลด์เต็มไปด้วยตัวเลข ไม่รู้จะย่อยยังไงให้คนเข้าใจง่าย”",
+          "“ทำสไลด์เองแล้วดูไม่มืออาชีพพอ”"
+        ],
+        "offers": [
+          {
+            "format": "Slide Clinic 90 นาที",
+            "desc": "เอาสไลด์เดิมมาปรับให้เป็น storytelling",
+            "price": "2,000–4,000 บาท",
+            "outcome": "money"
+          },
+          {
+            "format": "Rapid Slide Rescue",
+            "desc": "แก้สไลด์ด่วนก่อนพรีเซนต์ภายใน 24 ชม.",
+            "price": "1,000–2,500 บาท",
+            "outcome": "quality"
+          },
+          {
+            "format": "Template Pack",
+            "desc": "โครงสไลด์สวยพร้อมใช้ ปรับเองได้",
+            "price": "500–1,000 บาท",
+            "outcome": "time"
+          }
+        ],
+        "messages": [
+          "“เห็นว่ากำลังเตรียมพรีเซนต์อยู่ใช่ไหมครับ ผมลองปรับสไลด์ให้เป็น storytelling ได้นะ”",
+          "“สไลด์ด่วนก่อนพรุ่งนี้ ผมช่วยแก้ให้ทันได้ครับ ลองส่งมาดู”",
+          "“มี template สไลด์สวยพร้อมใช้ อยากลองเอาไปปรับดูไหมครับ”"
+        ],
+        "contacts": [
+          "คนที่เคยขอ “Slide พรีเซนต์สวยๆ”",
+          "ทีมที่เคยขอความช่วยเหลือเรื่องสไลด์",
+          "น้องที่กำลังทำ thesis/portfolio"
+        ],
+        "seven_day": [
+          "ทัก 1 คนที่เคยขอให้ช่วยทำสไลด์สวย ๆ เสนอ Slide Clinic ราคาทดลอง",
+          "ทำ Template Pack ตัวอย่าง 1 ชุดแจกให้เพื่อนลองใช้",
+          "โพสต์เสนอ Rapid Slide Rescue ในกลุ่มที่มีคนต้องพรีเซนต์บ่อย"
+        ]
+      },
+      {
+        "name": "“ช่วยคิด Big Idea แคมเปญให้หน่อย”",
+        "candidates": [
+          "คลังความจำเรื่องราว",
+          "นักเล่าเรื่องด้วยข้อมูล"
+        ],
+        "pattern": "สังเกตจาก: เพื่อนร่วมงานขอให้ “ช่วยคิด Big Idea แคมเปญ” ซ้ำ ๆ → สัญญาณว่าทักษะสรุป+creative ของคุณคือของหายากในทีม",
+        "outcome": [
+          "money"
+        ],
+        "dna_options": [
+          "คนที่เพื่อนร่วมงานทักมาว่า “ช่วยคิด Big Idea ให้หน่อย” เพราะสรุปข้อมูลแล้ว creative ต่อได้ทันที",
+          "นักคิดไอเดียที่ใช้ความจำเรื่องราวเก่า ๆ มาผสมกับโจทย์ใหม่",
+          "คนที่ไม่ต้องรอ inspiration เพราะมีคลังเรื่องราวในหัวพร้อมหยิบใช้เสมอ"
+        ],
+        "buyers": [
+          {
+            "group": "ทีมการตลาด/ครีเอทีฟที่ต้องเสนองานลูกค้าบ่อยแต่ไอเดียตัน",
+            "why": "เป็นสิ่งที่คนขอให้ช่วยคิดอยู่แล้วบ่อย ๆ"
+          },
+          {
+            "group": "Founder/SME ที่ต้องการ Big Idea สำหรับแคมเปญ",
+            "why": "ไม่มีทีมครีเอทีฟในบริษัท"
+          },
+          {
+            "group": "เอเจนซี่เล็กที่ต้องการ freelance creative director ชั่วคราว",
+            "why": "ใช้ทักษะระดับ 20 ปีได้เต็มที่"
+          }
+        ],
+        "pain": [
+          "“ต้องคิดแคมเปญใหม่แต่ไอเดียตัน ประชุมหลายรอบก็ยังไม่ได้อะไร”",
+          "“มีข้อมูล brief เยอะ แต่แปลงเป็นไอเดียที่ว้าวไม่ได้สักที”",
+          "“ไม่มีทีมครีเอทีฟในบริษัท แต่ต้องคิดแคมเปญเอง”"
+        ],
+        "offers": [
+          {
+            "format": "Big Idea Sprint 2 ชม.",
+            "desc": "ระดมไอเดียแคมเปญจาก brief ที่มี",
+            "price": "2,500–5,000 บาท",
+            "outcome": "money"
+          },
+          {
+            "format": "Idea Review",
+            "desc": "ส่งไอเดียที่มีมาให้ช่วยดูและต่อยอด",
+            "price": "800–1,500 บาท",
+            "outcome": "time"
+          },
+          {
+            "format": "Freelance Creative Consult รายเดือน",
+            "desc": "สำหรับบริษัทที่ไม่มีทีมครีเอทีฟ",
+            "price": "5,000 บาทขึ้นไป/เดือน",
+            "outcome": "money"
+          }
+        ],
+        "messages": [
+          "“ติดไอเดียแคมเปญอยู่ใช่ไหมครับ ลองส่ง brief มา ผมช่วยคิดต่อให้ได้นะ”",
+          "“มี Big Idea Sprint สั้น ๆ ช่วยระดมไอเดียจาก brief ที่มี อยากลองไหมครับ”",
+          "“บริษัทไม่มีทีมครีเอทีฟใช่ไหมครับ ผมรับเป็น consult รายเดือนได้นะ”"
+        ],
+        "contacts": [
+          "ทีมการตลาด/ครีเอทีฟที่เคยขอให้ช่วยคิด Big Idea",
+          "Founder ที่เคยขอไอเดียแคมเปญ",
+          "เอเจนซี่เล็กในเครือข่าย"
+        ],
+        "seven_day": [
+          "ทักทีมที่เคยขอให้ช่วยคิด Big Idea เสนอ Idea Review ฟรีรอบแรก",
+          "ทัก Founder 1 คนเสนอ Big Idea Sprint ราคาทดลอง",
+          "โพสต์เสนอบริการ freelance creative consult ในกลุ่มธุรกิจที่รู้จัก"
+        ]
+      },
+      {
+        "name": "“ว่างมั้ย เป็น Moderator ให้หน่อยดิ”",
+        "candidates": [
+          "นักพูดบนเวที 20 ปี",
+          "นักเล่าเรื่องด้วยข้อมูล"
+        ],
+        "pattern": "สังเกตจาก: ถูกขอให้เป็น Moderator ซ้ำ ๆ จนเป็นเรื่องปกติ → สัญญาณว่าตลาดมองว่าคุณเชื่อถือได้พอจะคุมเวทีอยู่แล้ว",
+        "outcome": [
+          "money"
+        ],
+        "dna_options": [
+          "คนที่ถูกถามว่า “ว่างมั้ย เป็น Moderator ให้หน่อยดิ” บ่อยจนควรทำเป็นบริการจริงจัง",
+          "นักคุมเวทีที่ผ่านการพูดมา 20 ปี รู้จังหวะเงียบและจังหวะพูดของคนฟัง",
+          "คนที่ทำให้ panel discussion ที่น่าเบื่อกลายเป็นบทสนทนาที่มีชีวิตชีวา"
+        ],
+        "buyers": [
+          {
+            "group": "บริษัท/ผู้จัดงานที่ต้องการ Moderator งานสัมมนา/เสวนา",
+            "why": "เคยถูกขอให้ทำหน้าที่นี้มาแล้วหลายครั้ง"
+          },
+          {
+            "group": "ทีมที่จัด panel discussion แล้วอยากได้คนคุมบทสนทนา",
+            "why": "ปัญหาที่พบบ่อยในงานสัมมนา"
+          },
+          {
+            "group": "มหาวิทยาลัย/องค์กรที่จัดงาน public forum",
+            "why": "ต้องการคนที่คุมเวทีได้อย่างมืออาชีพ"
+          }
+        ],
+        "pain": [
+          "“จัดงานเสวนาแล้วหา Moderator ที่คุมบรรยากาศได้ดียาก”",
+          "“Panel discussion ที่ผ่านมาบทสนทนาน่าเบื่อ ไม่มีจังหวะ”",
+          "“จัดงาน public forum แล้วกลัวคุมเวทีไม่อยู่”"
+        ],
+        "offers": [
+          {
+            "format": "Moderator Package ครึ่งวัน-เต็มวัน",
+            "desc": "งานสัมมนา/เสวนา",
+            "price": "5,000–15,000 บาท",
+            "outcome": "money"
+          },
+          {
+            "format": "Pre-event Consult",
+            "desc": "วางโครงคำถาม/จังหวะการคุยก่อนงานจริง",
+            "price": "1,500–3,000 บาท",
+            "outcome": "quality"
+          },
+          {
+            "format": "Panel Training",
+            "desc": "ฝึกทีมงานให้คุมเวทีเองเป็น",
+            "price": "3,000–6,000 บาท",
+            "outcome": "money"
+          }
+        ],
+        "messages": [
+          "“ได้ยินว่ากำลังหา Moderator งานสัมมนาอยู่ใช่ไหมครับ ผมรับงานนี้เป็นทางการแล้วนะ”",
+          "“จัด panel discussion ครั้งหน้า ให้ผมช่วยวางโครงคำถามก่อนได้ไหมครับ”",
+          "“อยากให้ทีมงานคุมเวทีเองเป็นไหมครับ ผมสอนได้นะ”"
+        ],
+        "contacts": [
+          "คนที่เคยขอให้เป็น Moderator",
+          "ผู้จัดงานที่เคยร่วมงานด้วย",
+          "มหาวิทยาลัย/องค์กรในเครือข่าย"
+        ],
+        "seven_day": [
+          "บอกคนที่เคยขอให้เป็น Moderator ว่าตอนนี้เปิดรับงานนี้อย่างเป็นทางการแล้ว",
+          "ทักผู้จัดงานที่เคยร่วมงานด้วยเสนอ Moderator Package",
+          "โพสต์ในโปรไฟล์ว่าเปิดรับงาน Moderator/พิธีกรเวทีสัมมนา"
+        ]
+      },
+      {
+        "name": "ห้องสมุดเรื่องราวเดินได้",
+        "candidates": [
+          "คลังความจำเรื่องราว",
+          "นักเล่าเรื่องด้วยข้อมูล"
+        ],
+        "pattern": "สังเกตจาก: เพื่อนถามว่า “เรื่องนั้นมันตอนไหนนะ” เพราะจำได้แม่นกว่าใคร → สัญญาณว่าความจำนี้ช่วยคนที่ลืมเรื่องราวตัวเองได้",
+        "outcome": [
+          "quality"
+        ],
+        "dna_options": [
+          "คนที่เพื่อน ๆ ถามว่า “เรื่องนั้นมันตอนไหนนะ” เพราะจำเรื่องราวได้แม่นกว่าใคร",
+          "นักขุดความทรงจำที่ช่วยคนอื่นหาเรื่องราวที่ลืมไปแล้วเจอ",
+          "คนที่เชื่อว่าทุกคนมีเรื่องเด็ด ๆ ในตัว แค่ลืมไปว่ามันอยู่ตรงไหน"
+        ],
+        "buyers": [
+          {
+            "group": "คนเตรียมพูดบนเวที/สัมภาษณ์งานที่ต้องเล่าเรื่องตัวเอง",
+            "why": "ใช้ทักษะความจำที่เป็นจุดแข็งเฉพาะตัวได้เต็มที่"
+          },
+          {
+            "group": "Founder/SME ที่มี story ธุรกิจดีแต่ลืมรายละเอียดเด็ด ๆ ไปแล้ว",
+            "why": "ต้องการคนช่วยขุดเรื่องราวออกมาเล่า"
+          },
+          {
+            "group": "คนเขียน resume/LinkedIn ที่นึกจุดเด่นตัวเองไม่ออก",
+            "why": "pain แบบเดียวกับที่เพื่อนขอความช่วยเหลือบ่อย"
+          }
+        ],
+        "pain": [
+          "“ต้องเล่าเรื่องราวของตัวเอง/บริษัท แต่นึกรายละเอียดที่น่าสนใจไม่ออก”",
+          "“จำได้ว่าเคยมีเรื่องเด็ด ๆ แต่ตอนนี้นึกไม่ออกว่าคืออะไร”",
+          "“เขียน resume แล้วรู้สึกว่าประวัติตัวเองน่าเบื่อ”"
+        ],
+        "offers": [
+          {
+            "format": "Story Excavation Session",
+            "desc": "คุยแล้วช่วยขุดเรื่องราวที่ลืมไปแล้วออกมา",
+            "price": "1,000–2,000 บาท",
+            "outcome": "quality"
+          },
+          {
+            "format": "Pitch Story Starter Kit",
+            "desc": "Checklist ก่อนขึ้นพรีเซนต์",
+            "price": "300–600 บาท",
+            "outcome": "time"
+          },
+          {
+            "format": "Resume Story Session",
+            "desc": "ขุดจุดเด่นมาเขียน resume/LinkedIn ให้น่าสนใจ",
+            "price": "800–1,500 บาท",
+            "outcome": "quality"
+          }
+        ],
+        "messages": [
+          "“นึกเรื่องราวเด็ด ๆ ของตัวเองไม่ออกใช่ไหมครับ ลองคุยกับผม ผมช่วยขุดออกมาให้”",
+          "“มี Checklist เตรียมเล่าเรื่องตัวเองก่อนขึ้นพรีเซนต์ ลองดูก่อนไหมครับ”",
+          "“เขียน resume แล้วรู้สึกน่าเบื่อใช่ไหมครับ มาคุยกัน ผมช่วยขุดจุดเด่นให้”"
+        ],
+        "contacts": [
+          "คนที่เคยถามพี่เรื่องราวในอดีต/เส้นทาง",
+          "คนที่กำลังเตรียมพูดบนเวทีสำคัญ",
+          "เพื่อนที่กำลังหางาน/ทำ resume"
+        ],
+        "seven_day": [
+          "ชวนเพื่อน 1 คนที่กำลังเตรียมพรีเซนต์มาคุย 20 นาที ขุดเรื่องราวที่ลืมไปแล้ว",
+          "เสนอ Resume Story Session ให้เพื่อน 1 คนที่กำลังหางาน",
+          "ทำ Pitch Story Starter Kit แจกให้เพื่อน 2 คนลองใช้"
+        ]
+      },
+      {
+        "name": "ปล่อยวางก่อนขึ้นเวที",
+        "candidates": [
+          "นักปล่อยวางความเครียด",
+          "นักพูดบนเวที 20 ปี"
+        ],
+        "pattern": "สังเกตจาก: คุณแก้ปัญหาความเครียด/กังวลเกินไปของตัวเองได้ หลังผ่านเวทีมา 20 ปี → สัญญาณว่าคุณมีวิธีที่ผ่านการพิสูจน์มาแล้วจริง",
+        "outcome": [
+          "quality"
+        ],
+        "dna_options": [
+          "คนที่ผ่านเวทีมา 20 ปี แต่ก็เคยกังวลเกินไปเหมือนกัน จนหาวิธีปล่อยวางได้เอง",
+          "นักพูดที่เชื่อว่าความกังวลจัดการได้ ไม่ต้องรอให้ประสบการณ์เยอะพอ",
+          "คนที่แชร์ความกลัวจริง ๆ ของตัวเอง ไม่ใช่แค่สอนทฤษฎีความมั่นใจ"
+        ],
+        "buyers": [
+          {
+            "group": "คนที่กำลังเตรียมเวทีใหญ่สำคัญ (TEDx, งานบริษัท) ที่กังวลเกินเหตุ",
+            "why": "เป็น pain ที่เคยผ่านมาด้วยตัวเองโดยตรง"
+          },
+          {
+            "group": "มือใหม่ที่เพิ่งเริ่มต้องพูดในที่สาธารณะบ่อยขึ้น",
+            "why": "ต้องการคนที่เข้าใจความกลัวจริง ๆ"
+          },
+          {
+            "group": "คนทำงานที่ต้องพรีเซนต์บ่อยแต่ยังไม่ชินกับความกดดัน",
+            "why": "pain ที่เกิดซ้ำในทุกงานพรีเซนต์"
+          }
+        ],
+        "pain": [
+          "“ใกล้ขึ้นเวทีแล้วตื่นเต้นมาก กลัวลืมสิ่งที่จะพูด”",
+          "“กังวลเรื่องพรีเซนต์จนนอนไม่หลับก่อนวันงาน”",
+          "“พรีเซนต์บ่อยแต่ยังไม่ชินกับความกดดันสักที”"
+        ],
+        "offers": [
+          {
+            "format": "Calm Before Stage Session",
+            "desc": "คุย 30 นาทีก่อนขึ้นเวทีสำคัญ",
+            "price": "1,000–2,000 บาท",
+            "outcome": "quality"
+          },
+          {
+            "format": "Mini Session ฝึกปล่อยวาง",
+            "desc": "ทั่วไป ไม่ใช่แค่ก่อนงาน",
+            "price": "800–1,500 บาท",
+            "outcome": "quality"
+          },
+          {
+            "format": "Ongoing Coaching รายเดือน",
+            "desc": "สำหรับคนที่ต้องพรีเซนต์บ่อย",
+            "price": "2,000–4,000 บาท/เดือน",
+            "outcome": "quality"
+          }
+        ],
+        "messages": [
+          "“มีเวทีสำคัญเร็ว ๆ นี้ไหมครับ ผมช่วยคุยให้ใจนิ่งขึ้นก่อนขึ้นเวทีได้นะ”",
+          "“กังวลเรื่องพรีเซนต์บ่อยไหมครับ ผมมีวิธีปล่อยวางที่ใช้เองมา 20 ปี”",
+          "“พรีเซนต์บ่อยแต่ยังกดดันอยู่ใช่ไหมครับ ลองคุยกันแบบต่อเนื่องได้นะ”"
+        ],
+        "contacts": [
+          "เพื่อนที่กำลังเตรียมขึ้นเวทีสำคัญ",
+          "มือใหม่ที่เพิ่งเริ่มพูดในที่สาธารณะ",
+          "คนทำงานที่ต้องพรีเซนต์บ่อย"
+        ],
+        "seven_day": [
+          "ทักเพื่อน 1 คนที่มีเวทีสำคัญเร็ว ๆ นี้ เสนอ Calm Before Stage Session ฟรีรอบแรก",
+          "โพสต์แชร์วิธีปล่อยวางความกังวลก่อนเวทีที่ใช้เอง",
+          "เสนอ mini session ให้มือใหม่ 1 คนที่เพิ่งเริ่มพูดในที่สาธารณะ"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "jan",
+    "nickname": "แจน",
+    "fullname": "สุดารัตน์ เอกธนมณี",
+    "role": "Founder · Community / Facilitator / Marketing · 6–10 ปี",
+    "raw_skills": [
+      "Community Building",
+      "Facilitator (นำกระบวนการกลุ่ม)",
+      "Marketing",
+      "Idea Generation",
+      "Connect the Dot (ต่อไอเดีย/คนที่กระจัดกระจายให้เชื่อมกัน)",
+      "หาทางออกแบบ Win-win Solution"
+    ],
+    "skill_candidates": [
+      {
+        "name": "Connect the Dot Thinker",
+        "source": "Idea Generation, Connect the Dot"
+      },
+      {
+        "name": "Facilitator มืออาชีพ",
+        "source": "Facilitator (นำกระบวนการกลุ่ม)"
+      },
+      {
+        "name": "นักสร้าง Community",
+        "source": "Community Building, Marketing"
+      },
+      {
+        "name": "นักเจรจา Win-win",
+        "source": "หาทางออกแบบ Win-win Solution"
+      },
+      {
+        "name": "นัก Marketing",
+        "source": "Marketing"
+      }
+    ],
+    "skill_combos": [
+      {
+        "name": "Connect the Dot Canvas",
+        "candidates": [
+          "Connect the Dot Thinker",
+          "นัก Marketing"
+        ],
+        "pattern": "สังเกตจาก: บอกตรง ๆ ว่าอยากได้ effortless income + คนถามเรื่อง Start Business บ่อย → สัญญาณว่าควรทำ digital product จากทักษะที่ทำเป็นธรรมชาติอยู่แล้ว",
+        "outcome": [
+          "money"
+        ],
+        "dna_options": [
+          "คนที่บอกตรง ๆ ว่าอยากได้ effortless income ใช้ Connect the Dot มาทำเป็น guide ขายซ้ำได้",
+          "นักคิดไอเดียที่เชื่อว่าความยุ่งเหยิงในหัวคนอื่นจัดระเบียบได้ด้วยเครื่องมือง่าย ๆ",
+          "คนที่อยากทำงานน้อยลงแต่ได้ผลลัพธ์เท่าเดิม เลยเลือกทำ product ที่ไม่ต้องอยู่หน้างานทุกครั้ง"
+        ],
+        "buyers": [
+          {
+            "group": "คนอยากเริ่มธุรกิจ/community แต่ไอเดียเยอะจนไม่รู้จะเริ่มตรงไหน",
+            "why": "ตรงกับสิ่งที่เก่งที่สุด (Idea → Action)"
+          },
+          {
+            "group": "Solopreneur ที่มีไอเดียกระจัดกระจายอยากจัดระเบียบเอง",
+            "why": "ใช้ canvas ได้ด้วยตัวเองไม่ต้องพึ่งใคร"
+          },
+          {
+            "group": "คนที่ตามกลุ่ม community ของแจนอยู่แล้ว",
+            "why": "มี audience พร้อมทดสอบได้เร็วที่สุด"
+          }
+        ],
+        "pain": [
+          "“มีไอเดียเยอะในหัวแต่ไม่มีเครื่องมือจัดระเบียบให้เห็นภาพรวม”",
+          "“อยากเริ่มทำ community/ธุรกิจ แต่ไอเดียเยอะจนไม่รู้จะเริ่มจากไหนก่อน”",
+          "“อยากมีรายได้เสริมที่ไม่ต้องนั่งทำงานตลอดเวลา”"
+        ],
+        "offers": [
+          {
+            "format": "Connect the Dot Canvas (E-book)",
+            "desc": "ขายซ้ำได้โดยไม่ต้องนั่งด้วยทุกครั้ง",
+            "price": "300–600 บาท",
+            "outcome": "money"
+          },
+          {
+            "format": "Faceless Clip Series",
+            "desc": "สอนใช้ Canvas ทีละขั้น ดูตามเวลาว่างได้",
+            "price": "500–1,200 บาท",
+            "outcome": "time"
+          },
+          {
+            "format": "Canvas + Live Review รวมชุด",
+            "desc": "ซื้อ canvas พร้อมรีวิวสด 1 ครั้ง",
+            "price": "800–1,500 บาท",
+            "outcome": "quality"
+          }
+        ],
+        "messages": [
+          "“มี Canvas ช่วยจัดระเบียบไอเดียที่กระจัดกระจาย ทำครั้งเดียวใช้ได้เรื่อย ๆ อยากลองดูไหมคะ”",
+          "“ทำคลิปสอนใช้ Canvas แบบ faceless ไว้ดูตามเวลาว่างได้ อยากลองดูก่อนไหมคะ”",
+          "“ซื้อ Canvas พร้อมรีวิวสดกับพี่ 1 ครั้งเลยไหมคะ จะได้ใช้ถูกตั้งแต่ต้น”"
+        ],
+        "contacts": [
+          "คนในกลุ่ม community ที่ดูแลอยู่",
+          "เพื่อนที่เคยถามเรื่อง Start Business",
+          "คนที่ตามกลุ่มของแจนอยู่แล้ว"
+        ],
+        "seven_day": [
+          "ทำ Canvas เวอร์ชันแรก (ไฟล์เดียว) แล้วให้เพื่อน 2 คนลองใช้ฟรีขอ feedback",
+          "โพสต์ในกลุ่ม community ถามว่าใครอยากได้ canvas จัดระเบียบไอเดีย",
+          "ถ่ายคลิป faceless สั้น ๆ แนะนำ canvas ที่กำลังทำ"
+        ]
+      },
+      {
+        "name": "Deal Mediator",
+        "candidates": [
+          "นักเจรจา Win-win",
+          "Facilitator มืออาชีพ"
+        ],
+        "pattern": "สังเกตจาก: ปัญหาที่คุณแก้ได้เองคือ Find win-win solution → สัญญาณว่าคุณเห็นทางออกที่คนอื่นมองไม่เห็นตอนสถานการณ์ตึงเครียด",
+        "outcome": [
+          "money"
+        ],
+        "dna_options": [
+          "คนที่หาทาง win-win ได้เสมอแม้สถานการณ์ดูตัน",
+          "นักไกล่เกลี่ยที่ไม่เข้าข้างฝ่ายไหน แต่มองหาทางที่ทุกคน win",
+          "คนที่เก่งเจรจาโดยไม่รู้ตัว เพราะทำจนเป็นธรรมชาติในชีวิตประจำวัน"
+        ],
+        "buyers": [
+          {
+            "group": "Founder ที่ติดขัดเรื่อง partnership/negotiation",
+            "why": "เป็นสิ่งที่คนรอบตัวขอให้ช่วยอยู่แล้ว"
+          },
+          {
+            "group": "สองฝ่ายที่คุยดีลกันเองแล้วตัน ต้องการคนกลาง",
+            "why": "ต้องการคนที่ไม่มีผลประโยชน์ทับซ้อน"
+          },
+          {
+            "group": "ทีมที่ขัดแย้งกันเรื่องทิศทางงาน",
+            "why": "ใช้ facilitator skill ช่วยหาจุดร่วมได้"
+          }
+        ],
+        "pain": [
+          "“คุยดีลกับพาร์ทเนอร์แล้วตันทุกที ไม่รู้จะหาจุดที่ทั้งคู่ win ยังไง”",
+          "“อยากได้คนกลางที่เข้าใจธุรกิจจริง ๆ ไม่ใช่แค่ทนายที่ดูสัญญา”",
+          "“ทีมขัดแย้งกันเรื่องทิศทางจนงานไม่เดินหน้า”"
+        ],
+        "offers": [
+          {
+            "format": "Deal Facilitation Session",
+            "desc": "เข้าไปช่วย facilitate การคุยดีลที่ติดอยู่",
+            "price": "2,000–4,000 บาท",
+            "outcome": "money"
+          },
+          {
+            "format": "Pre-negotiation Consult",
+            "desc": "ก่อนเข้าคุยดีลจริง",
+            "price": "800–1,500 บาท",
+            "outcome": "quality"
+          },
+          {
+            "format": "Team Conflict Facilitation",
+            "desc": "ช่วยทีมหาจุดร่วมเมื่อขัดแย้งเรื่องทิศทาง",
+            "price": "2,500–5,000 บาท",
+            "outcome": "time"
+          }
+        ],
+        "messages": [
+          "“ดีลที่คุยติดอยู่ใช่ไหมคะ ลองให้พี่ช่วย facilitate หาทาง win-win ดูไหม”",
+          "“ก่อนเข้าคุยดีลสำคัญ อยากซ้อมกับพี่ก่อนไหมคะ”",
+          "“ทีมขัดแย้งกันเรื่องทิศทางใช่ไหมคะ พี่ช่วย facilitate หาจุดร่วมได้นะ”"
+        ],
+        "contacts": [
+          "Founder ที่เคยคุยเรื่อง partnership ด้วยกัน",
+          "คนรู้จักที่กำลังเจรจาดีลอยู่",
+          "ทีมที่เคยเห็นขัดแย้งกันเรื่องทิศทาง"
+        ],
+        "seven_day": [
+          "ทัก Founder 1 คนที่เคยคุยเรื่องดีลด้วยกัน ถามว่ายังติดอยู่ไหม",
+          "เสนอ pre-negotiation consult ฟรีให้เพื่อน 1 คนที่กำลังจะเจรจาสำคัญ",
+          "โพสต์เสนอบริการ facilitate ดีล/ความขัดแย้งในกลุ่มธุรกิจที่รู้จัก"
+        ]
+      },
+      {
+        "name": "Idea to Action Facilitator",
+        "candidates": [
+          "Facilitator มืออาชีพ",
+          "Connect the Dot Thinker"
+        ],
+        "pattern": "สังเกตจาก: คนถามเรื่อง Community/Start Business ซ้ำ ๆ + เก่ง Idea Generation → สัญญาณว่าคุณคือคนที่ทำให้ประชุมมีทางออกจริง",
+        "outcome": [
+          "time"
+        ],
+        "dna_options": [
+          "Facilitator ที่ทำให้ไอเดียเยอะ ๆ ในหัวคนอื่นกลายเป็นก้าวแรกที่ทำได้จริง",
+          "คนที่เกลียดประชุมที่วนไปวนมา เลยฝึกทักษะพาคนไปสู่ข้อสรุป",
+          "นักเชื่อมไอเดียที่ทำให้คนในห้องรู้สึกว่าตัวเองมีส่วนร่วมจริง ๆ"
+        ],
+        "buyers": [
+          {
+            "group": "ทีมที่ต้องการ facilitator ช่วยระดมไอเดียในที่ประชุมสำคัญ",
+            "why": "ทดสอบกับทีมที่รู้จักได้ก่อน"
+          },
+          {
+            "group": "กลุ่มเพื่อนที่คุยไอเดียธุรกิจกันเองแล้วไม่คืบหน้า",
+            "why": "เป็น pain ที่เกิดขึ้นซ้ำ ๆ ในกลุ่มเพื่อน"
+          },
+          {
+            "group": "Startup ที่ประชุมวางแผนกลยุทธ์แต่วนซ้ำ",
+            "why": "ต้องการคนนอกที่ไม่มีอคติมาช่วยสรุป"
+          }
+        ],
+        "pain": [
+          "“ประชุมระดมไอเดียกันทีไร ก็วนเวียนไม่ไปไหนสักที”",
+          "“คุยไอเดียกับเพื่อนกันเองมานาน แต่ไม่มีใครสรุปเป็นแอคชันจริงจัง”",
+          "“ประชุมวางแผนกลยุทธ์แต่ทุกคนพูดคนละทิศทาง”"
+        ],
+        "offers": [
+          {
+            "format": "Facilitation Package",
+            "desc": "นำประชุมระดมไอเดียให้ทีม/บริษัท",
+            "price": "2,000–5,000 บาท",
+            "outcome": "time"
+          },
+          {
+            "format": "Mini Session",
+            "desc": "สรุปไอเดียที่คุยกันให้เป็นแอคชันแรก",
+            "price": "800–1,800 บาท",
+            "outcome": "time"
+          },
+          {
+            "format": "Strategy Session ครึ่งวัน",
+            "desc": "สำหรับทีมที่ต้องวางแผนกลยุทธ์",
+            "price": "4,000–8,000 บาท",
+            "outcome": "money"
+          }
+        ],
+        "messages": [
+          "“ประชุมระดมไอเดียครั้งหน้า ให้พี่ช่วย facilitate ไหมคะ จะได้ไม่วนเหมือนเดิม”",
+          "“ไอเดียที่คุยกันไว้นานแล้ว อยากให้พี่ช่วยสรุปเป็นแอคชันแรกไหมคะ”",
+          "“ทีมกำลังวางแผนกลยุทธ์อยู่ใช่ไหมคะ พี่ช่วย facilitate ให้ชัดเจนขึ้นได้นะ”"
+        ],
+        "contacts": [
+          "ทีมที่เคยเชิญไปช่วย facilitate",
+          "เพื่อนที่คุยไอเดียธุรกิจด้วยกันแต่ยังไม่คืบหน้า",
+          "Startup ในเครือข่ายที่กำลังวางกลยุทธ์"
+        ],
+        "seven_day": [
+          "เสนอ facilitate ประชุมให้ทีมที่รู้จัก 1 ทีมฟรี เพื่อ portfolio",
+          "ชวนกลุ่มเพื่อนที่คุยไอเดียค้างมาสรุปเป็นแอคชันด้วยกัน 1 ครั้ง",
+          "ทัก Startup 1 แห่งเสนอ Strategy Session ราคาทดลอง"
+        ]
+      },
+      {
+        "name": "Community Architect",
+        "candidates": [
+          "นักสร้าง Community",
+          "นัก Marketing"
+        ],
+        "pattern": "สังเกตจาก: คนถามเรื่อง Community บ่อยที่สุด → สัญญาณว่าคุณเป็นคนที่ถูกมองว่าเชี่ยวชาญเรื่องนี้อยู่แล้วในสายตาคนรอบตัว",
+        "outcome": [
+          "money"
+        ],
+        "dna_options": [
+          "นักสร้าง community ที่เชื่อว่าคนที่ใช่จะเจอกันได้ถ้ามีคนช่วยต่อจุด",
+          "คนที่สร้าง community ของตัวเองมาได้ เลยรู้ว่าอะไรทำให้คนอยากอยู่ต่อ",
+          "นัก Marketing ที่มองว่า community คือช่องทางการตลาดที่ยั่งยืนที่สุด"
+        ],
+        "buyers": [
+          {
+            "group": "กลุ่มที่อยากเริ่มจัด community/event แต่ยังไม่มีโครงสร้าง",
+            "why": "มีประสบการณ์ facilitator ที่ทำได้จริง"
+          },
+          {
+            "group": "แบรนด์/ธุรกิจที่อยากสร้าง community ลูกค้าแต่ไม่รู้จะเริ่มยังไง",
+            "why": "ใช้ทักษะ Marketing ร่วมกับ community building"
+          },
+          {
+            "group": "Solopreneur ที่รู้สึกโดดเดี่ยว อยากมี community คนคิดแบบเดียวกัน",
+            "why": "pain ที่พบบ่อยในคนทำธุรกิจคนเดียว"
+          }
+        ],
+        "pain": [
+          "“ทำธุรกิจคนเดียวแล้วรู้สึกโดดเดี่ยว ไม่มีใครคุยไอเดียด้วย”",
+          "“อยากจัด event/community แต่ไม่รู้จะเริ่มวางโครงสร้างยังไง”",
+          "“แบรนด์อยากมี community ลูกค้าแต่ไม่รู้จะเริ่มตรงไหน”"
+        ],
+        "offers": [
+          {
+            "format": "Community Blueprint Session",
+            "desc": "วางโครงสร้าง community เริ่มต้น",
+            "price": "1,500–3,000 บาท",
+            "outcome": "money"
+          },
+          {
+            "format": "Community Starter Guide (E-book)",
+            "desc": "เริ่มต้นด้วยตัวเอง ราคาย่อมเยา",
+            "price": "300–600 บาท",
+            "outcome": "money"
+          },
+          {
+            "format": "Brand Community Package",
+            "desc": "วางระบบ community ลูกค้าให้แบรนด์",
+            "price": "5,000 บาทขึ้นไป",
+            "outcome": "money"
+          }
+        ],
+        "messages": [
+          "“อยากเริ่ม community แต่ยังไม่มีโครงสร้างใช่ไหมคะ พี่ช่วยวางให้ได้นะ”",
+          "“มี guide เริ่มต้นสร้าง community อยากลองอ่านดูก่อนไหมคะ”",
+          "“แบรนด์อยากมี community ลูกค้าไหมคะ พี่ช่วยวางระบบให้ได้ค่ะ”"
+        ],
+        "contacts": [
+          "คนในกลุ่ม community ที่ดูแลอยู่",
+          "Solopreneur ที่รู้จักและดูเหมือนโดดเดี่ยว",
+          "แบรนด์/ธุรกิจในเครือข่ายที่อยากมี community"
+        ],
+        "seven_day": [
+          "โพสต์ถามในกลุ่ม community ของตัวเองว่าใครกำลังอยากเริ่ม community ของตัวเองบ้าง",
+          "ทัก Solopreneur 1 คนเสนอ Community Blueprint Session",
+          "ทำ Community Starter Guide เวอร์ชันแรกแจกให้เพื่อน 2 คนอ่าน"
+        ]
+      },
+      {
+        "name": "Launch Facilitator",
+        "candidates": [
+          "นักสร้าง Community",
+          "นักเจรจา Win-win"
+        ],
+        "pattern": "สังเกตจาก: ผสมทักษะ Community + Facilitator + Marketing เข้าด้วยกัน → สัญญาณว่าคุณพาไอเดียไปถึงวันเปิดตัวจริงได้ ไม่ใช่แค่คิดเฉย ๆ",
+        "outcome": [
+          "money",
+          "time"
+        ],
+        "dna_options": [
+          "คนที่จัด event เปิดตัวไอเดียใหม่ให้เกิดจริงได้ ไม่ใช่แค่คิดไอเดียเฉย ๆ",
+          "นักจัดงานที่เข้าใจทั้งฝั่งไอเดียและฝั่งปฏิบัติการจริง",
+          "คนที่เชื่อว่าไอเดียที่ดีที่สุดคือไอเดียที่ได้เปิดตัวจริง ไม่ใช่แค่อยู่ในกระดาษ"
+        ],
+        "buyers": [
+          {
+            "group": "Founder ที่มีไอเดีย/โปรดักต์ใหม่แต่ไม่รู้จะเปิดตัวยังไงให้มีคนมา",
+            "why": "ใช้ทั้ง 3 ทักษะพร้อมกัน"
+          },
+          {
+            "group": "กลุ่ม/community ที่อยากจัด launch event ครั้งแรก",
+            "why": "ไม่เคยจัด event มาก่อน ต้องการคนช่วย"
+          },
+          {
+            "group": "แบรนด์เล็กที่จะเปิดตัวสินค้าใหม่",
+            "why": "งบไม่พอจ้าง event agency ใหญ่"
+          }
+        ],
+        "pain": [
+          "“มีโปรดักต์/ไอเดียพร้อมแล้ว แต่ไม่รู้จะเปิดตัวยังไงให้มีคนสนใจ”",
+          "“ไม่เคยจัด event มาก่อน กลัวจัดแล้วไม่มีคนมา”",
+          "“งบไม่พอจ้าง event agency แต่อยากเปิดตัวให้ดูมืออาชีพ”"
+        ],
+        "offers": [
+          {
+            "format": "Launch Event Facilitation",
+            "desc": "จัด/นำ event เปิดตัวให้",
+            "price": "3,000–8,000 บาท",
+            "outcome": "money"
+          },
+          {
+            "format": "Launch Checklist",
+            "desc": "เตรียมงานเปิดตัวแบบไม่พลาด",
+            "price": "300–600 บาท",
+            "outcome": "time"
+          },
+          {
+            "format": "DIY Launch Kit",
+            "desc": "สำหรับแบรนด์เล็กงบจำกัด ทำเองได้",
+            "price": "800–1,500 บาท",
+            "outcome": "money"
+          }
+        ],
+        "messages": [
+          "“มีโปรดักต์/ไอเดียพร้อมเปิดตัวไหมคะ พี่ช่วยจัด launch event ให้ได้นะ”",
+          "“มี checklist เตรียมงานเปิดตัวแบบไม่พลาด อยากลองดูก่อนไหมคะ”",
+          "“แบรนด์เล็กงบจำกัดใช่ไหมคะ พี่มี DIY Launch Kit ให้ลองใช้ได้ค่ะ”"
+        ],
+        "contacts": [
+          "Founder ที่รู้จักที่กำลังจะเปิดตัวโปรดักต์",
+          "กลุ่ม community ที่อยากจัด event ครั้งแรก",
+          "แบรนด์เล็กในเครือข่าย"
+        ],
+        "seven_day": [
+          "ถาม Founder 1 คนที่รู้จักว่ากำลังจะเปิดตัวอะไรไหม เสนอช่วย facilitate",
+          "ทำ Launch Checklist แจกให้กลุ่มที่อยากจัด event ครั้งแรก",
+          "เสนอ DIY Launch Kit ให้แบรนด์เล็ก 1 แบรนด์ในเครือข่าย"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "june",
+    "nickname": "จูน",
+    "fullname": "วิรัจฉรา ศรีสุข",
+    "role": "ที่ปรึกษาการเงิน (FChFP) / วิทยากรภาษี / Creator TikTok จูลิโกะโลกการเงิน · 6–10 ปี",
+    "raw_skills": [
+      "Personal Finance (FChFP) — ค่าใช้จ่าย/ประกัน/ลงทุน/ภาษี/เกษียณ/มรดก (ปสก. 8 ปี)",
+      "วิทยากรภาษีบุคคล สอนพนักงาน/ฟรีแลนซ์ (เคยสอนแบบเก็บเงิน)",
+      "ขายประกันเก่ง (MDRT 6 ปี)",
+      "ทำคอนเทนต์ Short Video (TikTok)",
+      "Storytelling เล่าเรื่องยากให้ง่าย",
+      "จัดสัมมนา (ผู้สอน+Producer)",
+      "MC/พิธีกร (MC งาน CTC2026)",
+      "Connection เยอะหลายวงการ",
+      "จัดการภาษีให้ฟรีแลนซ์ (เอกสาร/ยื่นภาษี/รับมือสรรพากร)"
+    ],
+    "skill_candidates": [
+      {
+        "name": "ผู้เชี่ยวชาญภาษีฟรีแลนซ์",
+        "source": "จัดการภาษีให้ฟรีแลนซ์ (เอกสาร/ยื่นภาษี/รับมือสรรพากร)"
+      },
+      {
+        "name": "ที่ปรึกษาการเงิน FChFP",
+        "source": "Personal Finance FChFP ปสก. 8 ปี"
+      },
+      {
+        "name": "MC/นักพูดเวที",
+        "source": "MC พิธีกร CTC2026, พูดบนเวทีมีอารมณ์ร่วม, จัดสัมมนา"
+      },
+      {
+        "name": "Creator สายการเงิน",
+        "source": "TikTok จูลิโกะโลกการเงิน, Storytelling"
+      },
+      {
+        "name": "ที่ปรึกษาประกัน MDRT",
+        "source": "ขายประกันเก่ง MDRT 6 ปี"
+      }
+    ],
+    "skill_combos": [
+      {
+        "name": "จัดการภาษีฟรีแลนซ์ตัวจริง",
+        "candidates": [
+          "ผู้เชี่ยวชาญภาษีฟรีแลนซ์",
+          "ที่ปรึกษาการเงิน FChFP"
+        ],
+        "pattern": "สังเกตจาก: คำถามอันดับ 1 ที่คนถามคือเรื่องภาษี ยื่นภาษี โดนย้อนหลัง → สัญญาณว่านี่คือ pain ที่ชัดเจนและเร่งด่วนที่สุดในตลาดของคุณ",
+        "outcome": [
+          "money",
+          "quality"
+        ],
+        "dna_options": [
+          "คนที่เคยจัดการทุกขั้นตอนภาษีให้ฟรีแลนซ์มาแล้วจริง ตั้งแต่เอกสารยันโดนสรรพากรเรียก",
+          "ที่ปรึกษาการเงินที่ลงมือทำเอกสารภาษีเองจริง ไม่ใช่แค่พูดทฤษฎี",
+          "คนที่เข้าใจความกลัวเรื่องภาษีของฟรีแลนซ์ เพราะเคยพาลูกค้าผ่านมันมาหลายเคส"
+        ],
+        "buyers": [
+          {
+            "group": "ฟรีแลนซ์ที่กลัวโดนสรรพากรเรียกย้อนหลัง",
+            "why": "เป็นคำถามที่คนถามเธอบ่อยที่สุด"
+          },
+          {
+            "group": "ฟรีแลนซ์หน้าใหม่ที่ยังไม่เคยจัดระบบเอกสารภาษีเลย",
+            "why": "ป้องกันปัญหาก่อนเกิด ง่ายกว่าตามแก้ทีหลัง"
+          },
+          {
+            "group": "ฟรีแลนซ์ที่เพิ่งโดนสรรพากรเรียกและตื่นตระหนก",
+            "why": "ต้องการความช่วยเหลือด่วน ยินดีจ่ายสูงกว่าปกติ"
+          }
+        ],
+        "pain": [
+          "“เป็นฟรีแลนซ์ ไม่รู้จะจัดการภาษียังไง กลัวโดนสรรพากรเรียกย้อนหลัง”",
+          "“เอกสารภาษีกระจัดกระจายไปหมด ไม่รู้จะเริ่มจัดระบบตรงไหนก่อน”",
+          "“โดนสรรพากรเรียกแล้ว ตื่นตระหนกไม่รู้จะทำยังไง”"
+        ],
+        "offers": [
+          {
+            "format": "Freelance Tax Rescue Session",
+            "desc": "เอาเคสจริงมาช่วยจัดการทีละขั้น",
+            "price": "1,000–2,500 บาท",
+            "outcome": "money"
+          },
+          {
+            "format": "E-Book คู่มือภาษีฟรีแลนซ์",
+            "desc": "ต่อยอดจากที่เคยสอนแบบเก็บเงินอยู่แล้ว",
+            "price": "199–499 บาท",
+            "outcome": "money"
+          },
+          {
+            "format": "Emergency Tax Consult",
+            "desc": "สำหรับคนที่โดนสรรพากรเรียกด่วน",
+            "price": "1,500–3,000 บาท",
+            "outcome": "quality"
+          }
+        ],
+        "messages": [
+          "“เห็นถามเรื่องภาษีฟรีแลนซ์เข้ามาบ่อย จูนเคยจัดการเคสแบบนี้มาแล้วจริง ลองคุยกันได้นะ”",
+          "“มีคู่มือภาษีฟรีแลนซ์ที่เขียนจากเคสจริงที่เคยจัดการให้ลูกค้ามา ลองอ่านดูก่อนไหมคะ”",
+          "“โดนสรรพากรเรียกแล้วใช่ไหมคะ ทักจูนด่วนได้เลย ช่วยได้ค่ะ”"
+        ],
+        "contacts": [
+          "ลูกค้าเก่าที่เคยขอคำปรึกษาภาษี",
+          "เพื่อนฟรีแลนซ์ที่เคยถามเรื่องนี้ตรง ๆ",
+          "ฟรีแลนซ์หน้าใหม่ในเครือข่าย"
+        ],
+        "seven_day": [
+          "ส่งข้อความหาลูกค้าเก่า 2-3 คนที่เคยขอคำปรึกษาภาษีเรื่องนี้",
+          "โพสต์ใน TikTok ถามคนดูว่าใครกำลังกังวลเรื่องภาษีฟรีแลนซ์",
+          "ทำ checklist ภาษีฟรีแลนซ์ 1 หน้าแจกให้เพื่อน 3 คนลองใช้"
+        ]
+      },
+      {
+        "name": "การลงทุนสำหรับเงินก้อนเล็ก",
+        "candidates": [
+          "ที่ปรึกษาการเงิน FChFP",
+          "Creator สายการเงิน"
+        ],
+        "pattern": "สังเกตจาก: คำถามอันดับ 2 คือ “มีเงินอยู่เท่านี้ เอาไปลงทุนอะไรดี” → สัญญาณว่าคนอยากได้คำแนะนำแบบเข้าถึงง่าย ไม่ใช่แค่สำหรับคนมีเงินเยอะ",
+        "outcome": [
+          "money"
+        ],
+        "dna_options": [
+          "ที่ปรึกษาการเงินคุณวุฒิ FChFP 8 ปี ที่บอกว่าไม่ต้องมีเงินก้อนใหญ่ก็ปรึกษาได้",
+          "คนที่เชื่อว่าการลงทุนควรเริ่มได้ตั้งแต่เงินก้อนเล็ก ไม่ต้องรอให้รวยก่อน",
+          "Creator สายการเงินที่ตอบคำถามนี้มาซ้ำจนรู้ว่าคนกลัวอะไรก่อนตัดสินใจ"
+        ],
+        "buyers": [
+          {
+            "group": "คนที่เพิ่งเริ่มมีเงินเก็บก้อนแรกแต่ไม่รู้จะลงทุนอะไร",
+            "why": "เป็นคำถามที่คนถามเธอบ่อยที่สุดเป็นอันดับ 2"
+          },
+          {
+            "group": "พนักงานบริษัทที่อยากวางแผนการเงินระยะยาวแต่ไม่รู้จะเริ่มตรงไหน",
+            "why": "ต้องการคำแนะนำที่เข้าใจง่าย"
+          },
+          {
+            "group": "คนดู TikTok ที่ยังไม่กล้าเริ่มลงทุนเพราะกลัวเลือกผิด",
+            "why": "มี audience พร้อมอยู่แล้ว"
+          }
+        ],
+        "pain": [
+          "“มีเงินเก็บอยู่ก้อนหนึ่ง แต่ไม่รู้จะเอาไปลงทุนอะไรดี กลัวเลือกผิด”",
+          "“มีรายได้เยอะแต่ไม่มีแผนการเงินระยะยาว กลัวเกษียณแล้วไม่พอใช้”",
+          "“ดูคลิปลงทุนเยอะแต่ยังไม่กล้าเริ่มลงมือทำจริง”"
+        ],
+        "offers": [
+          {
+            "format": "Mini Session 1:1",
+            "desc": "วางแผนลงทุนเบื้องต้นสำหรับเงินก้อนเล็ก",
+            "price": "500–1,500 บาท",
+            "outcome": "money"
+          },
+          {
+            "format": "Checklist",
+            "desc": "ก่อนตัดสินใจลงทุนครั้งแรก",
+            "price": "199–399 บาท",
+            "outcome": "quality"
+          },
+          {
+            "format": "3-Month Follow-up Package",
+            "desc": "ติดตามแผนลงทุนช่วงเริ่มต้น",
+            "price": "1,500–3,000 บาท",
+            "outcome": "money"
+          }
+        ],
+        "messages": [
+          "“มีเงินเก็บแล้วไม่รู้จะลงทุนอะไรใช่ไหมคะ ปรึกษาจูนได้เลยค่ะ ไม่ต้องมีเงินก้อนใหญ่”",
+          "“มี checklist ก่อนลงทุนครั้งแรกที่ทำจากประสบการณ์ 8 ปี อยากลองดูไหมคะ”",
+          "“ดูคลิปลงทุนเยอะแต่ยังไม่กล้าเริ่มใช่ไหมคะ มาคุยกันก่อนได้นะ”"
+        ],
+        "contacts": [
+          "คนดู TikTok ที่เคยถามเรื่องลงทุน",
+          "เพื่อนร่วมงาน/คนรู้จักที่เพิ่งเริ่มมีเงินเก็บ",
+          "ลูกค้าเก่าที่เคยปรึกษาเรื่องการเงิน"
+        ],
+        "seven_day": [
+          "โพสต์ใน TikTok ถามคนดูตรง ๆ ว่ามีเงินก้อนแรกแล้วอยากได้คำแนะนำลงทุนไหม",
+          "ทักเพื่อน 1 คนที่เพิ่งเริ่มมีเงินเก็บ เสนอ mini session ราคาทดลอง",
+          "ทำ checklist ลงทุนครั้งแรกแจกให้คนดู TikTok 3 คนลองใช้"
+        ]
+      },
+      {
+        "name": "เวทีการเงินที่คนฟังหลักร้อยอยู่หมัด",
+        "candidates": [
+          "MC/นักพูดเวที",
+          "ที่ปรึกษาการเงิน FChFP"
+        ],
+        "pattern": "สังเกตจาก: เคยเป็น MC งาน CTC2026 และจัดสัมมนามาแล้วจริง → สัญญาณว่าคุณมี proof of work ระดับที่พร้อมเสนอราคาสูงได้",
+        "outcome": [
+          "money",
+          "quality"
+        ],
+        "dna_options": [
+          "คนที่เคยเป็น MC งาน CTC2026 และจัดสัมมนาทั้งเป็นผู้สอนและ Producer",
+          "นักพูดที่เอาคนฟังหลักร้อยอยู่หมัดได้ แม้เรื่องจะเป็นการเงินที่คนคิดว่าน่าเบื่อ",
+          "ที่ปรึกษาการเงินที่ผสมความรู้ลึกกับทักษะ entertain คนฟังได้พร้อมกัน"
+        ],
+        "buyers": [
+          {
+            "group": "องค์กร/บริษัทที่อยากจัดสัมมนาการเงินให้พนักงานแบบไม่น่าเบื่อ",
+            "why": "มีประสบการณ์จัดสัมมนา+MC จริงอยู่แล้ว"
+          },
+          {
+            "group": "ผู้จัดงานที่ต้องการ MC/วิทยากรสายการเงินที่คุมเวทีได้จริง",
+            "why": "proof of work จากงาน CTC2026"
+          },
+          {
+            "group": "สมาคม/ชมรมที่จัดกิจกรรมให้สมาชิกเรื่องการเงิน",
+            "why": "ต้องการวิทยากรที่พูดสนุกไม่วิชาการเกินไป"
+          }
+        ],
+        "pain": [
+          "“จัดสัมมนาการเงินในบริษัททีไร พนักงานก็หลับหมด”",
+          "“หาวิทยากร/MC สายการเงินที่พูดสนุกไม่น่าเบื่อยาก”",
+          "“จัดกิจกรรมให้สมาชิกแต่เนื้อหาการเงินมันวิชาการเกินไป”"
+        ],
+        "offers": [
+          {
+            "format": "สัมมนาการเงินองค์กร",
+            "desc": "บรรยาย+facilitate แบบไม่น่าเบื่อ",
+            "price": "5,000 บาทขึ้นไป",
+            "outcome": "money"
+          },
+          {
+            "format": "MC/พิธีกรงานสัมมนาสายการเงิน",
+            "desc": "แยกจากบรรยาย",
+            "price": "3,000–8,000 บาท",
+            "outcome": "money"
+          },
+          {
+            "format": "Workshop สมาคม/ชมรม",
+            "desc": "เนื้อหาการเงินแบบสนุก ไม่วิชาการเกินไป",
+            "price": "3,000–6,000 บาท",
+            "outcome": "quality"
+          }
+        ],
+        "messages": [
+          "“บริษัทกำลังมองหาวิทยากรจัดสัมมนาการเงินอยู่ไหมคะ จูนรับจัดแบบไม่น่าเบื่อ เคยเป็น MC งาน CTC2026 มาแล้วค่ะ”",
+          "“ต้องการ MC งานสัมมนาสายการเงิน/ธุรกิจไหมคะ จูนรับงานนี้ด้วยค่ะ”",
+          "“จัดกิจกรรมให้สมาชิกเรื่องการเงินอยู่ไหมคะ จูนทำให้สนุกขึ้นได้นะคะ”"
+        ],
+        "contacts": [
+          "HR/คนในองค์กรที่เคยรู้จักผ่านงานสัมมนา",
+          "ผู้จัดงาน CTC2026 หรืองานอื่นที่เคยร่วม",
+          "สมาคม/ชมรมในเครือข่าย"
+        ],
+        "seven_day": [
+          "ติดต่อ HR ที่เคยรู้จักเสนอสัมมนาการเงินแบบทดลอง",
+          "ทักผู้จัดงาน CTC2026 ถามว่ามีงานอื่นที่ต้องการ MC ไหม",
+          "โพสต์แนะนำบริการวิทยากร/MC สายการเงินในโปรไฟล์"
+        ]
+      },
+      {
+        "name": "Content สายการเงินที่คนดูจบคลิป",
+        "candidates": [
+          "Creator สายการเงิน",
+          "MC/นักพูดเวที"
+        ],
+        "pattern": "สังเกตจาก: มีช่อง TikTok จูลิโกะโลกการเงินอยู่แล้ว → สัญญาณว่ามี distribution channel พร้อมใช้ แค่ต้องแปลงเป็นสินค้าที่ขายได้",
+        "outcome": [
+          "money"
+        ],
+        "dna_options": [
+          "Creator ช่อง TikTok จูลิโกะโลกการเงิน ที่เล่าเรื่องภาษี-การเงินยากให้เข้าใจง่าย",
+          "คนที่มี audience พร้อมอยู่แล้ว แค่ยังไม่เคยแปลงเป็นสินค้าจริงจัง",
+          "นัก Storyteller ที่ใช้ short video เป็นเครื่องมือสร้างความน่าเชื่อถือ"
+        ],
+        "buyers": [
+          {
+            "group": "คนดู TikTok ที่ติดตามช่องอยู่แล้วและเริ่มมีรายได้ฟรีแลนซ์",
+            "why": "มี audience พร้อมอยู่แล้ว ทดสอบได้เร็วที่สุด"
+          },
+          {
+            "group": "แบรนด์/บริษัทที่อยากได้คอนเทนต์การเงินสไตล์เดียวกันไปใช้สอนพนักงาน",
+            "why": "ใช้ผลงานช่อง TikTok เป็น portfolio ได้เลย"
+          },
+          {
+            "group": "คนดูที่คอมเมนต์ถามคำถามซ้ำ ๆ ในคลิป",
+            "why": "เป็นสัญญาณว่าอยากได้เนื้อหาเจาะลึกกว่าคลิปสั้น"
+          }
+        ],
+        "pain": [
+          "“ดูคลิปการเงินในโซเชียลเยอะแต่จำไม่ได้ อยากได้ที่สรุปเข้าใจง่ายจริง ๆ”",
+          "“บริษัทอยากมีคอนเทนต์สอนพนักงานเรื่องการเงินแต่ทำเองไม่เป็น”",
+          "“อยากรู้ลึกกว่าคลิป TikTok แต่ไม่รู้จะหาที่ไหนต่อ”"
+        ],
+        "offers": [
+          {
+            "format": "Short Video Series สอนภาษี/การเงิน",
+            "desc": "แพ็กใช้สอนพนักงานสไตล์ TikTok",
+            "price": "990–2,900 บาท",
+            "outcome": "money"
+          },
+          {
+            "format": "Mini Course",
+            "desc": "อัดจากคลิปที่เคยทำ จัดเป็นชุดต่อเนื่อง",
+            "price": "990–2,500 บาท",
+            "outcome": "money"
+          },
+          {
+            "format": "Corporate Content Package",
+            "desc": "ผลิตคอนเทนต์การเงินให้แบรนด์ใช้สอนพนักงาน",
+            "price": "8,000 บาทขึ้นไป",
+            "outcome": "money"
+          }
+        ],
+        "messages": [
+          "“ดูคลิปจูนใน TikTok อยู่ใช่ไหมคะ จูนทำเป็นชุดสอนต่อเนื่องแล้ว อยากลองดูไหมคะ”",
+          "“อยากได้คอนเทนต์การเงินสอนพนักงานสไตล์เข้าใจง่ายไหมคะ จูนทำให้ได้ค่ะ”",
+          "“เห็นคอมเมนต์ถามคำถามนี้บ่อย จูนทำคอร์สเจาะลึกแล้วนะคะ”"
+        ],
+        "contacts": [
+          "คนดู TikTok ที่เคยคอมเมนต์ถามคำถาม",
+          "แบรนด์/บริษัทที่รู้จักผ่าน connection ที่มี",
+          "คนดูที่คอมเมนต์ถามคำถามซ้ำ ๆ"
+        ],
+        "seven_day": [
+          "ถ่ายคลิป TikTok สั้น ๆ แนะนำ mini course/ชุดคลิปที่กำลังทำ",
+          "ตอบคอมเมนต์คำถามซ้ำ ๆ พร้อมแปะลิงก์ mini course",
+          "ทักแบรนด์ 1 แบรนด์ในเครือข่ายเสนอ Corporate Content Package"
+        ]
+      },
+      {
+        "name": "ประกัน+ภาษีแบบไม่ยัดเยียด",
+        "candidates": [
+          "ที่ปรึกษาประกัน MDRT",
+          "ผู้เชี่ยวชาญภาษีฟรีแลนซ์"
+        ],
+        "pattern": "สังเกตจาก: เป็น MDRT 6 ปี + เชี่ยวชาญภาษี → สัญญาณว่าคุณให้คำแนะนำครบวงจรที่คู่แข่งส่วนใหญ่ทำแยกกันไม่ได้",
+        "outcome": [
+          "money",
+          "quality"
+        ],
+        "dna_options": [
+          "MDRT 6 ปี ที่ไม่ได้ขายประกันแบบยัดเยียด แต่ผูกกับความรู้ภาษีจริง",
+          "คนที่เชื่อว่าประกันที่ดีต้องช่วยลดหย่อนภาษีได้จริง ไม่ใช่แค่ปิดยอด",
+          "ที่ปรึกษาที่มองภาพรวมการเงินทั้งระบบ ไม่ใช่ขายทีละผลิตภัณฑ์"
+        ],
+        "buyers": [
+          {
+            "group": "เจ้าของกิจการ/ผู้บริหารที่อยากวางแผนภาษี+ประกันแบบครบวงจร",
+            "why": "ใช้ประสบการณ์ FChFP 8 ปีได้เต็มที่"
+          },
+          {
+            "group": "พนักงานที่เคยเจอตัวแทนขายประกันแบบยัดเยียดมาก่อน",
+            "why": "pain ที่ทำให้เชื่อใจ MDRT ทั่วไปยาก"
+          },
+          {
+            "group": "ฟรีแลนซ์ที่อยากซื้อประกันเพื่อลดหย่อนภาษีให้คุ้ม",
+            "why": "เชื่อมโยงกับความเชี่ยวชาญภาษีฟรีแลนซ์ของเธอ"
+          }
+        ],
+        "pain": [
+          "“เจอตัวแทนขายประกันแล้วรู้สึกโดนยัดเยียด ไม่อยากคุยเรื่องนี้อีก”",
+          "“อยากลดหย่อนภาษีผ่านประกัน แต่ไม่รู้จะเลือกแบบไหนไม่ให้โดนขายเกินจำเป็น”",
+          "“เป็นฟรีแลนซ์อยากซื้อประกันลดหย่อนภาษีแต่ไม่รู้จะเริ่มยังไง”"
+        ],
+        "offers": [
+          {
+            "format": "Tax + Insurance Planning Session",
+            "desc": "ดูภาพรวมทั้งสองด้านพร้อมกัน",
+            "price": "800–2,000 บาท",
+            "outcome": "money"
+          },
+          {
+            "format": "Checklist เลือกประกันลดหย่อนภาษี",
+            "desc": "แบบไม่โดนขายเกินจำเป็น",
+            "price": "199–399 บาท",
+            "outcome": "quality"
+          },
+          {
+            "format": "Freelancer Insurance Package",
+            "desc": "ประกัน+วางแผนภาษีเฉพาะฟรีแลนซ์",
+            "price": "1,000–2,500 บาท",
+            "outcome": "money"
+          }
+        ],
+        "messages": [
+          "“อยากวางแผนภาษี+ประกันไปพร้อมกันไหมคะ จูนดูภาพรวมให้ได้ ไม่ยัดเยียดแน่นอนค่ะ”",
+          "“มี checklist เลือกประกันลดหย่อนภาษีแบบไม่โดนขายเกินจำเป็น ลองดูก่อนได้ค่ะ”",
+          "“เป็นฟรีแลนซ์อยากได้ประกันลดหย่อนภาษีไหมคะ จูนมีแพ็กเฉพาะให้ค่ะ”"
+        ],
+        "contacts": [
+          "เจ้าของธุรกิจในเครือข่าย MDRT/ประกัน",
+          "ลูกค้าเก่าที่เคยปรึกษาเรื่องภาษี",
+          "เพื่อนฟรีแลนซ์ที่อยากได้ประกัน"
+        ],
+        "seven_day": [
+          "ส่ง checklist เลือกประกันให้เพื่อน/ลูกค้าเก่า 2 คนลองอ่าน",
+          "ทักฟรีแลนซ์ 1 คนเสนอ Freelancer Insurance Package",
+          "โพสต์อธิบายว่าทำไมประกัน+ภาษีควรวางแผนพร้อมกัน"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "yok",
+    "nickname": "หยก",
+    "fullname": "ปิยพรรณ จรัญพงษ์",
+    "role": "Financial Advisor · น้อยกว่า 3 ปี",
+    "raw_skills": [
+      "Consultation",
+      "Analysis",
+      "Empathy (ฟังแล้วเข้าใจสถานการณ์ลูกค้า)",
+      "ทำ Proposal (คนชมว่าเก่งทั้งที่คิดว่าธรรมดา)",
+      "Business Development mindset",
+      "วางแผนการเงินให้คนรู้สึกเบาใจ ไม่กดดัน"
+    ],
+    "skill_candidates": [
+      {
+        "name": "นักเขียน Proposal",
+        "source": "ทำ Proposal (คนชมว่าเก่งทั้งที่คิดว่าธรรมดา)"
+      },
+      {
+        "name": "นัก Empathy",
+        "source": "Empathy, วางแผนการเงินให้คนรู้สึกเบาใจ"
+      },
+      {
+        "name": "นักวิเคราะห์",
+        "source": "Analysis, Consultation"
+      },
+      {
+        "name": "Entrepreneurial Mindset",
+        "source": "Business Development mindset"
+      },
+      {
+        "name": "มือใหม่ที่กำลังฝึกฝีมือ",
+        "source": "อยากมีศิลปะขายมากขึ้น (กำลังฝึกเอง)"
+      }
+    ],
+    "skill_combos": [
+      {
+        "name": "Proposal ที่ปิดแบบไม่ต้อง Hard Sell",
+        "candidates": [
+          "นักเขียน Proposal",
+          "นัก Empathy"
+        ],
+        "pattern": "สังเกตจาก: คนชมว่าคุณทำ Proposal เก่งทั้งที่คิดว่าธรรมดา → สัญญาณว่าคุณมี skill ที่มีมูลค่าแต่ยังไม่เคยแพ็กขาย",
+        "outcome": [
+          "money"
+        ],
+        "dna_options": [
+          "คนที่ถูกชมว่าทำ Proposal เก่ง ทั้งที่ตัวเองคิดว่าธรรมดา เพราะฟังลูกค้าจริงก่อนเขียน",
+          "นักเขียนที่เชื่อว่า Proposal ที่ดีเริ่มจากการฟัง ไม่ใช่การขาย",
+          "คนที่เก่งเรื่องนี้โดยไม่รู้ตัวมานาน จนมีคนบอกถึงได้รู้ว่ามันขายได้"
+        ],
+        "buyers": [
+          {
+            "group": "มือใหม่สาย B2B sales ที่อยากเรียนรู้การทำ Proposal",
+            "why": "ตรงกับสิ่งที่คนถามเธอบ่อยที่สุด"
+          },
+          {
+            "group": "เจ้าของธุรกิจเล็กที่เขียน Proposal เองแล้วลูกค้าไม่ตอบกลับ",
+            "why": "pain ที่แก้ได้ตรงจุดด้วยทักษะนี้"
+          },
+          {
+            "group": "Freelancer ที่ต้องส่ง Proposal บ่อยแต่ไม่มั่นใจ",
+            "why": "ต้องการแบบฟอร์มที่ใช้ซ้ำได้"
+          }
+        ],
+        "pain": [
+          "“เขียน Proposal ไปแล้วลูกค้าไม่ตอบกลับ ไม่รู้พลาดตรงไหน”",
+          "“อยากขายแบบมีศิลปะมากขึ้น แต่ไม่รู้จะเริ่มปรับสไตล์ยังไง”",
+          "“ต้องส่ง Proposal บ่อยแต่ทุกครั้งรู้สึกไม่มั่นใจ”"
+        ],
+        "offers": [
+          {
+            "format": "Proposal Review & Rewrite",
+            "desc": "เอา Proposal เดิมมาช่วยปรับ",
+            "price": "800–1,500 บาท",
+            "outcome": "money"
+          },
+          {
+            "format": "Coaching Session",
+            "desc": "สอนมือใหม่ B2B sales เขียนแบบไม่ hard sell",
+            "price": "800–1,800 บาท",
+            "outcome": "quality"
+          },
+          {
+            "format": "Proposal Template Pack",
+            "desc": "แบบฟอร์มใช้ซ้ำได้หลายสถานการณ์",
+            "price": "300–600 บาท",
+            "outcome": "time"
+          }
+        ],
+        "messages": [
+          "“เขียน Proposal แล้วลูกค้าไม่ตอบใช่ไหมคะ ลองส่งมาให้ดู ช่วยปรับให้ได้นะ”",
+          "“อยากเรียนรู้เขียน Proposal แบบไม่ hard sell ไหมคะ สอนได้ค่ะ”",
+          "“ต้องส่ง Proposal บ่อยใช่ไหมคะ มี template ใช้ซ้ำได้ให้ลองดูนะ”"
+        ],
+        "contacts": [
+          "เพื่อนสาย B2B sales ที่เคยถามเรื่อง proposal",
+          "เจ้าของธุรกิจเล็กในเครือข่าย",
+          "Freelancer ที่ต้องส่ง Proposal บ่อย"
+        ],
+        "seven_day": [
+          "แชร์ Proposal Template ให้เพื่อนสาย B2B sales 2 คนลองใช้",
+          "เสนอ Proposal Review ฟรีให้เจ้าของธุรกิจเล็ก 1 คน",
+          "โพสต์แชร์เทคนิคเขียน Proposal ไม่ hard sell 1 ข้อในโซเชียล"
+        ]
+      },
+      {
+        "name": "No-pressure Money Talk",
+        "candidates": [
+          "นัก Empathy",
+          "นักวิเคราะห์"
+        ],
+        "pattern": "สังเกตจาก: ปัญหาที่แก้ได้เองคือวางแผนการเงินให้คนเบาใจ อยู่กับปัจจุบัน → สัญญาณว่าคุณมีวิธีคุยเรื่องเงินที่ต่างจากที่ปรึกษาทั่วไป",
+        "outcome": [
+          "quality"
+        ],
+        "dna_options": [
+          "คนที่เคยแก้ปัญหาให้คนอื่น “เบาใจและอยู่กับปัจจุบันได้” เรื่องการเงิน",
+          "ที่ปรึกษาที่ฟังก่อนแนะนำ ไม่รีบขายตั้งแต่ประโยคแรก",
+          "คนที่เชื่อว่าเงินเป็นเรื่องความรู้สึกก่อนเป็นเรื่องตัวเลข"
+        ],
+        "buyers": [
+          {
+            "group": "คนที่กังวลเรื่องการเงินแต่ไม่กล้าคุยกับที่ปรึกษาเพราะกลัวโดนขาย",
+            "why": "ตรงกับสไตล์ no-pressure ของเธอพอดี"
+          },
+          {
+            "group": "คนที่เพิ่งเริ่มมีรายได้และไม่รู้จะวางแผนการเงินยังไง",
+            "why": "ต้องการคนที่ไม่ทำให้กลัว"
+          },
+          {
+            "group": "เพื่อน/คนรู้จักที่เครียดเรื่องเงินจนกระทบชีวิตประจำวัน",
+            "why": "pain ด้านความรู้สึกที่ต้องการคนเข้าใจก่อนแนะนำ"
+          }
+        ],
+        "pain": [
+          "“อยากวางแผนการเงิน แต่กลัวโดน hard sell เลยไม่กล้าเริ่มคุย”",
+          "“กังวลเรื่องเงินตลอดเวลา ไม่สามารถอยู่กับปัจจุบันได้”",
+          "“เพิ่งเริ่มมีรายได้ ไม่รู้จะวางแผนการเงินจากตรงไหนก่อน”"
+        ],
+        "offers": [
+          {
+            "format": "First Conversation 30 นาที",
+            "desc": "คุยเรื่องการเงินแบบไม่มีการขาย",
+            "price": "500–1,200 บาท",
+            "outcome": "quality"
+          },
+          {
+            "format": "Checklist",
+            "desc": "คุยเรื่องการเงินแบบไม่กดดันตัวเอง/คนอื่น",
+            "price": "200–400 บาท",
+            "outcome": "time"
+          },
+          {
+            "format": "Beginner Money Plan",
+            "desc": "วางแผนการเงินเบื้องต้นสำหรับคนเพิ่งเริ่มมีรายได้",
+            "price": "800–1,500 บาท",
+            "outcome": "quality"
+          }
+        ],
+        "messages": [
+          "“อยากชวนคุยเรื่องการเงินแบบไม่มีการขายเลยค่ะ แค่อยากฟังสถานการณ์ตอนนี้ก่อน”",
+          "“มี checklist คุยเรื่องเงินแบบไม่กดดันตัวเอง อยากลองดูไหมคะ”",
+          "“เพิ่งเริ่มมีรายได้ใช่ไหมคะ มาวางแผนกันแบบไม่กดดันได้นะ”"
+        ],
+        "contacts": [
+          "คนรู้จักที่เคยพูดว่ากลัวถูกขายประกัน/การเงิน",
+          "ลูกค้าเก่าที่เคยคุยด้วยแต่ยังไม่ปิดการขาย",
+          "เพื่อนที่เพิ่งเริ่มมีรายได้"
+        ],
+        "seven_day": [
+          "เลือกลูกค้าเก่า 1 คนที่ยังไม่ได้ปิดการขาย ส่งข้อความชวนคุยแบบ no-pressure",
+          "ทักเพื่อน 1 คนที่เพิ่งเริ่มมีรายได้ เสนอ Beginner Money Plan",
+          "โพสต์เล่าว่าทำไมการคุยเรื่องเงินไม่ควรน่ากลัว"
+        ]
+      },
+      {
+        "name": "Entrepreneurial Mindset Coach",
+        "candidates": [
+          "Entrepreneurial Mindset",
+          "นักวิเคราะห์"
+        ],
+        "pattern": "สังเกตจาก: ปัญหาที่แก้ได้เองคือ Business Development Skill ที่ต้องผสม entrepreneurial+professional mindset → สัญญาณว่าคุณผ่านความไม่มั่นใจแบบเดียวกับที่มือใหม่กำลังเจอ",
+        "outcome": [
+          "money"
+        ],
+        "dna_options": [
+          "คนที่เคยพัฒนา Business Development Skill ที่ต้องผสม entrepreneurial และ professional mindset",
+          "โค้ชที่เพิ่งผ่านช่วงไม่มั่นใจมาไม่นาน เลยเข้าใจมือใหม่ได้ลึกกว่า",
+          "นักวิเคราะห์ที่ใช้หลักการเดียวกับงานมาช่วยดู mindset ธุรกิจ"
+        ],
+        "buyers": [
+          {
+            "group": "มือใหม่ที่เพิ่งเริ่มทำธุรกิจ/ขายของแต่ยังไม่มั่นใจ mindset ตัวเอง",
+            "why": "เป็น pain ที่เธอเคยผ่านมาโดยตรง"
+          },
+          {
+            "group": "คนที่ลาออกจากงานประจำมาทำธุรกิจตัวเองใหม่ ๆ",
+            "why": "ต้องปรับ mindset จากพนักงานเป็นเจ้าของธุรกิจ"
+          },
+          {
+            "group": "นักศึกษาจบใหม่ที่อยากเป็นผู้ประกอบการแต่ไม่มั่นใจ",
+            "why": "ต้องการคนที่เข้าใจความไม่มั่นใจแบบเริ่มต้น"
+          }
+        ],
+        "pain": [
+          "“ไม่มั่นใจว่าตัวเองมี mindset แบบผู้ประกอบการพอจะทำธุรกิจได้จริง”",
+          "“ลาออกจากงานประจำมาทำธุรกิจแล้วรู้สึกหลงทาง”",
+          "“อยากเป็นผู้ประกอบการแต่กลัวความไม่แน่นอน”"
+        ],
+        "offers": [
+          {
+            "format": "Mindset Consult Session",
+            "desc": "คุยหาสมดุล entrepreneurial+professional",
+            "price": "800–1,500 บาท",
+            "outcome": "money"
+          },
+          {
+            "format": "Self-Check Guide",
+            "desc": "เช็ค mindset ตัวเองก่อนเริ่มธุรกิจจริงจัง",
+            "price": "300–500 บาท",
+            "outcome": "quality"
+          },
+          {
+            "format": "Transition Coaching 3 ครั้ง",
+            "desc": "สำหรับคนลาออกจากงานประจำมาทำธุรกิจ",
+            "price": "2,000–4,000 บาท",
+            "outcome": "quality"
+          }
+        ],
+        "messages": [
+          "“ไม่มั่นใจ mindset ตัวเองก่อนเริ่มธุรกิจใช่ไหมคะ ลองคุยกับหยกดูก่อนได้นะ”",
+          "“มี guide เช็ค mindset ก่อนเริ่มธุรกิจ อยากลองดูก่อนไหมคะ”",
+          "“เพิ่งลาออกมาทำธุรกิจใช่ไหมคะ หยกช่วยปรับ mindset ให้ได้นะ”"
+        ],
+        "contacts": [
+          "เพื่อนที่เพิ่งเริ่มทำธุรกิจของตัวเอง",
+          "เจ้าของธุรกิจเล็กในเครือข่าย",
+          "นักศึกษาจบใหม่ที่สนใจเป็นผู้ประกอบการ"
+        ],
+        "seven_day": [
+          "ส่ง Self-Check Guide ให้เพื่อนที่เพิ่งเริ่มทำธุรกิจ 1 คนลองทำ",
+          "ทักเพื่อนที่เพิ่งลาออกมาทำธุรกิจ เสนอ Mindset Consult ฟรีรอบแรก",
+          "โพสต์แชร์ประสบการณ์ปรับ mindset ของตัวเอง 1 เรื่อง"
+        ]
+      },
+      {
+        "name": "B2B Sales ไม่ Hard Sell",
+        "candidates": [
+          "มือใหม่ที่กำลังฝึกฝีมือ",
+          "นักวิเคราะห์"
+        ],
+        "pattern": "สังเกตจาก: บอกตรง ๆ ว่าอยากมีศิลปะขายมากขึ้น ไม่ hard sell แต่ได้ผลลัพธ์ → สัญญาณว่าคุณกำลังฝึกทักษะนี้อยู่ ทำให้เข้าใจมือใหม่คนอื่นได้ลึก",
+        "outcome": [
+          "money"
+        ],
+        "dna_options": [
+          "หยกเองก็กำลังฝึกศิลปะการขายแบบไม่ hard sell อยู่ เลยเข้าใจว่ามือใหม่ติดตรงไหน",
+          "คนที่ไม่แกล้งเป็นผู้เชี่ยวชาญ แต่แชร์สิ่งที่กำลังเรียนรู้จริง ๆ",
+          "นัก B2B sales รุ่นใหม่ที่เชื่อว่าการขายที่ดีที่สุดคือการไม่รู้สึกเหมือนถูกขาย"
+        ],
+        "buyers": [
+          {
+            "group": "เพื่อนร่วมสาย Financial Advisor ที่อยากปรับสไตล์ขายให้นุ่มขึ้น",
+            "why": "อยู่ในวงการเดียวกัน เข้าใจ pain ตรงกัน"
+          },
+          {
+            "group": "มือใหม่สาย sales ที่เพิ่งเริ่มงานและรู้สึกอึดอัดกับการ hard sell",
+            "why": "pain เดียวกับที่หยกเคยเจอ"
+          },
+          {
+            "group": "เพื่อนสาย B2B sales ที่เคยถามเรื่อง proposal",
+            "why": "ขยายจากความสัมพันธ์ที่มีอยู่แล้ว"
+          }
+        ],
+        "pain": [
+          "“ขายแบบ hard sell มาตลอดแล้วรู้สึกลูกค้าอึดอัด อยากเปลี่ยนสไตล์”",
+          "“เพิ่งเริ่มงาน sales แล้วรู้สึกอึดอัดทุกครั้งที่ต้องขาย”",
+          "“อยากขายแบบมีศิลปะแต่ไม่รู้จะเริ่มฝึกยังไง”"
+        ],
+        "offers": [
+          {
+            "format": "Peer Practice Session",
+            "desc": "ฝึกคุยขายแบบไม่ hard sell ด้วยกัน",
+            "price": "500–1,000 บาท",
+            "outcome": "quality"
+          },
+          {
+            "format": "Follow-up Script",
+            "desc": "กลับไปคุยลูกค้าเก่าแบบไม่กดดัน",
+            "price": "200–500 บาท",
+            "outcome": "time"
+          },
+          {
+            "format": "Sales Mindset Group",
+            "desc": "กลุ่มเล็กฝึกขายแบบไม่ hard sell ร่วมกัน",
+            "price": "800–1,500 บาท/คน",
+            "outcome": "quality"
+          }
+        ],
+        "messages": [
+          "“เห็นว่าอยากปรับสไตล์การขายให้นุ่มขึ้นใช่ไหมคะ มาฝึกด้วยกันได้นะ หยกก็กำลังฝึกอยู่เหมือนกัน”",
+          "“มี script กลับไปคุยลูกค้าเก่าแบบไม่กดดัน อยากลองดูไหมคะ”",
+          "“เพิ่งเริ่มงาน sales แล้วอึดอัดใช่ไหมคะ มาคุยกันได้นะ”"
+        ],
+        "contacts": [
+          "เพื่อนร่วมสาย Financial Advisor ที่สนใจปรับสไตล์ขาย",
+          "เพื่อนสาย B2B sales ที่เคยถามเรื่อง proposal",
+          "มือใหม่สาย sales ในเครือข่าย"
+        ],
+        "seven_day": [
+          "ชวนเพื่อนร่วมสาย 1 คนมาฝึก Peer Practice Session ด้วยกันฟรีก่อน",
+          "แชร์ Follow-up Script ให้เพื่อน 2 คนลองใช้",
+          "โพสต์ชวนคนที่สนใจฝึกขายไม่ hard sell มารวมกลุ่มเล็ก ๆ"
+        ]
+      },
+      {
+        "name": "Sales Process Analyst",
+        "candidates": [
+          "นักวิเคราะห์",
+          "นักเขียน Proposal"
+        ],
+        "pattern": "สังเกตจาก: ผสม Analysis กับ Proposal เข้าด้วยกัน → สัญญาณว่าคุณมองเห็นทั้งภาพรวมกระบวนการและรายละเอียดการปิดดีล",
+        "outcome": [
+          "time",
+          "money"
+        ],
+        "dna_options": [
+          "นักวิเคราะห์ที่มองเห็นจุดรั่วในกระบวนการขายที่คนอื่นมองไม่เห็น",
+          "คนที่เชื่อว่าปัญหาปิดดีลไม่ได้ มักไม่ใช่ที่ Proposal แต่ที่ขั้นตอนก่อนหน้า",
+          "ที่ปรึกษาที่ใช้ทั้งการวิเคราะห์และการเขียนมาช่วยแก้กระบวนการขายทั้งระบบ"
+        ],
+        "buyers": [
+          {
+            "group": "เจ้าของธุรกิจเล็กที่มีกระบวนการขายอยู่แล้วแต่ไม่ปิดดีลสักที",
+            "why": "ประหยัดเวลาลองผิดลองถูกเอง"
+          },
+          {
+            "group": "มือใหม่สาย sales ที่ไม่รู้ว่าตัวเองพลาดตรงขั้นตอนไหน",
+            "why": "ต้องการมุมมองจากคนนอกที่วิเคราะห์เป็น"
+          },
+          {
+            "group": "ทีมขายเล็กที่ยอดตกแต่หาสาเหตุไม่เจอ",
+            "why": "ต้องการ audit กระบวนการทั้งทีม"
+          }
+        ],
+        "pain": [
+          "“มีขั้นตอนขายอยู่แล้วแต่ปิดดีลไม่ได้สักที ไม่รู้พลาดตรงไหน”",
+          "“ไม่มีใครช่วยดูกระบวนการขายทั้งหมดให้อย่างเป็นระบบ”",
+          "“ยอดขายตกแต่หาสาเหตุที่แท้จริงไม่เจอ”"
+        ],
+        "offers": [
+          {
+            "format": "Sales Process Audit",
+            "desc": "วิเคราะห์กระบวนการขายทั้งหมดหาจุดรั่ว",
+            "price": "1,500–3,000 บาท",
+            "outcome": "money"
+          },
+          {
+            "format": "Quick Proposal Check",
+            "desc": "ก่อนส่งให้ลูกค้าจริง",
+            "price": "300–600 บาท",
+            "outcome": "time"
+          },
+          {
+            "format": "Team Sales Audit",
+            "desc": "สำหรับทีมขายเล็กที่ยอดตก",
+            "price": "3,000–6,000 บาท",
+            "outcome": "money"
+          }
+        ],
+        "messages": [
+          "“ปิดดีลไม่ได้สักทีใช่ไหมคะ ลองให้หยกช่วยดูกระบวนการขายทั้งหมดได้นะ”",
+          "“ก่อนส่ง Proposal ให้ลูกค้า อยากให้หยกช่วยเช็คก่อนไหมคะ”",
+          "“ยอดขายทีมตกใช่ไหมคะ หยกช่วย audit กระบวนการให้ได้นะ”"
+        ],
+        "contacts": [
+          "เจ้าของธุรกิจเล็กในเครือข่าย",
+          "มือใหม่สาย B2B sales ที่เคยถามเรื่อง proposal",
+          "ทีมขายเล็กในเครือข่าย"
+        ],
+        "seven_day": [
+          "เสนอ Quick Proposal Check ฟรีให้เพื่อน 1 คนก่อนส่ง Proposal จริง",
+          "ทักเจ้าของธุรกิจเล็ก 1 คนเสนอ Sales Process Audit",
+          "โพสต์แชร์ 1 จุดรั่วที่มักเจอในกระบวนการขาย B2B"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "takro",
+    "nickname": "ตะกร้อ",
+    "fullname": "ลัทธปัทม์ ตั้งตรัสธรรม",
+    "role": "Data & AI Strategist / Corporate Trainer / Bilingual MC / เจ้าของร้าน Bakery Cafe · 6–10 ปี",
+    "raw_skills": [
+      "Corporate/Enterprise End-to-End Data & AI Modernization Solution/Platform",
+      "Data Visualization (Power BI)",
+      "Training / Corporate Training",
+      "Public Speaking / MC สองภาษา (ไทย-อังกฤษ)",
+      "Communication & Presentation",
+      "Acting",
+      "ความรู้ IT/Data ที่ลึกจนเป็นเรื่องธรรมดา (แต่คนอื่นว้าว)",
+      "เจ้าของธุรกิจ Bakery Cafe (brunchandbaked)"
+    ],
+    "skill_candidates": [
+      {
+        "name": "Enterprise Data & AI Architect",
+        "source": "Corporate/Enterprise Data & AI Platform, Power BI"
+      },
+      {
+        "name": "Bilingual Corporate Trainer",
+        "source": "Training/Corporate Training, MC สองภาษา"
+      },
+      {
+        "name": "Stage Performer",
+        "source": "Acting, Public Speaking"
+      },
+      {
+        "name": "เจ้าของธุรกิจ Bakery",
+        "source": "brunchandbaked"
+      },
+      {
+        "name": "ผู้เชี่ยวชาญ IT/Data ที่พูดเป็น",
+        "source": "ความรู้ IT/Data + Communication & Presentation"
+      }
+    ],
+    "skill_combos": [
+      {
+        "name": "Data Storyteller for Executives",
+        "candidates": [
+          "Enterprise Data & AI Architect",
+          "ผู้เชี่ยวชาญ IT/Data ที่พูดเป็น"
+        ],
+        "pattern": "สังเกตจาก: ทำ End-to-End Data & AI Platform ระดับองค์กรมาแล้ว → สัญญาณว่าปัญหาที่ทีม Data เจอบ่อยคือ 'สร้างเก่งแต่นำเสนอไม่รอด'",
+        "outcome": [
+          "money",
+          "time"
+        ],
+        "dna_options": [
+          "คนที่ทำ End-to-End Data & AI Platform ระดับองค์กรมาแล้ว แต่ต่างจากคนอื่นตรงพรีเซนต์ให้ผู้บริหารเข้าใจได้จริง",
+          "Data Strategist ที่เชื่อว่าโปรเจกต์ดีแค่ไหนก็ไร้ค่า ถ้าเล่าให้ผู้บริหารเข้าใจไม่ได้",
+          "คนที่แปล technical จริงให้เป็นภาษาธุรกิจได้ เพราะเคยอยู่ทั้งสองฝั่ง"
+        ],
+        "buyers": [
+          {
+            "group": "ทีม Data/IT ที่ทำโปรเจกต์เสร็จแล้วแต่เสนอผู้บริหารไม่ผ่าน",
+            "why": "เป็นปัญหาที่เจอบ่อยในสายงานเดียวกันกับเขา"
+          },
+          {
+            "group": "องค์กรที่กำลังเริ่มทำ Data & AI Transformation",
+            "why": "ต้องการคนที่เชื่อมช่องว่างระหว่างทีมเทคกับผู้บริหาร"
+          },
+          {
+            "group": "CIO/CTO ที่ต้องรายงานความคืบหน้า Data project ให้บอร์ด",
+            "why": "ต้องการคนช่วยเตรียมการนำเสนอระดับสูง"
+          }
+        ],
+        "pain": [
+          "“ทีมทำ Data/AI Project เสร็จแล้ว แต่เสนอผู้บริหารทีไรไม่มีใครเข้าใจ”",
+          "“มี Dashboard/Data สวยแล้ว แต่เล่าให้คนที่ไม่ใช่สายเทคฟังไม่รู้เรื่อง”",
+          "“ต้องรายงานผลงาน Data project ให้บอร์ดแต่กลัวพูดไม่ผ่าน”"
+        ],
+        "offers": [
+          {
+            "format": "Mini Workshop",
+            "desc": "เล่า Data/AI ให้ผู้บริหารเข้าใจใน 1 สไลด์",
+            "price": "1,500–3,000 บาท",
+            "outcome": "money"
+          },
+          {
+            "format": "Dashboard Storytelling Review",
+            "desc": "เอา Power BI ที่มีมาช่วยปรับให้เล่าเรื่องได้",
+            "price": "1,000–2,000 บาท",
+            "outcome": "time"
+          },
+          {
+            "format": "Board Presentation Prep",
+            "desc": "เตรียมการนำเสนอให้บอร์ด/ผู้บริหารระดับสูง",
+            "price": "2,500–5,000 บาท",
+            "outcome": "money"
+          }
+        ],
+        "messages": [
+          "“ทีมทำ Data/AI Project เสร็จแล้วแต่เสนอผู้บริหารไม่ผ่านใช่ไหมครับ ผมช่วยปรับการเล่าเรื่องให้ได้นะ”",
+          "“มี Dashboard Power BI ที่อยากให้ช่วยดูว่าเล่าเรื่องเข้าใจง่ายพอไหม ลองส่งมาดูได้ครับ”",
+          "“ต้องรายงานบอร์ดเรื่อง Data project ไหมครับ ผมช่วยเตรียมให้ได้นะ”"
+        ],
+        "contacts": [
+          "ทีม Data/IT ที่เคยร่วมงานด้วยกัน",
+          "ผู้บริหารที่เคยฟังพรีเซนต์แล้วชม",
+          "CIO/CTO ในเครือข่าย"
+        ],
+        "seven_day": [
+          "เลือกทีมที่เคยร่วมงาน Data/AI ด้วยกัน 1 ทีม เสนอ Mini Workshop ให้ดู",
+          "ทักทีมที่กำลังจะรายงานบอร์ด เสนอ Board Presentation Prep",
+          "โพสต์แชร์เทคนิคเล่า Data ให้ผู้บริหารเข้าใจ 1 ข้อ"
+        ]
+      },
+      {
+        "name": "Bilingual Corporate Trainer",
+        "candidates": [
+          "Bilingual Corporate Trainer",
+          "Enterprise Data & AI Architect"
+        ],
+        "pattern": "สังเกตจาก: สอนได้ทั้งไทย-อังกฤษและมีพื้นฐาน Data/AI จริง → สัญญาณว่าคุณเติมช่องว่างที่ trainer ทั่วไปในตลาดทำไม่ได้",
+        "outcome": [
+          "money"
+        ],
+        "dna_options": [
+          "Corporate Trainer ที่สอนได้สองภาษาไทย-อังกฤษ ผสมกับพื้นฐาน Data/AI จริง",
+          "คนที่เชื่อว่าการสอน Data/Tech เป็นภาษาอังกฤษต้องมาจากคนที่เข้าใจ Data จริง ไม่ใช่แค่ภาษาเก่ง",
+          "Trainer ที่ทำงานสายเทคมาก่อน เลยรู้ว่าทีม Data ต้องการอะไรจริง ๆ"
+        ],
+        "buyers": [
+          {
+            "group": "ทีม HR/L&D ที่ต้องการ trainer สอน Data/Presentation แบบสองภาษา",
+            "why": "หา trainer แบบนี้ในตลาดยาก"
+          },
+          {
+            "group": "บริษัทต่างชาติ/สาขาไทยที่ต้องการ training เป็นภาษาอังกฤษ",
+            "why": "ต้องการคนที่สื่อสารได้ทั้งสองภาษา"
+          },
+          {
+            "group": "ทีม Data ที่มีคนต่างชาติปนอยู่และต้อง training ร่วมกัน",
+            "why": "ต้องการ trainer ที่คุยได้ทั้งสองภาษาในคลาสเดียว"
+          }
+        ],
+        "pain": [
+          "“หา trainer สอน Data/Tech เป็นภาษาอังกฤษได้ดีจริง ๆ ยาก”",
+          "“จัด training มาหลายครั้งแล้วพนักงานไม่ค่อยเก็บอะไรไปใช้ต่อ”",
+          "“ทีมมีทั้งคนไทยและต่างชาติ training แยกภาษาทำให้ไม่ทันกัน”"
+        ],
+        "offers": [
+          {
+            "format": "Corporate Training Package",
+            "desc": "สอน Presentation/Communication สำหรับทีม Data/Tech",
+            "price": "5,000 บาทขึ้นไป",
+            "outcome": "money"
+          },
+          {
+            "format": "Bilingual Workshop",
+            "desc": "ไทย-อังกฤษในคลาสเดียว สำหรับทีมนานาชาติ",
+            "price": "6,000 บาทขึ้นไป",
+            "outcome": "money"
+          },
+          {
+            "format": "Training Needs Consult",
+            "desc": "ประเมินก่อนว่าทีมต้องการ training แบบไหน",
+            "price": "1,500–3,000 บาท",
+            "outcome": "quality"
+          }
+        ],
+        "messages": [
+          "“บริษัทกำลังหา trainer สอน Data/Tech เป็นภาษาอังกฤษอยู่ไหมครับ ผมสอนได้สองภาษาเลย”",
+          "“จัด training แล้วพนักงานไม่ค่อยเก็บไปใช้ใช่ไหมครับ ผมมีสไตล์ที่ทำให้จำได้จริง”",
+          "“ทีมมีทั้งคนไทยและต่างชาติใช่ไหมครับ ผมสอนสองภาษาในคลาสเดียวได้นะ”"
+        ],
+        "contacts": [
+          "HR/L&D ที่เคยติดต่อเรื่อง Corporate Training",
+          "บริษัทต่างชาติในเครือข่าย",
+          "ทีม Data ที่มีคนต่างชาติปนอยู่"
+        ],
+        "seven_day": [
+          "ส่งข้อความหา HR/L&D ที่เคยติดต่อเรื่อง training เสนอ Package ใหม่",
+          "ทักบริษัทต่างชาติ 1 แห่งเสนอ Bilingual Workshop",
+          "โพสต์แนะนำบริการ Corporate Training สองภาษาในโปรไฟล์"
+        ]
+      },
+      {
+        "name": "Stage-Ready Tech Expert",
+        "candidates": [
+          "Stage Performer",
+          "ผู้เชี่ยวชาญ IT/Data ที่พูดเป็น"
+        ],
+        "pattern": "สังเกตจาก: มีพื้นฐาน Acting และความรู้ IT/Data ลึก → สัญญาณว่าคุณเป็น MC/Speaker ที่หายากเพราะเข้าใจเนื้อหาจริง ไม่ใช่แค่คุมเวที",
+        "outcome": [
+          "money",
+          "quality"
+        ],
+        "dna_options": [
+          "ผู้เชี่ยวชาญ Data ที่ใช้ทักษะการแสดงมาทำให้เนื้อหาเทคนิคจริงจังกลายเป็นเรื่องสนุกบนเวที",
+          "คนที่เชื่อว่า MC งานเทคที่ดีต้องเข้าใจของจริง ไม่ใช่แค่อ่านสคริปต์",
+          "Performer ที่เอาพื้นฐาน Acting มาทำให้พูดเรื่อง Data ไม่น่าเบื่อ"
+        ],
+        "buyers": [
+          {
+            "group": "งาน Event/สัมมนาสายเทคที่ต้องการ MC ที่เข้าใจเนื้อหาจริง",
+            "why": "หายากในตลาด MC ทั่วไป"
+          },
+          {
+            "group": "บริษัทเทคที่จัดงานเปิดตัวโปรดักต์และต้องการคนพูดที่เข้าใจของจริง",
+            "why": "ต้องการความน่าเชื่อถือทางเทคนิคบนเวที"
+          },
+          {
+            "group": "งาน Tech Conference ที่ต้องการ speaker พูดเรื่องยากให้สนุก",
+            "why": "proof of work จากพื้นฐาน Data จริง"
+          }
+        ],
+        "pain": [
+          "“อยากได้ MC งานสัมมนาที่เข้าใจเนื้อหาเทคนิคจริง ไม่ใช่แค่พิธีกรทั่วไป”",
+          "“จัดงานเปิดตัวโปรดักต์เทค แต่คนพูดเล่าเรื่องเทคนิคให้คนทั่วไปฟังไม่สนุก”",
+          "“จัด Tech Conference แล้ว speaker พูดน่าเบื่อ ผู้ฟังหลุดความสนใจ”"
+        ],
+        "offers": [
+          {
+            "format": "MC Package",
+            "desc": "พิธีกรสองภาษางานสัมมนา/เปิดตัวโปรดักต์สายเทค",
+            "price": "เริ่ม 8,000 บาท",
+            "outcome": "money"
+          },
+          {
+            "format": "Speaker Session",
+            "desc": "พูดหัวข้อ Data/AI ให้เข้าใจง่ายในงานสัมมนา",
+            "price": "เริ่ม 5,000 บาท",
+            "outcome": "money"
+          },
+          {
+            "format": "Tech Conference Package",
+            "desc": "MC+Speaker เต็มวันสำหรับงานใหญ่",
+            "price": "15,000 บาทขึ้นไป",
+            "outcome": "money"
+          }
+        ],
+        "messages": [
+          "“มีงานสัมมนาสายเทคเร็ว ๆ นี้ไหมครับ ผมรับเป็น MC สองภาษาที่เข้าใจเนื้อหาจริงด้วย”",
+          "“จัดงานเปิดตัวโปรดักต์เทคอยู่ไหมครับ ผมช่วยพูดให้เรื่องเทคนิคสนุกและเข้าใจง่ายได้”",
+          "“จัด Tech Conference อยู่ไหมครับ ผมรับทั้ง MC และ Speaker ได้เลย”"
+        ],
+        "contacts": [
+          "ผู้จัดงานสัมมนาสายเทคที่เคยเห็นผลงาน MC",
+          "บริษัทเทคในเครือข่าย",
+          "ผู้จัด Tech Conference ที่รู้จัก"
+        ],
+        "seven_day": [
+          "โพสต์ในโปรไฟล์ว่าเปิดรับงาน MC สายเทค/สัมมนา แล้วดูว่าใครทัก",
+          "ทักบริษัทเทค 1 แห่งเสนอ Speaker Session",
+          "ส่ง reel/คลิปตัวอย่างการพูดให้ผู้จัดงานที่เคยร่วมงานด้วย"
+        ]
+      },
+      {
+        "name": "จากดาต้าสู่ธุรกิจร้านกาแฟจริง",
+        "candidates": [
+          "เจ้าของธุรกิจ Bakery",
+          "Enterprise Data & AI Architect"
+        ],
+        "pattern": "สังเกตจาก: เอา Data มาใช้จริงกับร้าน brunchandbaked ของตัวเอง → สัญญาณว่าคุณมีเคสพิสูจน์จริงกับธุรกิจเล็ก ไม่ใช่แค่ทฤษฎีองค์กรใหญ่",
+        "outcome": [
+          "money",
+          "time"
+        ],
+        "dna_options": [
+          "ที่ปรึกษา Data/AI ที่เอา Data มาใช้ตัดสินใจกับร้าน brunchandbaked ของตัวเองจริง ๆ",
+          "คนที่เข้าใจ pain ของธุรกิจเล็กจากประสบการณ์ตรง ไม่ใช่แค่ทฤษฎีองค์กรใหญ่",
+          "เจ้าของร้านที่ใช้ความรู้ Data ช่วยตัวเองก่อน แล้วค่อยแบ่งปันให้คนอื่น"
+        ],
+        "buyers": [
+          {
+            "group": "เจ้าของร้าน/ธุรกิจ SME ขนาดเล็กที่อยากเริ่มใช้ Data แต่ไม่รู้จะเริ่มยังไง",
+            "why": "เขาเจอ pain เดียวกันนี้กับร้านตัวเองมาก่อน"
+          },
+          {
+            "group": "เจ้าของคาเฟ่/ร้านอาหารที่อยากรู้ว่าเมนู/เวลาขายไหนทำเงินจริง",
+            "why": "ใช้เคสจริงจากร้านตัวเองเป็น proof"
+          },
+          {
+            "group": "เจ้าของธุรกิจเล็กที่เพิ่งเริ่มเก็บข้อมูลแต่ไม่รู้จะวิเคราะห์ยังไง",
+            "why": "ต้องการคนแปล data เป็นการตัดสินใจจริง"
+          }
+        ],
+        "pain": [
+          "“เปิดร้านมาสักพักแล้วแต่ไม่รู้จริง ๆ ว่าเมนู/ช่วงเวลาไหนทำเงินให้ร้าน”",
+          "“อยากเริ่มใช้ Data/AI ในธุรกิจเล็ก ๆ ของตัวเอง แต่ไม่รู้จะเริ่มตรงไหน”",
+          "“เก็บข้อมูลร้านไว้เยอะแต่ไม่รู้จะเอามาใช้ตัดสินใจยังไง”"
+        ],
+        "offers": [
+          {
+            "format": "Mini Session 1:1",
+            "desc": "วางแผนเริ่มใช้ Data/AI สำหรับธุรกิจเล็ก จากประสบการณ์ทำร้านเอง",
+            "price": "1,000–2,500 บาท",
+            "outcome": "money"
+          },
+          {
+            "format": "Simple Dashboard Setup",
+            "desc": "Dashboard ง่าย ๆ ดูยอดขาย/เมนูขายดีสำหรับร้านเล็ก",
+            "price": "2,000–4,000 บาท",
+            "outcome": "time"
+          },
+          {
+            "format": "Data Reading Session",
+            "desc": "เอาข้อมูลร้านที่มีอยู่แล้วมาช่วยอ่านและแนะนำแอคชัน",
+            "price": "1,500–3,000 บาท",
+            "outcome": "money"
+          }
+        ],
+        "messages": [
+          "“เห็นว่าอยากเริ่มใช้ Data ในธุรกิจตัวเองใช่ไหมครับ ผมมีประสบการณ์ตรงจากการทำร้าน brunchandbaked เองด้วย”",
+          "“อยากรู้ไหมครับว่าเมนู/ช่วงเวลาไหนทำเงินให้ร้านจริง ๆ ผมช่วยทำ Dashboard ง่าย ๆ ให้ดูได้”",
+          "“มีข้อมูลร้านเก็บไว้เยอะแต่ไม่รู้จะใช้ยังไงใช่ไหมครับ ส่งมาให้ผมช่วยอ่านได้นะ”"
+        ],
+        "contacts": [
+          "เจ้าของธุรกิจ SME ในเครือข่ายที่อยากใช้ Data",
+          "เจ้าของร้านกาแฟ/ร้านอาหารที่รู้จัก",
+          "เจ้าของธุรกิจเล็กที่เก็บข้อมูลไว้แต่ไม่ได้ใช้"
+        ],
+        "seven_day": [
+          "ชวนเจ้าของร้าน/ธุรกิจเล็กที่รู้จัก 1 คนคุย 20 นาทีว่าอยากเห็น Data อะไรจากร้านบ้าง",
+          "ทำ Dashboard ตัวอย่างจากร้าน brunchandbaked โชว์เป็น portfolio",
+          "โพสต์แชร์ insight 1 อย่างที่ Data ช่วยร้านตัวเองได้"
+        ]
+      },
+      {
+        "name": "โค้ชนำเสนอสำหรับสาย Data/IT",
+        "candidates": [
+          "Stage Performer",
+          "ผู้เชี่ยวชาญ IT/Data ที่พูดเป็น"
+        ],
+        "pattern": "สังเกตจาก: คนถามเรื่องการพูด/นำเสนอ/พิธีกรบ่อยที่สุด → สัญญาณว่าคนสาย Data/IT รอบตัวคุณอยากมีทักษะนี้แต่ไม่มีใครสอนที่เข้าใจสายเดียวกัน",
+        "outcome": [
+          "quality",
+          "money"
+        ],
+        "dna_options": [
+          "คนสาย Data/IT ที่พูด/นำเสนอเก่งจนคนรอบตัวมาขอคำแนะนำเรื่องการพูดบ่อยที่สุด",
+          "โค้ชที่เคยกลัวพูดต่อหน้าคนมาก่อน เข้าใจว่าคนสายเทคกลัวอะไรจริง ๆ",
+          "คนที่เชื่อว่าทักษะพูดฝึกได้เหมือนทักษะเขียนโค้ด ไม่ใช่พรสวรรค์"
+        ],
+        "buyers": [
+          {
+            "group": "คนสาย Data/IT ที่เก่งงานแต่นำเสนอ/พูดในที่ประชุมไม่มั่นใจ",
+            "why": "เป็นสิ่งที่คนรอบตัวขอคำแนะนำอยู่แล้วบ่อยที่สุด"
+          },
+          {
+            "group": "เพื่อนร่วมทีมที่ต้องพรีเซนต์ผลงานแต่กลัวเวทีคนเยอะ",
+            "why": "pain ที่เจอบ่อยในทีมเทค"
+          },
+          {
+            "group": "นักศึกษาสาย IT/Data ที่ต้องนำเสนอ thesis/โปรเจกต์",
+            "why": "ต้องการโค้ชที่เข้าใจเนื้อหาสายเทค"
+          }
+        ],
+        "pain": [
+          "“เก่งงาน Data/IT มาก แต่พอต้องเข้าประชุมนำเสนอกลับพูดไม่ออก”",
+          "“กลัวพูดต่อหน้าคนเยอะ ทั้งที่ความรู้ในหัวมีเต็มไปหมด”",
+          "“ต้องนำเสนอ thesis/โปรเจกต์แต่ไม่มั่นใจการพูด”"
+        ],
+        "offers": [
+          {
+            "format": "Coaching Session",
+            "desc": "ฝึกนำเสนอสำหรับคนสาย Data/IT โดยเฉพาะ",
+            "price": "1,500–3,000 บาท",
+            "outcome": "quality"
+          },
+          {
+            "format": "Checklist เตรียมพรีเซนต์ Data/Tech",
+            "desc": "ให้ผู้บริหารอนุมัติง่ายขึ้น",
+            "price": "300–600 บาท",
+            "outcome": "time"
+          },
+          {
+            "format": "Thesis Presentation Coaching",
+            "desc": "สำหรับนักศึกษาสาย IT/Data",
+            "price": "800–1,500 บาท",
+            "outcome": "quality"
+          }
+        ],
+        "messages": [
+          "“เก่งงาน Data แต่นำเสนอไม่มั่นใจใช่ไหมครับ ผมเคยอยู่จุดนั้นมาก่อน ช่วยฝึกได้นะ”",
+          "“มี Checklist เตรียมพรีเซนต์งาน Data/Tech ให้ผู้บริหารอนุมัติง่ายขึ้น อยากลองดูไหมครับ”",
+          "“ต้องนำเสนอ thesis ใช่ไหมครับ ผมช่วยโค้ชให้มั่นใจขึ้นได้นะ”"
+        ],
+        "contacts": [
+          "เพื่อนร่วมทีม Data/IT ที่เคยบอกว่านำเสนอไม่มั่นใจ",
+          "คนที่เคยขอคำแนะนำเรื่องการพูด/นำเสนอ",
+          "นักศึกษาสาย IT/Data ที่รู้จัก"
+        ],
+        "seven_day": [
+          "ชวนเพื่อนที่นำเสนอไม่มั่นใจ 1 คนมาซ้อม 20 นาทีฟรีเพื่อขอ feedback",
+          "ทักน้องนักศึกษาสาย IT 1 คนเสนอช่วยโค้ช thesis presentation",
+          "โพสต์แชร์ 1 เทคนิคนำเสนอสำหรับคนสาย Data/IT"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "prang",
+    "nickname": "ปรางค์",
+    "fullname": "ณัชชา ไตรรัตน์ชัชวาลย์",
+    "role": "ที่ปรึกษาการเงิน & Freelance PM · น้อยกว่า 3 ปี",
+    "raw_skills": [
+      "Project Management",
+      "Facilitator/Moderator",
+      "คุยกับคนง่าย กล้าทักก่อน กล้าคุยก่อน",
+      "Connect people",
+      "ช่วยทำให้เกิดไอเดียและกล้าลงมือทำ (boost energy)",
+      "การ aware ความรู้สึกเก่งไม่พอ/ดีไม่พอ และ recover กลับมาได้",
+      "หา Promotion งานเซลล์ต่าง ๆ",
+      "จัดการการเงินตัวเองได้แม้ชอบใช้เงิน (ไม่ struggle เรื่องไม่มีเงินเก็บ)"
+    ],
+    "skill_candidates": [
+      {
+        "name": "Connector ตัวยง",
+        "source": "Connect people, คุยกับคนง่าย กล้าทักก่อน"
+      },
+      {
+        "name": "Energy Booster",
+        "source": "ช่วยทำให้เกิดไอเดียและกล้าลงมือทำ"
+      },
+      {
+        "name": "Facilitator/Moderator",
+        "source": "Facilitator/Moderator"
+      },
+      {
+        "name": "Freelance PM",
+        "source": "Project Management"
+      },
+      {
+        "name": "คนที่ recover จาก Imposter Syndrome ได้",
+        "source": "aware ความรู้สึกเก่งไม่พอ/ดีไม่พอ และ recover กลับมาได้"
+      }
+    ],
+    "skill_combos": [
+      {
+        "name": "Connector ที่หา Connection ให้ตรงคน",
+        "candidates": [
+          "Connector ตัวยง",
+          "Facilitator/Moderator"
+        ],
+        "pattern": "สังเกตจาก: เพื่อน ๆ ขอให้ “แนะนำคนที่กำลังมองหาอยู่ให้รู้จัก” ซ้ำที่สุด → สัญญาณว่าคุณคือ hub เชื่อมคนในเครือข่ายอยู่แล้วโดยธรรมชาติ",
+        "outcome": [
+          "money",
+          "time"
+        ],
+        "dna_options": [
+          "คนที่เพื่อน ๆ มักขอให้ “แนะนำคนที่กำลังมองหาอยู่ให้รู้จัก” กล้าทักก่อนและจับคู่คนที่ใช่ได้จริง",
+          "Connector ที่ไม่ได้แค่รู้จักคนเยอะ แต่จำได้ว่าใครต้องการอะไร",
+          "คนที่มองว่าทุก connection มีค่า ถ้าจับคู่ให้ถูกจังหวะ"
+        ],
+        "buyers": [
+          {
+            "group": "Freelancer/เจ้าของธุรกิจเล็กที่ต้องการ connection แต่ไม่กล้าทักคนใหม่เอง",
+            "why": "เป็นสิ่งที่เพื่อน ๆ ขอให้ช่วยอยู่แล้วบ่อยที่สุด"
+          },
+          {
+            "group": "คนที่กำลังหา partner/ลูกค้า/โอกาสงานแต่เครือข่ายจำกัด",
+            "why": "ใช้ทักษะ connect people ได้ตรงจุด"
+          },
+          {
+            "group": "คนย้ายเมือง/เปลี่ยนวงการใหม่ที่ยังไม่มีเครือข่าย",
+            "why": "ต้องการคนช่วยเปิดประตูแรก"
+          }
+        ],
+        "pain": [
+          "“อยากได้ connection ใหม่ ๆ แต่ไม่กล้าทักคนที่ไม่รู้จักเอง”",
+          "“รู้ว่าต้องขยายเครือข่าย แต่ไม่รู้จะเริ่มจากใคร/ที่ไหนก่อน”",
+          "“ย้ายมาวงการใหม่แล้วไม่รู้จักใครเลย”"
+        ],
+        "offers": [
+          {
+            "format": "Connection Matching Session",
+            "desc": "คุยว่าต้องการอะไร แล้วช่วยจับคู่คนที่ใช่ให้",
+            "price": "500–1,200 บาท",
+            "outcome": "money"
+          },
+          {
+            "format": "Warm Intro Package",
+            "desc": "แนะนำ 3 connection ที่ตรงจุดภายใน 2 สัปดาห์",
+            "price": "800–2,000 บาท",
+            "outcome": "time"
+          },
+          {
+            "format": "Network Starter สำหรับคนย้ายวงการ",
+            "desc": "เปิดประตูแรกให้คนที่ไม่มีเครือข่ายเลย",
+            "price": "1,000–2,500 บาท",
+            "outcome": "money"
+          }
+        ],
+        "messages": [
+          "“อยากได้ connection ใหม่ ๆ แต่ไม่กล้าทักเองใช่ไหมคะ ปรางค์ช่วยแนะนำคนที่ใช่ให้ได้นะ”",
+          "“บอกปรางค์มาว่ากำลังมองหาใคร/โอกาสแบบไหน ปรางค์ลองช่วยจับคู่ให้ดูค่ะ”",
+          "“ย้ายมาวงการใหม่ยังไม่รู้จักใครใช่ไหมคะ ปรางค์ช่วยเปิดประตูแรกให้ได้นะ”"
+        ],
+        "contacts": [
+          "เพื่อนที่เคยขอให้แนะนำคนรู้จัก",
+          "Freelancer ในเครือข่ายที่ต้องการ connection",
+          "คนที่เพิ่งย้ายวงการ/เมืองใหม่"
+        ],
+        "seven_day": [
+          "ถามเพื่อน 2 คนว่ากำลังมองหา connection แบบไหน แล้วลองจับคู่ให้ 1 คู่ภายใน 7 วัน",
+          "ทักคนที่เพิ่งย้ายวงการ 1 คน เสนอ Network Starter",
+          "โพสต์เสนอ Warm Intro Package ในกลุ่มเพื่อนที่ทำธุรกิจ"
+        ]
+      },
+      {
+        "name": "Energy Booster ที่ทำให้กล้าลงมือทำ",
+        "candidates": [
+          "Energy Booster",
+          "Facilitator/Moderator"
+        ],
+        "pattern": "สังเกตจาก: คนชมว่า “ช่วยทำให้เกิดไอเดียและกล้าลงมือทำ” → สัญญาณว่าคุณคือแรงผลักที่คนขาดตอนติดอยู่กับความคิด",
+        "outcome": [
+          "quality",
+          "money"
+        ],
+        "dna_options": [
+          "คนที่คนรอบตัวชมว่า “ช่วยทำให้เกิดไอเดียและกล้าลงมือทำ” ไม่ใช่แค่ให้กำลังใจลอย ๆ",
+          "Facilitator ที่ผลักดันคนให้ทำจริงมากกว่าคิดเฉย ๆ",
+          "คนที่เชื่อว่าพลังงานที่ถูกต้องสำคัญกว่าแผนที่สมบูรณ์แบบ"
+        ],
+        "buyers": [
+          {
+            "group": "คนที่มีไอเดียแต่ไม่กล้าเริ่มลงมือทำสักที",
+            "why": "ตรงกับสิ่งที่คนชมว่าเธอเก่งที่สุด"
+          },
+          {
+            "group": "คนรู้จักที่ดูเหมือนหมดพลัง/ไม่มั่นใจตัวเอง",
+            "why": "pain ที่พบบ่อยรอบตัวเธอ"
+          },
+          {
+            "group": "ทีมเล็กที่ไอเดียเยอะแต่ไม่มีใคร push ให้ทำจริง",
+            "why": "ใช้ทักษะ facilitator ผลักดันทีมได้"
+          }
+        ],
+        "pain": [
+          "“มีไอเดียอยู่ในหัวตั้งนานแล้ว แต่ไม่กล้าลงมือทำสักที”",
+          "“รู้สึกหมดพลัง ไม่มั่นใจตัวเอง จนไม่กล้าตัดสินใจทำอะไรใหม่ ๆ”",
+          "“ทีมมีไอเดียเยอะแต่ไม่มีใครผลักให้ลงมือทำจริง”"
+        ],
+        "offers": [
+          {
+            "format": "Energy & Action Session 45 นาที",
+            "desc": "คุยไอเดียแล้ว push ให้ลงมือทำจริง",
+            "price": "500–1,200 บาท",
+            "outcome": "quality"
+          },
+          {
+            "format": "Accountability Check-in รายสัปดาห์",
+            "desc": "ติดตามว่าลงมือทำถึงไหนแล้ว",
+            "price": "300–800 บาท/ครั้ง",
+            "outcome": "quality"
+          },
+          {
+            "format": "Team Kickoff Facilitation",
+            "desc": "ผลักดันทีมให้เริ่มลงมือจากไอเดียที่มี",
+            "price": "1,500–3,000 บาท",
+            "outcome": "money"
+          }
+        ],
+        "messages": [
+          "“มีไอเดียที่ยังไม่กล้าเริ่มใช่ไหมคะ ลองคุยกับปรางค์ดู ช่วย push ให้เริ่มได้จริงนะ”",
+          "“อยากมีคนช่วย follow ว่าทำไอเดียถึงไหนแล้วไหมคะ ปรางค์เช็คอินให้ได้ค่ะ”",
+          "“ทีมมีไอเดียเยอะแต่ไม่มีใคร push ใช่ไหมคะ ปรางค์ช่วยผลักดันให้ได้นะ”"
+        ],
+        "contacts": [
+          "เพื่อนที่เคยมีไอเดียแต่ไม่กล้าเริ่ม",
+          "คนรู้จักที่ดูเหมือนหมดพลัง/ไม่มั่นใจตัวเอง",
+          "ทีมเล็กที่มีไอเดียค้างอยู่"
+        ],
+        "seven_day": [
+          "ชวนเพื่อน 1 คนที่มีไอเดียค้างอยู่มาคุย 30 นาที ผลักดันให้เริ่มก้าวแรก",
+          "เสนอ Team Kickoff Facilitation ให้ทีมเล็ก 1 ทีมที่รู้จัก",
+          "โพสต์ถามเพื่อน ๆ ว่าใครมีไอเดียค้างอยู่ที่อยากถูก push ให้เริ่ม"
+        ]
+      },
+      {
+        "name": "รับมือความรู้สึกเก่งไม่พอ",
+        "candidates": [
+          "คนที่ recover จาก Imposter Syndrome ได้",
+          "Energy Booster"
+        ],
+        "pattern": "สังเกตจาก: เขียนเล่าตรง ๆ ว่าเคย aware ความรู้สึกเก่งไม่พอแล้ว recover ได้เอง → สัญญาณว่าคุณผ่านสิ่งที่ฟรีแลนซ์/ผู้ประกอบการใหม่ส่วนใหญ่กำลังเจอ",
+        "outcome": [
+          "quality"
+        ],
+        "dna_options": [
+          "คนที่เคยรู้สึก “เก่งไม่พอ ดีไม่พอ” แล้วหาทาง recover กลับมาได้ด้วยตัวเอง",
+          "คนที่ไม่ได้แกล้งทำเป็นเข้มแข็งตลอดเวลา แต่แชร์ช่วงที่อ่อนแอจริง ๆ",
+          "นักเดินทางที่ผ่านความไม่มั่นใจมาเอง เลยรู้ทางออกที่ใช้ได้จริง ไม่ใช่ทฤษฎี"
+        ],
+        "buyers": [
+          {
+            "group": "Freelancer/คนออกมาทำธุรกิจตัวเองใหม่ ๆ ที่รู้สึก imposter syndrome",
+            "why": "เป็น pain ที่เธอเคยผ่านมาโดยตรงระหว่างออกมาทำฟรีแลนซ์"
+          },
+          {
+            "group": "คนที่กำลังเปลี่ยนสาย/เริ่มอะไรใหม่แล้วรู้สึกไม่มั่นใจตัวเอง",
+            "why": "pain แบบเดียวกันในสถานการณ์เปลี่ยนผ่าน"
+          },
+          {
+            "group": "คนที่ชอบใช้เงินแต่กังวลว่าตัวเองจัดการเงินไม่เป็น",
+            "why": "เชื่อมกับ pain การเงินที่เธอก็เคยแก้ได้เอง"
+          }
+        ],
+        "pain": [
+          "“ออกมาทำธุรกิจ/ฟรีแลนซ์เอง แล้วรู้สึกว่าตัวเองเก่งไม่พอ ดีไม่พอตลอดเวลา”",
+          "“รู้สึกท้อจนอยาก recover กลับมา แต่ไม่รู้จะเริ่มยังไง”",
+          "“ชอบใช้เงินแต่กังวลว่าตัวเองจัดการเงินไม่เป็นเลย”"
+        ],
+        "offers": [
+          {
+            "format": "Real Talk Session",
+            "desc": "คุยเรื่องความรู้สึกเก่งไม่พอแบบตรง ๆ พร้อมวิธี recover",
+            "price": "500–1,000 บาท",
+            "outcome": "quality"
+          },
+          {
+            "format": "Mini Guide",
+            "desc": "วิธี aware และ recover จากความรู้สึกเก่งไม่พอ",
+            "price": "200–400 บาท",
+            "outcome": "quality"
+          },
+          {
+            "format": "Money + Mindset Session",
+            "desc": "คุยทั้งเรื่องเงินและความมั่นใจไปพร้อมกัน",
+            "price": "800–1,500 บาท",
+            "outcome": "quality"
+          }
+        ],
+        "messages": [
+          "“รู้สึกเก่งไม่พอ ดีไม่พอบ้างไหมคะ ปรางค์เคยผ่านจุดนั้นมาเหมือนกัน ลองคุยกันได้นะ”",
+          "“มี guide สั้น ๆ วิธี recover จากความรู้สึกเก่งไม่พอ จากประสบการณ์ตรงของปรางค์ อยากอ่านไหมคะ”",
+          "“ชอบใช้เงินแต่กังวลจัดการไม่เป็นใช่ไหมคะ ปรางค์เคยผ่านมาเหมือนกัน มาคุยกันได้นะ”"
+        ],
+        "contacts": [
+          "เพื่อนฟรีแลนซ์/เจ้าของธุรกิจใหม่ที่เคยบ่นเรื่องความมั่นใจ",
+          "คนที่กำลังเปลี่ยนสายอาชีพ",
+          "เพื่อนที่เคยบ่นเรื่องจัดการเงินไม่เป็น"
+        ],
+        "seven_day": [
+          "ทักเพื่อน 1 คนที่เคยบ่นเรื่องความมั่นใจ ชวนคุย Real Talk Session ฟรีรอบแรก",
+          "โพสต์เล่าประสบการณ์ตรงเรื่อง imposter syndrome ของตัวเอง 1 เรื่อง",
+          "ทำ Mini Guide เวอร์ชันแรกแจกให้เพื่อน 2 คนอ่าน"
+        ]
+      },
+      {
+        "name": "PM ที่ทำให้โปรเจกต์ไม่หลุดมือ",
+        "candidates": [
+          "Freelance PM",
+          "Connector ตัวยง"
+        ],
+        "pattern": "สังเกตจาก: มีพื้นฐาน Project Management และกำลังทำ Freelance PM อยู่แล้ว → สัญญาณว่านี่คือทักษะที่ตลาดจ่ายเงินซื้อได้ทันทีโดยไม่ต้องสร้างใหม่",
+        "outcome": [
+          "time",
+          "money"
+        ],
+        "dna_options": [
+          "Freelance PM ที่ดูแลโปรเจกต์คนอื่นให้ไม่หลุดมือ",
+          "คนที่เก่งจัดลำดับความสำคัญ เพราะบริหารหลายโปรเจกต์ของตัวเองมาก่อน",
+          "PM ที่เชื่อมคนในทีมได้ดี เพราะเป็น connector โดยธรรมชาติอยู่แล้ว"
+        ],
+        "buyers": [
+          {
+            "group": "เจ้าของธุรกิจเล็ก/ฟรีแลนซ์ที่มีหลายโปรเจกต์พร้อมกันจนหลุดมือ",
+            "why": "ใช้ทักษะ PM หลักโดยตรง"
+          },
+          {
+            "group": "ทีมเล็กที่ไม่มีงบจ้าง PM ประจำ",
+            "why": "ต้องการ PM ชั่วคราวช่วงโปรเจกต์สำคัญ"
+          },
+          {
+            "group": "Founder ที่เพิ่งเริ่มมีทีมและไม่เคยบริหารโปรเจกต์มาก่อน",
+            "why": "ต้องการคนวางระบบให้ตั้งแต่ต้น"
+          }
+        ],
+        "pain": [
+          "“มีหลายโปรเจกต์พร้อมกันจนหลุดมือ ไม่รู้อันไหนควรโฟกัสก่อน”",
+          "“ทีมเล็กไม่มีงบจ้าง PM ประจำ แต่โปรเจกต์ก็ต้องการคนคุม”",
+          "“เพิ่งเริ่มมีทีมแต่ไม่เคยบริหารโปรเจกต์มาก่อนเลย”"
+        ],
+        "offers": [
+          {
+            "format": "Freelance PM Package 1-3 เดือน",
+            "desc": "ดูแลโปรเจกต์ระยะสั้น",
+            "price": "3,000 บาทขึ้นไป",
+            "outcome": "time"
+          },
+          {
+            "format": "Project Rescue Session",
+            "desc": "ช่วยจัดลำดับความสำคัญโปรเจกต์ที่หลุดมือ",
+            "price": "1,000–2,000 บาท",
+            "outcome": "time"
+          },
+          {
+            "format": "PM System Setup",
+            "desc": "วางระบบบริหารโปรเจกต์ให้ทีมใหม่",
+            "price": "2,000–4,000 บาท",
+            "outcome": "time"
+          }
+        ],
+        "messages": [
+          "“มีหลายโปรเจกต์จนหลุดมือใช่ไหมคะ ปรางค์ช่วยจัดลำดับและดูแลให้ได้นะ”",
+          "“ทีมเล็กไม่มี PM ประจำใช่ไหมคะ ปรางค์รับดูแลโปรเจกต์ระยะสั้นได้ค่ะ”",
+          "“เพิ่งเริ่มมีทีมใช่ไหมคะ ปรางค์ช่วยวางระบบบริหารโปรเจกต์ให้ได้นะ”"
+        ],
+        "contacts": [
+          "เจ้าของธุรกิจเล็ก/ฟรีแลนซ์ในเครือข่ายที่มีหลายโปรเจกต์",
+          "ทีมเล็กที่เคยขาด PM",
+          "Founder ที่เพิ่งเริ่มมีทีม"
+        ],
+        "seven_day": [
+          "ทักเพื่อน 1 คนที่มีหลายโปรเจกต์พร้อมกัน เสนอ Project Rescue Session ฟรีรอบแรก",
+          "ทัก Founder 1 คนที่เพิ่งเริ่มมีทีม เสนอ PM System Setup",
+          "โพสต์แนะนำบริการ Freelance PM ในโปรไฟล์"
+        ]
+      },
+      {
+        "name": "นักจัดกิจกรรมที่รู้ใจคน",
+        "candidates": [
+          "Facilitator/Moderator",
+          "Connector ตัวยง"
+        ],
+        "pattern": "สังเกตจาก: เพื่อน ๆ ขอให้ “ชวนไปทำกิจกรรมที่น่าจะเหมาะกับคน ๆ นั้น” → สัญญาณว่าคุณอ่านคนออกและจับคู่กิจกรรมได้แม่นกว่าทั่วไป",
+        "outcome": [
+          "quality"
+        ],
+        "dna_options": [
+          "คนที่เพื่อน ๆ ไว้ใจให้ชวนไปทำกิจกรรมที่ “ใช่” สำหรับคนคนนั้นโดยเฉพาะ",
+          "Facilitator ที่จับสัญญาณว่าใครต้องการอะไรก่อนที่เขาจะพูดออกมา",
+          "คนที่เชื่อว่ากิจกรรมที่ใช่เปลี่ยนพลังงานคนได้มากกว่าคำแนะนำใด ๆ"
+        ],
+        "buyers": [
+          {
+            "group": "คนที่อยากออกไปทำกิจกรรมใหม่ ๆ แต่ไม่รู้จะเลือกอะไรที่ใช่กับตัวเอง",
+            "why": "ตรงกับสิ่งที่เพื่อน ๆ ขอให้ช่วยอยู่แล้วบ่อยที่สุด"
+          },
+          {
+            "group": "ทีม/กลุ่มเพื่อนที่อยากจัด team bonding แต่ไม่รู้จะจัดอะไร",
+            "why": "ใช้ facilitator skill วางแผนกิจกรรมกลุ่มได้"
+          },
+          {
+            "group": "คนที่เพิ่งย้ายเมือง/เริ่มชีวิตใหม่และอยากหาสังคมที่ใช่",
+            "why": "เชื่อมกับทักษะ connect people ของเธอ"
+          }
+        ],
+        "pain": [
+          "“อยากลองทำกิจกรรมใหม่ ๆ แต่ไม่รู้จะเลือกอะไรที่เหมาะกับตัวเองจริง ๆ”",
+          "“อยากจัด team bonding ให้ทีม แต่คิดไม่ออกว่ากิจกรรมแบบไหนจะเหมาะ”",
+          "“ย้ายมาเมืองใหม่แล้วไม่รู้จะหาสังคม/กิจกรรมที่ใช่ยังไง”"
+        ],
+        "offers": [
+          {
+            "format": "Activity Matching Session",
+            "desc": "คุยแล้วแนะนำกิจกรรมที่ใช่กับคน ๆ นั้น",
+            "price": "300–800 บาท",
+            "outcome": "quality"
+          },
+          {
+            "format": "Team Bonding Curator",
+            "desc": "วางแผนกิจกรรมให้ทีม/กลุ่มเพื่อน",
+            "price": "1,500–3,000 บาท",
+            "outcome": "quality"
+          },
+          {
+            "format": "New City Social Starter",
+            "desc": "แนะนำกิจกรรม/สังคมสำหรับคนย้ายเมืองใหม่",
+            "price": "500–1,200 บาท",
+            "outcome": "quality"
+          }
+        ],
+        "messages": [
+          "“อยากลองทำกิจกรรมใหม่ ๆ แต่ไม่รู้จะเลือกอะไรใช่ไหมคะ คุยกับปรางค์ได้เลย ช่วยแมทช์ให้”",
+          "“อยากจัด team bonding ให้ทีมไหมคะ ปรางค์ช่วยวางแผนกิจกรรมที่เหมาะให้ได้ค่ะ”",
+          "“ย้ายมาเมืองใหม่ใช่ไหมคะ ปรางค์ช่วยแนะนำกิจกรรม/สังคมที่ใช่ให้ได้นะ”"
+        ],
+        "contacts": [
+          "เพื่อนที่เคยขอให้แนะนำกิจกรรม",
+          "ทีม/กลุ่มเพื่อนที่อยากจัด team bonding",
+          "คนที่เพิ่งย้ายเมืองใหม่"
+        ],
+        "seven_day": [
+          "ถามเพื่อน 2 คนว่าอยากลองกิจกรรมแบบไหน แล้วแนะนำให้ 1 อย่างภายใน 7 วัน",
+          "เสนอ Team Bonding Curator ให้ทีมเล็ก 1 ทีมที่รู้จัก",
+          "ทักคนที่เพิ่งย้ายเมืองใหม่ 1 คน แนะนำกิจกรรม/สังคมที่น่าจะใช่"
+        ]
+      }
+    ]
+  }
+]
+;
+
+/* ============ state ============ */
+let currentPerson = null;
+let currentMode = null; // 'survey' | 'ai'
+let lastFormData = null;
+
+/* ============ view routing ============ */
+function showView(id){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+function goHome(){ showView('view-home'); }
+function goSelect(){ currentMode='survey'; renderSelectGrid(); showView('view-select'); }
+function goForm(){ currentMode='ai'; document.getElementById('formErr').style.display='none'; showView('view-form'); }
+function goBackFromResult(){
+  if(currentMode==='survey'){ goSelect(); } else { goForm(); }
+}
+
+/* ============ select grid ============ */
+function renderSelectGrid(){
+  const grid = document.getElementById('selectGrid');
+  grid.innerHTML = '';
+  PEOPLE.forEach(p=>{
+    const btn = document.createElement('button');
+    btn.className = 'personpill';
+    btn.innerHTML = `<span class="nick">${p.nickname}</span><span class="role">${p.role}</span>`;
+    btn.onclick = ()=>{ renderInsight(p); showView('view-result'); };
+    grid.appendChild(btn);
+  });
+}
+
+/* ============ generic selectable option group ============ */
+function renderOptionGroup(containerId, items, renderItem){
+  const el = document.getElementById(containerId);
+  el.innerHTML = '';
+  items.forEach((item)=>{
+    const card = document.createElement('div');
+    card.className = 'optioncard';
+    card.innerHTML = renderItem(item) + '<span class="pickmark"></span>';
+    card.addEventListener('click', (e)=>{
+      if(e.target.closest('.oc-copybtn')) return;
+      el.querySelectorAll('.optioncard').forEach(c=>c.classList.remove('selected'));
+      card.classList.add('selected');
+    });
+    el.appendChild(card);
+  });
+  return el;
+}
+
+function copyText(text){
+  const clean = (text || '').replace(/[“”]/g,'');
+  navigator.clipboard.writeText(clean).then(()=>showToast('คัดลอกแล้ว'));
+}
+
+/* ============ toggle KNOW sections ============ */
+function toggleSection(key){
+  const el = document.getElementById('sec-'+key);
+  el.classList.toggle('open');
+  const dot = document.querySelector(`.pdot[data-${key}]`);
+  if(el.classList.contains('open')) dot.classList.add('done');
+}
+
+/* ============ print / save as PDF ============ */
+function printResult(){
+  const printWindow = window.open('', '_blank');
+  if(!printWindow){
+    showToast('เบราว์เซอร์บล็อกป๊อปอัพ กรุณาอนุญาตแล้วลองอีกครั้ง');
+    return;
+  }
+  const headBits = document.querySelectorAll('style, link[rel="stylesheet"]');
+  let headExtra = '';
+  headBits.forEach(el=>{ headExtra += el.outerHTML; });
+  const resultHTML = document.getElementById('view-result').innerHTML;
+  const personName = currentPerson ? currentPerson.nickname : 'KNOW Rescue Kit';
+
+  printWindow.document.open();
+  printWindow.document.write(
+    '<!DOCTYPE html><html lang="th"><head><meta charset="UTF-8">' +
+    '<title>KNOW Rescue Kit — ' + personName + '</title>' +
+    headExtra +
+    '<style>body{background:#fff;margin:0;padding:24px;} .no-print{display:none!important;} .know-content{grid-template-rows:1fr!important;} .wrap{max-width:900px;margin:0 auto;padding:0;} .gatebox{display:none!important;}</style>' +
+    '</head><body><div class="wrap">' + resultHTML + '</div></body></html>'
+  );
+  printWindow.document.close();
+
+  const triggerPrint = ()=>{ try{ printWindow.focus(); printWindow.print(); }catch(e){} };
+  if(printWindow.document.readyState === 'complete'){
+    setTimeout(triggerPrint, 400);
+  } else {
+    printWindow.onload = ()=> setTimeout(triggerPrint, 300);
+    setTimeout(triggerPrint, 900);
+  }
+}
+
+/* ============ render insight (shared by both modes) ============ */
+function renderInsight(p){
+  currentPerson = p;
+  document.getElementById('rNick').textContent = p.nickname;
+  document.getElementById('rRole').textContent = p.role;
+
+  const rawEl = document.getElementById('rRawSkills');
+  rawEl.innerHTML = p.raw_skills.map((s,i)=>`<div class="skillrow"><div class="num">${i+1}</div><div class="txt">${s}</div></div>`).join('');
+
+  const candEl = document.getElementById('rCandidates');
+  candEl.innerHTML = p.skill_candidates.map(c=>`<div class="candidatecard"><div class="cname">${c.name}</div><div class="csource">จาก: ${c.source}</div></div>`).join('');
+
+  renderComboCards(p);
+  resetComboSelection();
+
+  ['k','n','o','w'].forEach(k=>{
+    document.getElementById('sec-'+k).classList.remove('open');
+    const dot = document.querySelector(`.pdot[data-${k}]`);
+    if(dot) dot.classList.remove('done');
+  });
+}
+
+function renderComboCards(p){
+  const el = document.getElementById('rCombos');
+  el.innerHTML = '';
+  p.skill_combos.forEach((c, idx)=>{
+    const card = document.createElement('div');
+    card.className = 'optioncard combocard';
+    card.innerHTML = `
+      <div class="oc-title">${c.name}</div>
+      <div class="outcome-badges">${outcomeBadges(c.outcome)}</div>
+      <div class="oc-combine">มาจาก Skill Candidate: ${(c.candidates||[]).join(' + ')}</div>
+      <div class="patternbox">🔍 ${c.pattern}</div>
+      <span class="pickmark"></span>
+    `;
+    card.addEventListener('click', ()=>{
+      el.querySelectorAll('.optioncard').forEach(x=>x.classList.remove('selected'));
+      card.classList.add('selected');
+      selectCombo(p, idx);
+    });
+    el.appendChild(card);
+  });
+}
+
+function resetComboSelection(){
+  document.getElementById('dnaWrap').style.display = 'none';
+  ['n','o','w'].forEach(k=>{
+    document.getElementById('gate-'+k).style.display = 'flex';
+    document.getElementById('content-'+k).style.display = 'none';
+  });
+}
+
+function selectCombo(p, idx){
+  const c = p.skill_combos[idx];
+
+  document.getElementById('dnaWrap').style.display = 'block';
+  renderOptionGroup('rDnaOptions', c.dna_options, d=>`<div class="oc-quote">${d}</div>`);
+
+  renderOptionGroup('rBuyers', c.buyers, b=>`<div class="oc-title">${b.group}</div><div class="oc-desc">✓ ${b.why}</div>`);
+  renderOptionGroup('rPainOptions', c.pain, pn=>`<div class="oc-quote">${pn}</div>`);
+
+  renderOptionGroup('rOffers', c.offers, o=>`
+    <div class="oc-title">${outcomeTag(o.outcome)} ${o.format}</div>
+    <div class="oc-desc">${o.desc}</div>
+    <div class="oc-price">Beta Price: ${o.price}</div>
+  `);
+
+  const msgEl = renderOptionGroup('rMessages', c.messages, m=>`
+    <div class="oc-msgtext">${m}</div>
+    <button type="button" class="oc-copybtn" data-copy>📋 คัดลอก</button>
+  `);
+  msgEl.querySelectorAll('.oc-copybtn').forEach((btn, i)=>{
+    btn.addEventListener('click', (e)=>{ e.stopPropagation(); copyText(c.messages[i]); });
+  });
+
+  document.getElementById('rContacts').innerHTML = c.contacts.map(x=>`<div class="contactrow"><span class="ck"></span>${x}</div>`).join('');
+
+  renderOptionGroup('rSevenOptions', c.seven_day, s=>`<div class="oc-desc">${s}</div>`);
+
+  ['n','o','w'].forEach(k=>{
+    document.getElementById('gate-'+k).style.display = 'none';
+    document.getElementById('content-'+k).style.display = 'block';
+  });
+
+  showToast('เปิดตัวเลือก Buyer, Offer และ Message ของ Combo นี้แล้ว ✅');
+}
+
+/* ============ path B: generate a copyable prompt (no API call) ============ */
+function buildPrompt(data){
+  return `คุณคือผู้ช่วยของ Workshop "Sell What You Know" ที่ใช้ KNOW Framework (Knowledge → Need → Offer → Win) ช่วยฉันที่ยังนึกไม่ออกว่าตัวเองมีอะไรขายได้
+
+กติกาสำคัญ:
+- ห้ามให้คำแนะนำทั่วไปที่ AI ไหนก็คิดได้ ต้องใช้รายละเอียด/คำพูด/ตัวเลขที่ฉันเล่ามาจริงในการตั้งชื่อ Skill Candidate, Skill Combo, DNA, และ Offer ทุกจุด อย่าเขียนอะไรที่เอาไปใช้กับใครก็ได้
+- แต่ละ Skill Combo ต้องบอก "🔍 Pattern ที่สังเกตเห็น" คือสังเกตจากอะไรซ้ำ ๆ ในคำตอบของฉัน หรือมาจาก pain แบบไหน แล้วสรุปว่าทำไมถึงคิดว่า Combo นี้ช่วยคนอื่นได้ (รูปแบบ: "สังเกตจาก... → สัญญาณว่า...")
+- แต่ละ Offer ต้องบอกชัดว่าช่วยชีวิตผู้ซื้อดีขึ้นด้าน 💰 เงินเพิ่มขึ้น / ⏱️ เวลาน้อยลง / 🌱 คุณภาพชีวิตดีขึ้น (อย่างน้อย 1 ด้าน) ไม่จำเป็นต้องเป็นของใหม่เสมอไป จะต่อยอดจากสิ่งที่ฉันทำอยู่แล้วก็ได้
+- ทุกหมวด (DNA, Buyer, Pain, Offer, Message, 7-Day Action) ต้องมีอย่างน้อย 3 ตัวเลือกให้ฉันเลือกเอง ห้ามฟันธงคำตอบเดียว เพราะฉันต้องเป็นคนเลือกเอง ไม่ใช่ AI เลือกให้
+- ห้ามแนะนำสิ่งที่ฉันบอกว่าไม่อยากทำเด็ดขาด
+
+ข้อมูลของฉัน:
+- คนรอบตัวมักขอให้ฉันช่วยเรื่อง: ${data.q1 || "ไม่ได้ระบุ"}
+- เคยเจอปัญหาอะไรแล้วแก้ได้เอง: ${data.q2 || "ไม่ได้ระบุ"}
+- มี skill/ประสบการณ์: ${data.q3 || "ไม่ได้ระบุ"}
+- อยากช่วยคนแบบไหน: ${data.q4 || "ไม่ได้ระบุ"}
+- สิ่งที่ไม่อยากทำ: ${data.q5 || "ไม่มี"}
+
+ช่วยตอบกลับมาเป็นภาษาไทย จัดรูปแบบด้วยหัวข้อและอีโมจิตามนี้ (อ่านง่าย ไม่ต้องมีคำนำหรือสรุปท้ายเพิ่มเติม):
+
+## 🧩 สกิล/ประสบการณ์ทั้งหมดที่ฉันมี
+(ลิสต์สกิลทั้งหมดที่แยกได้จากคำตอบของฉันด้านบน ให้ครบ ไม่ตัดทอน)
+
+## 🎯 Skill Candidate (5 ตัว)
+(ตั้งชื่อสกิลที่พร้อมขายได้ 5 ชื่อ แต่ละชื่อบอกด้วยว่า "จาก:" อะไรในคำตอบของฉัน)
+
+## 🔗 Skill Combo (5 แบบ)
+สำหรับแต่ละ Combo ให้มีหัวข้อย่อยชื่อ Combo แล้วตามด้วย:
+- มาจาก Skill Candidate: (ระบุ 2 ชื่อที่ใช้)
+- 🔍 Pattern ที่สังเกตเห็น: ...
+- ด้านที่ช่วยชีวิตดีขึ้น: 💰/⏱️/🌱
+- 🧬 My DNA (3 ตัวเลือก มุมมองต่างกันจริง)
+- 🎯 Buyer (3 กลุ่ม พร้อมเหตุผลว่าทำไมทดสอบได้ใน 7 วัน)
+- 💬 Pain Language (3 ประโยคคำพูดลูกค้า)
+- 📦 Offer Idea (3 ไอเดีย พร้อม format / ราคา Beta / ด้านที่ช่วย)
+- ✉️ First Message (3 แบบ พร้อมใช้ส่งจริง)
+- 📇 First Contact List (3 คน/กลุ่มที่ควรส่งให้ก่อน)
+- 🗓️ ภายใน 7 วัน (3 ไอเดียแอคชันให้เลือก)`;
+}
+
+function collectForm(){
+  return {
+    name: document.getElementById('q0').value.trim(),
+    q1: document.getElementById('q1').value.trim(),
+    q2: document.getElementById('q2').value.trim(),
+    q3: document.getElementById('q3').value.trim(),
+    q4: document.getElementById('q4').value.trim(),
+    q5: document.getElementById('q5').value.trim()
+  };
+}
+
+function submitForm(){
+  const data = collectForm();
+  if(!data.q1 || !data.q2 || !data.q3 || !data.q4){
+    document.getElementById('formErr').style.display = 'block';
+    return;
+  }
+  document.getElementById('formErr').style.display = 'none';
+  lastFormData = data;
+
+  try{
+    const prompt = buildPrompt(data);
+    document.getElementById('promptOutput').textContent = prompt;
+    showView('view-promptresult');
+  }catch(err){
+    console.error('Prompt build error:', err);
+    document.getElementById('errorMsg').textContent = 'สร้าง Prompt ไม่สำเร็จ ลองแก้คำตอบแล้วลองใหม่อีกครั้ง';
+    showView('view-error');
+  }
+}
+
+function copyGeneratedPrompt(){
+  const text = document.getElementById('promptOutput').textContent || '';
+  navigator.clipboard.writeText(text).then(()=>showToast('คัดลอก Prompt แล้ว ไปวางในแชท AI ได้เลย'));
+}
+
+function openExternal(url){
+  window.open(url, '_blank');
+}
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2200);
+}
+</script>
+</body>
+</html>
