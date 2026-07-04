@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sell What You Know — AI Prompt Pack</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@500;600;700;800&family=Sarabun:wght@400;500;600;700&display=swap');
+
+  :root{
+    --navy:#17264A;
+    --navy-deep:#0E1730;
+    --pink:#E31C5F;
+    --pink-deep:#B9134C;
+    --gold:#FFC845;
+    --cream:#FBF3ED;
+    --pink-tint:#FDE7EE;
+    --blue-tint:#EAF1FC;
+    --ink:#22263A;
+    --muted:#6B7280;
+    --line:#EEE1DA;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Sarabun','Prompt','Leelawadee UI','Noto Sans Thai',-apple-system,'Segoe UI',sans-serif;
+    line-height:1.6;
+  }
+
+  .wrap{max-width:880px;margin:0 auto;padding:0 20px 80px;}
+
+  /* ---------- Header ---------- */
+  .hero{
+    background:linear-gradient(160deg,var(--navy) 0%,var(--navy-deep) 100%);
+    color:#fff;
+    padding:52px 28px 40px;
+    border-radius:0 0 32px 32px;
+    position:relative;
+    overflow:hidden;
+    text-align:center;
+  }
+  .hero::before{
+    content:"";
+    position:absolute; top:-60px; right:-60px;
+    width:220px;height:220px;border-radius:50%;
+    background:radial-gradient(circle,var(--pink) 0%,transparent 70%);
+    opacity:.55;
+  }
+  .hero::after{
+    content:"";
+    position:absolute; bottom:-80px; left:-40px;
+    width:180px;height:180px;border-radius:50%;
+    background:radial-gradient(circle,#3F5AA6 0%,transparent 70%);
+    opacity:.45;
+  }
+  .eyebrow{
+    position:relative;z-index:1;
+    display:inline-flex;align-items:center;gap:8px;
+    background:rgba(255,255,255,.1);
+    border:1px solid rgba(255,255,255,.25);
+    padding:6px 16px;border-radius:999px;
+    font-size:13px;letter-spacing:.06em;font-weight:600;
+    color:var(--gold);
+  }
+  .hero h1{
+    position:relative;z-index:1;
+    font-family:'Prompt',sans-serif;
+    font-size:clamp(28px,5vw,44px);
+    font-weight:800;margin:18px 0 6px;
+    line-height:1.2;
+  }
+  .hero h1 span{color:var(--gold);}
+  .hero p.sub{
+    position:relative;z-index:1;
+    font-size:16px;color:#DCE3F5;margin:0 0 22px;
+    font-weight:500;
+  }
+  .quote-badge{
+    position:relative;z-index:1;
+    max-width:520px;margin:0 auto;
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.18);
+    border-radius:16px;
+    padding:16px 20px;
+    font-size:14.5px;
+    color:#F4E9DC;
+  }
+  .quote-badge b{color:#fff;}
+  .credit{
+    position:relative;z-index:1;
+    margin-top:18px;font-size:12.5px;color:#B9C3DE;
+  }
+
+  /* ---------- Diamond signature icon ---------- */
+  .diamond{display:inline-block;width:18px;height:18px;vertical-align:-3px;}
+
+  /* ---------- How to use ---------- */
+  .howto{
+    margin:-28px 8px 34px;
+    background:#fff;
+    border-radius:20px;
+    box-shadow:0 10px 30px rgba(23,38,74,.10);
+    padding:26px 24px;
+    position:relative;
+    z-index:2;
+  }
+  .howto h2{
+    font-family:'Prompt',sans-serif;
+    font-size:19px;font-weight:700;color:var(--navy);
+    margin:0 0 14px;display:flex;align-items:center;gap:8px;
+  }
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+  @media(max-width:640px){.steps{grid-template-columns:1fr;}}
+  .step{
+    background:var(--blue-tint);
+    border-radius:14px;
+    padding:16px 14px;
+  }
+  .step .num{
+    width:26px;height:26px;border-radius:50%;
+    background:var(--navy);color:#fff;
+    display:flex;align-items:center;justify-content:center;
+    font-weight:700;font-size:13px;margin-bottom:10px;
+  }
+  .step p{margin:0;font-size:14px;color:var(--ink);}
+
+  .rule{
+    margin-top:16px;
+    background:var(--pink-tint);
+    border-radius:14px;
+    padding:14px 18px;
+    font-size:14.5px;
+    color:var(--pink-deep);
+    font-weight:600;
+    display:flex;gap:10px;align-items:flex-start;
+  }
+  .rule .ic{font-size:18px;line-height:1.3;}
+
+  /* ---------- KNOW strip ---------- */
+  .know-strip{
+    display:flex;gap:10px;margin:0 8px 40px;
+    overflow-x:auto;padding-bottom:4px;
+  }
+  .know-chip{
+    flex:1;min-width:150px;
+    background:#fff;border:1px solid var(--line);
+    border-radius:16px;padding:16px 14px;text-align:center;
+  }
+  .know-chip .letter{
+    width:36px;height:36px;border-radius:50%;
+    margin:0 auto 8px;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Prompt',sans-serif;font-weight:800;color:#fff;font-size:16px;
+  }
+  .know-chip:nth-child(1) .letter{background:var(--pink);}
+  .know-chip:nth-child(2) .letter{background:#3F5AA6;}
+  .know-chip:nth-child(3) .letter{background:#22A199;}
+  .know-chip:nth-child(4) .letter{background:var(--navy);}
+  .know-chip b{display:block;font-size:13.5px;color:var(--navy);font-family:'Prompt',sans-serif;}
+  .know-chip span{font-size:12px;color:var(--muted);}
+
+  /* ---------- Section headers ---------- */
+  .section{margin:0 8px 46px;}
+  .section-head{
+    display:flex;align-items:center;gap:14px;margin-bottom:18px;
+  }
+  .section-head .badge{
+    width:44px;height:44px;border-radius:12px;flex:none;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Prompt',sans-serif;font-weight:800;font-size:20px;color:#fff;
+  }
+  .section-head h2{
+    font-family:'Prompt',sans-serif;
+    font-size:21px;font-weight:700;color:var(--navy);margin:0;
+  }
+  .section-head p{margin:2px 0 0;font-size:13.5px;color:var(--muted);}
+
+  .sec-K .badge{background:var(--pink);}
+  .sec-N .badge{background:#3F5AA6;}
+  .sec-O .badge{background:#22A199;}
+  .sec-W .badge{background:var(--navy);}
+
+  /* ---------- Prompt cards ---------- */
+  .card{
+    background:#fff;border:1px solid var(--line);
+    border-radius:18px;padding:22px 22px 20px;margin-bottom:18px;
+    box-shadow:0 4px 14px rgba(23,38,74,.05);
+  }
+  .card-top{
+    display:flex;justify-content:space-between;align-items:flex-start;
+    gap:10px;margin-bottom:6px;flex-wrap:wrap;
+  }
+  .card-top h3{
+    font-family:'Prompt',sans-serif;font-size:16.5px;font-weight:700;
+    color:var(--navy);margin:0;display:flex;align-items:center;gap:8px;
+  }
+  .tag{
+    font-size:11.5px;font-weight:700;letter-spacing:.03em;
+    padding:4px 10px;border-radius:999px;white-space:nowrap;
+  }
+  .tag.prompt{background:var(--pink-tint);color:var(--pink-deep);}
+  .tag.template{background:var(--blue-tint);color:#2A4A8C;}
+  .tag.core{background:var(--navy);color:#fff;}
+  .tag.bonus{background:#EFECE4;color:#8A8170;}
+
+  .legend{
+    margin-top:12px;display:flex;gap:16px;flex-wrap:wrap;
+    font-size:12.5px;color:var(--muted);
+  }
+  .legend span{display:inline-flex;align-items:center;gap:6px;}
+  .legend .dot{width:9px;height:9px;border-radius:50%;display:inline-block;}
+  .legend .dot.core{background:var(--navy);}
+  .legend .dot.bonus{background:#C9C2B0;}
+  .when{font-size:13px;color:var(--muted);margin:0 0 14px;}
+  .when b{color:var(--ink);}
+
+  .prompt-box{
+    background:#F8F6F2;
+    border-left:4px solid var(--pink);
+    border-radius:10px;
+    padding:16px 18px;
+    font-size:14px;
+    white-space:pre-wrap;
+    color:#333A4E;
+    position:relative;
+  }
+  .prompt-box.tmpl{border-left-color:#3F5AA6;background:#F5F8FC;}
+  .prompt-box .fill{color:var(--pink-deep);font-weight:600;}
+  .prompt-box.tmpl .fill{color:#2A4A8C;font-weight:600;}
+
+  .copy-btn{
+    margin-top:10px;
+    display:inline-flex;align-items:center;gap:6px;
+    background:var(--navy);color:#fff;border:none;
+    font-size:12.5px;font-weight:600;
+    padding:8px 14px;border-radius:999px;cursor:pointer;
+    font-family:inherit;
+  }
+  .copy-btn:hover{background:var(--pink-deep);}
+  .copy-btn.copied{background:#22A199;}
+
+  .note{
+    margin-top:12px;font-size:12.5px;color:var(--muted);
+    background:#FBFAF8;border-radius:8px;padding:10px 12px;
+  }
+  .note b{color:var(--ink);}
+
+  /* ---------- Template mini-grid for 3 messages ---------- */
+  .tmpl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+  @media(max-width:720px){.tmpl-grid{grid-template-columns:1fr;}}
+
+  /* ---------- 30 day mini plan ---------- */
+  .plan-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px;}
+  @media(max-width:640px){.plan-grid{grid-template-columns:1fr 1fr;}}
+  .plan-cell{
+    background:var(--blue-tint);border-radius:12px;padding:12px;text-align:center;
+  }
+  .plan-cell b{display:block;font-size:12.5px;color:var(--navy);font-family:'Prompt',sans-serif;margin-bottom:4px;}
+  .plan-cell span{font-size:12px;color:var(--ink);}
+
+  /* ---------- Footer ---------- */
+  .footer{
+    margin:50px 8px 0;text-align:center;
+    padding:30px 20px;border-radius:20px;
+    background:linear-gradient(135deg,var(--navy),var(--navy-deep));
+    color:#EAEFFB;
+  }
+  .footer .diamond-big{margin-bottom:10px;}
+  .footer h3{font-family:'Prompt',sans-serif;font-size:18px;margin:0 0 6px;color:#fff;}
+  .footer p{font-size:13.5px;color:#B9C3DE;margin:0 0 4px;}
+  .footer .line{color:var(--gold);font-weight:700;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <div class="eyebrow">✦ COMPANION WORKBOOK — SELL WHAT YOU KNOW</div>
+    <h1>AI Prompt <span>Pack</span></h1>
+    <p class="sub">เปลี่ยนความรู้ในหัว ให้เป็นสิ่งที่คนอยากซื้อ · ใช้คู่กับ KNOW Framework</p>
+    <div class="quote-badge">
+      <b>“AI ไม่ได้มาแทนทักษะของคุณ</b><br>
+      แต่ช่วยให้ทักษะของคุณสร้างรายได้ได้เร็วขึ้น”
+    </div>
+    <div class="credit">รวบรวมจากเวิร์กช็อป Sell What You Know · โดย เชอรี่ (Cherry)</div>
+  </div>
+
+  <div class="howto">
+    <h2>🧭 วิธีใช้ Prompt Pack เล่มนี้</h2>
+    <div class="steps">
+      <div class="step"><div class="num">1</div><p>เปิด ChatGPT / Claude แล้วเลือกพรอมต์ที่ตรงกับขั้นตอนที่คุณกำลังทำอยู่</p></div>
+      <div class="step"><div class="num">2</div><p>คัดลอกพรอมต์ วางลงแชท แล้วเติมข้อมูลของตัวเองแทนวงเล็บ <span class="fill">[ ]</span></p></div>
+      <div class="step"><div class="num">3</div><p>อ่านผลลัพธ์ แล้วเลือกสิ่งที่ใช้ได้จริง — ไม่ต้องใช้ทั้งหมดที่ AI ให้มา</p></div>
+    </div>
+    <div class="rule"><span class="ic">⭐</span><span>กติกาทอง: AI ช่วย “สะท้อน / ขยาย / ร่าง” ให้เร็วขึ้น — แต่คนตัดสินใจสุดท้ายเสมอต้องเป็นคุณ ไม่ใช่ AI</span></div>
+    <div class="legend">
+      <span><span class="dot core"></span><b style="color:var(--ink);">Core Prompt</b> = ใช้ในคลาส ต้องทำให้ครบ</span>
+      <span><span class="dot bonus"></span><b style="color:var(--ink);">Bonus Prompt</b> = ใช้ถ้าตัน หรือใช้ต่อหลังคลาส</span>
+    </div>
+  </div>
+
+  <div class="know-strip">
+    <div class="know-chip"><div class="letter">K</div><b>Knowledge</b><span>ความรู้ที่ขายได้</span></div>
+    <div class="know-chip"><div class="letter">N</div><b>Need</b><span>คนที่ต้องการมัน</span></div>
+    <div class="know-chip"><div class="letter">O</div><b>Offer</b><span>สิ่งที่ซื้อได้</span></div>
+    <div class="know-chip"><div class="letter">W</div><b>Win</b><span>ขายจริง</span></div>
+  </div>
+
+  <!-- ===================== K — KNOWLEDGE ===================== -->
+  <div class="section sec-K">
+    <div class="section-head">
+      <div class="badge">K</div>
+      <div><h2>Knowledge — ความรู้ที่ขายได้</h2><p>หลักฐาน + Skill Combo + My DNA</p></div>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <h3>0. AI Prompt Audit <span style="font-weight:500;color:var(--muted);">— ตัวช่วยตั้งต้น</span></h3>
+        <span class="tag bonus">BONUS PROMPT</span>
+      </div>
+      <p class="when">ใช้ตอนไหน: <b>ก่อนเริ่มทุกครั้ง</b> ถ้าเคยลองถาม AI แล้วได้คำตอบยาว กว้าง เอาไปใช้ต่อยาก — ใช้พรอมต์นี้ปรับคำถามให้คมก่อน</p>
+      <div class="prompt-box" data-copy>นี่คือพรอมต์ที่ฉันเคยใช้ แล้วได้คำตอบที่ยาวเกินไป กว้างเกินไป หรือเอาไปใช้ต่อยาก:
+<span class="fill">[วางพรอมต์เดิมของฉันตรงนี้]</span>
+
+งานที่ฉันอยากเอาผลลัพธ์ไปใช้จริงคือ: <span class="fill">[อธิบายสั้นๆ เช่น ส่งลูกค้า / ทำสไลด์ / โพสต์ขาย]</span>
+
+ช่วยฉัน 3 อย่าง:
+1. บอกว่าพรอมต์เดิมของฉันกว้างหรือคลุมเครือตรงไหน
+2. เขียนพรอมต์เวอร์ชันใหม่ที่สั้นลง ชัดขึ้น และระบุ format คำตอบที่ต้องการ
+3. แนะนำคำถามต่อ (follow-up) 1 คำถาม เผื่อคำตอบที่ได้ยังไม่ตรงพอ
+
+ตอบสั้น กระชับ เป็นข้อๆ</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">📋 คัดลอกพรอมต์</button>
+      <div class="note"><b>Output ที่ควรได้:</b> พรอมต์เวอร์ชันใหม่ + วิธีถาม AI ให้ได้งานที่ใช้จริง</div>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <h3>1. AI Skill Mirror</h3>
+        <span class="tag core">CORE · 15 นาที</span>
+      </div>
+      <p class="when">ใช้ตอนไหน: หลังเขียน <b>Skill Candidate</b> 3 ตัวจากเรื่องจริงที่คนเคยขอให้ช่วยแล้ว — ให้ AI ช่วยมองว่ารวมกันเป็น Combo แบบไหนได้บ้าง</p>
+      <div class="prompt-box" data-copy>ฉันกำลังหา "ความรู้ที่ขายได้" ของตัวเองอยู่ นี่คือ Skill Candidate ที่ฉันมี (เรื่องจริงที่คนเคยขอให้ฉันช่วย + วิธีที่ฉันใช้แก้):
+
+1. <span class="fill">[Skill Candidate 1 + เรื่องจริงสั้นๆ]</span>
+2. <span class="fill">[Skill Candidate 2 + เรื่องจริงสั้นๆ]</span>
+3. <span class="fill">[Skill Candidate 3 + เรื่องจริงสั้นๆ]</span>
+
+ช่วยฉัน:
+1. เสนอ Skill Combo ที่เป็นไปได้ 3 แบบ โดยรวม 2 ข้อจากลิสต์ข้างบนเข้าด้วยกัน
+2. จากเรื่องจริงที่ฉันเล่า ดึง Power Words / คำสะท้อนจุดเด่น ของแต่ละ Combo 3–5 คำ ที่บอกว่า Combo นี้มีมุมมอง วิธีคิด หรือสไตล์การช่วยคนแบบไหน
+3. เสนอ Productize idea (ทำเป็นสินค้า/บริการ) ของแต่ละ Combo 2–3 แบบ
+
+ย้ำ: ช่วยสะท้อนตัวเลือกให้ฉันเห็นชัดขึ้นเท่านั้น อย่าเลือกแทนว่าอันไหนดีที่สุด ฉันจะเป็นคนเลือกเอง</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">📋 คัดลอกพรอมต์</button>
+      <div class="note"><b>Output ที่ควรได้:</b> Skill Combo 3 แบบ + Power Words / คำสะท้อนจุดเด่น 3–5 คำ + Productize Ideas 2–3 แบบ</div>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <h3>2. My DNA Extractor</h3>
+        <span class="tag bonus">BONUS PROMPT</span>
+      </div>
+      <p class="when">ใช้ตอนไหน: หลังเลือก Skill Combo ได้แล้ว ใช้หา "เหตุผลที่ต้องเป็นคุณ" — <b>ต้องตอบคำถามตามลำดับ อย่าข้ามข้อ 2 ไปข้อ 3</b> เพราะคนมักรีบตอบข้อ 3 จนได้คำตอบทั่วไปที่ใช้กับใครก็ได้</p>
+      <div class="prompt-box" data-copy>ฉันเลือก Skill Combo นี้ไว้แล้ว: <span class="fill">[ใส่ Skill Combo ที่เลือก]</span>
+
+ช่วยฉันหา "My DNA" — สิ่งที่ทำให้ไม่มีใครทำ Skill Combo นี้เหมือนฉันได้เป๊ะๆ โดยถามฉันทีละข้อตามลำดับนี้ (อย่าข้ามไปข้อ 3 ก่อนฉันตอบข้อ 2 ให้จบ):
+
+คำถามที่ 1 — AI ช่วยอะไรในเรื่องนี้ได้บ้าง (เช่น ได้ draft แรกเร็ว ตามแม่แบบทั่วไป)
+คำถามที่ 2 — อะไรที่ AI ยังไม่รู้ หรือแทนฉันไม่ได้ (เช่น ไม่รู้ context ของทีมจริง ไม่รู้ "เสียง" ที่ต้องใช้)
+คำถามที่ 3 — จากประสบการณ์จริง สิ่งที่ฉันเพิ่มค่าได้คืออะไร (เช่น เคยเจอเคสแบบนี้มาแล้ว รู้ว่าแบบไหนจะพัง)
+
+หลังฉันตอบครบ 3 ข้อ ช่วยเรียบเรียงเป็นย่อหน้าสั้นๆ 1 ย่อหน้า อธิบายว่า "ทำไมต้องเป็นฉัน" ให้ฟังแล้วน่าเชื่อถือ ไม่ใช่คำโฆษณาเกินจริง</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">📋 คัดลอกพรอมต์</button>
+      <div class="note"><b>My DNA = </b>Skill + Experience + Judgment + Voice/Style · <b>Output ที่ควรได้:</b> My DNA 1 ย่อหน้า</div>
+    </div>
+  </div>
+
+  <!-- ===================== N — NEED ===================== -->
+  <div class="section sec-N">
+    <div class="section-head">
+      <div class="badge">N</div>
+      <div><h2>Need — หาคนที่ต้องการมัน</h2><p>Buyer + Pain Language</p></div>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <h3>3. AI Buyer Mirror</h3>
+        <span class="tag core">CORE · 8 นาที</span>
+      </div>
+      <p class="when">ใช้ตอนไหน: หลังมี Skill Combo + My DNA แล้ว ใช้ขยายมุมมองว่า "ใครน่าจะซื้อ" — <b>ใช้ AI ขยายตัวเลือก ไม่ใช่ให้ AI เลือกแทน</b></p>
+      <div class="prompt-box" data-copy>นี่คือ Skill Combo ของฉัน: <span class="fill">[ใส่]</span>
+My DNA ของฉันคือ: <span class="fill">[ใส่]</span>
+หลักฐานที่ทำให้เห็นว่าฉันมีของจริงคือ: <span class="fill">[ใส่ 1–3 ข้อ]</span>
+จากหลักฐานนี้ ฉันคิดว่าอาจช่วยคนกลุ่มนี้ได้: <span class="fill">[ใส่ไอเดียคร่าวๆ]</span>
+
+ช่วยวิเคราะห์ Buyer ที่เป็นไปได้ 5 กลุ่ม โดยแต่ละกลุ่มให้บอก:
+- เขาคือใคร แบบเฉพาะเจาะจง (ไม่ใช่ "คนทำงาน" แต่เป็น "ใคร ทำอะไร ที่ไหน")
+- Situation: เขาเจอปัญหานี้ในสถานการณ์ไหน
+- Pain Language: เขาน่าจะพูดถึงปัญหานี้ว่าอะไร (ใช้ภาษาที่เขาพูดจริง ไม่ใช่ศัพท์การตลาด)
+- Test Signal: ปัญหานี้น่าคุย / น่าจ่าย / น่าทดลองไหม
+- ฉันควรเริ่มทดลองกับกลุ่มไหนก่อน เพราะอะไร
+
+ถ้าคำตอบยาวเกินไป ให้สรุปกลับมาเป็นตารางสั้นๆ
+ย้ำ: AI ช่วยขยายตัวเลือกให้ฉันเห็น แต่คนเลือก Buyer สุดท้ายคือฉัน</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">📋 คัดลอกพรอมต์</button>
+      <div class="note"><b>Output ที่ควรได้:</b> Buyer 5 กลุ่ม + Situation + Pain Language + Test Signal — เลือก Pain Language 1 ประโยคที่เหมือนภาษาลูกค้าจริงที่สุด เอาไปต่อกับ Offer ได้เลย</div>
+    </div>
+  </div>
+
+  <!-- ===================== O — OFFER ===================== -->
+  <div class="section sec-O">
+    <div class="section-head">
+      <div class="badge">O</div>
+      <div><h2>Offer — เปลี่ยนความรู้ให้เป็นสิ่งที่ซื้อได้</h2><p>รูปแบบ + ราคา + ข้อเสนอที่ชัด</p></div>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <h3>4. AI Offer Draft</h3>
+        <span class="tag core">CORE PROMPT</span>
+      </div>
+      <p class="when">ใช้ตอนไหน: หลังกรอก Offer Canvas (Buyer / Pain / Result / Format / Inside Offer / Why You / ราคา) แล้ว — ให้ AI ช่วยร่างเป็น Draft แรก</p>
+      <div class="prompt-box" data-copy>นี่คือ Offer Canvas ของฉัน:
+
+Buyer: <span class="fill">[ใส่]</span>
+Pain: <span class="fill">[ใส่]</span>
+Result (ผลลัพธ์ที่เขาจะได้): <span class="fill">[ใส่]</span>
+Format (เช่น checklist / template / mini session / guide): <span class="fill">[ใส่]</span>
+
+Inside Offer (สิ่งที่อยู่ข้างในจริง):
+1. <span class="fill">[inside 1]</span>
+2. <span class="fill">[inside 2]</span>
+3. <span class="fill">[inside 3]</span>
+4. <span class="fill">[inside 4 ถ้ามี]</span>
+5. <span class="fill">[inside 5 ถ้ามี]</span>
+
+Why You (สิ่งที่ฉันช่วยเพิ่มจาก AI หรือ template ทั่วไป): <span class="fill">[ใส่]</span>
+
+ราคา Beta: <span class="fill">[ใส่]</span>
+
+Canvas นี้คือข้อมูลจริงของฉัน ช่วยเรียบเรียงให้เป็น Draft แรก โดย:
+1. ตั้งชื่อ Offer ที่สั้น จำง่าย 3 แบบ
+2. เขียนคำอธิบาย 1 บรรทัด บอกว่าช่วยใคร แก้ปัญหาอะไร ได้ผลลัพธ์อะไร
+3. จัดเรียง Inside Offer ให้เป็นลำดับที่อ่านแล้วลื่นที่สุด
+
+ช่วยเรียบเรียงจากข้อมูลที่ให้เท่านั้น อย่าเพิ่ม feature ใหม่ อย่าเพิ่มคำสัญญาที่ฉันไม่ได้บอก</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">📋 คัดลอกพรอมต์</button>
+      <div class="note"><b>หลักการ:</b> Canvas คือข้อมูลจริง · AI คือผู้ช่วยเรียบเรียง ไม่ใช่ผู้ตัดสินใจแทน</div>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <h3>5. Bad Offer Makeover</h3>
+        <span class="tag bonus">BONUS PROMPT</span>
+      </div>
+      <p class="when">ใช้ตอนไหน: เมื่อมี Offer เดิมอยู่แล้วแต่รู้สึกว่ายัง "กว้างไป" หรือ "ฟังดูทำเป็นแต่ไม่รู้ว่าซื้ออะไร"</p>
+      <div class="prompt-box" data-copy>นี่คือ Offer เดิมของฉัน ที่รู้สึกว่ายังกว้างหรือคลุมเครืออยู่: <span class="fill">[วาง Offer เดิม]</span>
+
+ช่วยฉัน:
+1. บอกว่า Offer นี้ขาด Buyer ชัด / Pain ชัด / Result ชัด ตรงไหน
+2. เขียน Offer เวอร์ชันใหม่ที่ระบุ "ใคร ปัญหาอะไร ได้ผลอะไร" ให้ชัดใน 1–2 ประโยค
+3. เสนอชื่อ Offer ใหม่ 3 แบบ ที่ทำให้คนอ่านแล้ว "อยากรู้ว่าคืออะไร" มากกว่าเดิม
+
+เป้าหมาย: เปลี่ยนจาก Offer ที่ "ฟังดูทำเป็น" ให้เป็น Offer ที่ "ฟังแล้วรู้ว่าควรซื้อ"</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">📋 คัดลอกพรอมต์</button>
+    </div>
+  </div>
+
+  <!-- ===================== W — WIN ===================== -->
+  <div class="section sec-W">
+    <div class="section-head">
+      <div class="badge">W</div>
+      <div><h2>Win — เริ่มขายจริง</h2><p>ช่องทาง + ข้อความแรก + ฟีดแบ็ก</p></div>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <h3>6. AI Refine + Human Edit</h3>
+        <span class="tag core">CORE PROMPT</span>
+      </div>
+      <p class="when">ใช้ตอนไหน: หลังทำ Constructive Feedback กับเพื่อน 1 รอบแล้ว เอาผลตอบกลับมาใส่พรอมต์นี้ให้ AI ช่วย refine ต่อ</p>
+      <div class="prompt-box" data-copy>นี่คือ Soft Message ที่ฉันเขียนเองก่อน: <span class="fill">[วางข้อความร่าง]</span>
+
+เพื่อนให้ feedback มาว่า:
+ชัดแล้ว: <span class="fill">[สิ่งที่ชัดแล้ว]</span>
+ยังติด: <span class="fill">[สิ่งที่ยังงง / ดูขายเกินไป / ไม่อยากตอบ]</span>
+ลองแก้: <span class="fill">[ข้อเสนอจากเพื่อน]</span>
+
+ช่วย refine ข้อความนี้ให้ชัดขึ้น โดย:
+1. คงน้ำเสียงเดิมของฉันไว้
+2. ไม่ hard sell
+3. ทำให้คนอ่านรู้ว่าควรตอบอะไร
+4. สั้นพอสำหรับส่งแชทจริง
+
+ขอ 2 เวอร์ชัน:
+- เวอร์ชันนุ่ม ชวนคุย
+- เวอร์ชันตรงขึ้น เหมาะกับคนที่มี pain ชัดแล้ว
+
+หลังจากนั้น ช่วยชี้ 3 จุดที่ฉันควร Human Edit ก่อนส่งจริง</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">📋 คัดลอกพรอมต์</button>
+      <div class="note">AI ช่วยขัดข้อความ แต่เสียงสุดท้ายต้องเป็นของฉัน</div>
+    </div>
+
+    <h3 style="font-family:'Prompt',sans-serif;color:var(--navy);font-size:15.5px;margin:26px 4px 12px;">✉️ เทมเพลตข้อความแรก — เลือก 1 โหมดตามความพร้อมของคุณ</h3>
+    <div class="tmpl-grid">
+      <div class="card" style="margin-bottom:0;">
+        <div class="card-top"><h3 style="font-size:15px;">ขอ Feedback</h3><span class="tag template">TEMPLATE</span></div>
+        <p class="when">สำหรับคนที่ยังไม่อยากขายตรง</p>
+        <div class="prompt-box tmpl" data-copy>เห็นว่าคุณเคยเจอ / กำลังเจอเรื่อง <span class="fill">[pain / situation]</span>
+
+เรากำลังลองทำ <span class="fill">[offer]</span>
+เพื่อช่วยคนที่ <span class="fill">[buyer]</span> ให้ <span class="fill">[result]</span>
+
+ขอส่งรายละเอียดสั้นๆ ให้ดูได้ไหม
+อยากรู้ว่าอ่านแล้วตรงปัญหาจริงไหม หรือควรปรับตรงไหน</div>
+        <button class="copy-btn" onclick="copyPrompt(this)">📋 คัดลอก</button>
+        <div class="note">เป้าหมาย: ขอความเห็นก่อน ไม่ต้องปิดการขาย</div>
+      </div>
+      <div class="card" style="margin-bottom:0;">
+        <div class="card-top"><h3 style="font-size:15px;">ชวนลอง Beta</h3><span class="tag template">TEMPLATE</span></div>
+        <p class="when">สำหรับคนที่พร้อมให้คนแรกลอง</p>
+        <div class="prompt-box tmpl" data-copy>เห็นว่าคุณกำลัง <span class="fill">[situation]</span>
+เรากำลังเปิด beta รอบเล็กของ <span class="fill">[offer]</span>
+
+ตัวนี้ช่วยให้ <span class="fill">[result]</span>
+ถ้าสนใจ เดี๋ยวส่งรายละเอียดกับราคา beta ให้ดูก่อนได้
+ยังไม่ต้องตัดสินใจทันที</div>
+        <button class="copy-btn" onclick="copyPrompt(this)">📋 คัดลอก</button>
+        <div class="note">เป้าหมาย: ให้คนสนใจตอบกลับ หรือขอดูรายละเอียดต่อ</div>
+      </div>
+      <div class="card" style="margin-bottom:0;">
+        <div class="card-top"><h3 style="font-size:15px;">ขอ Referral</h3><span class="tag template">TEMPLATE</span></div>
+        <p class="when">สำหรับคนที่อยากเริ่มจากคนรู้จัก</p>
+        <div class="prompt-box tmpl" data-copy>เรากำลังลองทำ <span class="fill">[offer]</span>
+สำหรับคนที่ <span class="fill">[buyer]</span> และติดปัญหา "<span class="fill">[pain language]</span>"
+
+ถ้าคุณนึกถึงใครที่น่าจะเจอปัญหานี้
+ฝากแนะนำหรือส่งต่อให้เขาได้ไหม</div>
+        <button class="copy-btn" onclick="copyPrompt(this)">📋 คัดลอก</button>
+        <div class="note">เหมาะกับ: เพื่อนร่วมงาน / ลูกค้าเก่า / Alumni</div>
+      </div>
+    </div>
+    <div class="rule" style="background:var(--blue-tint);color:#2A4A8C;">
+      <span class="ic">☝️</span><span>เลือก <b>1 โหมดพอ</b> — Feedback / Beta / Referral อย่ารวมทั้งขอ feedback + ขาย + ขอ referral ในข้อความเดียว เพราะคนอ่านจะไม่รู้ว่าต้องตอบอะไร</span>
+    </div>
+
+    <div class="card" style="margin-top:18px;">
+      <div class="card-top">
+        <h3>💬 Constructive Feedback — คำถามชวนคนช่วยดูข้อความ</h3>
+        <span class="tag bonus">BONUS</span>
+      </div>
+      <p class="when">ใช้ตอนไหน: ก่อนส่งข้อความแรกจริง ลองให้เพื่อน 1 คนช่วยอ่านแล้วถาม 3 ข้อนี้</p>
+      <div class="prompt-box tmpl" data-copy>1. เข้าใจไหมว่าฉันกำลังเสนออะไร?
+2. รู้สึกว่าขายแรงไปไหม?
+3. ถ้าเป็นคุณ จะตอบกลับไหม?
+
+ปิดท้าย 1 ประโยค: "สิ่งที่ฉันเห็นว่า Offer นี้มีประโยชน์คือ ___"</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">📋 คัดลอก</button>
+      <div class="note">Feedback ไม่ใช่การตัดสิน แต่คือการช่วยให้ข้อความพร้อมส่งจริง</div>
+    </div>
+
+    <div class="card" style="margin-top:18px;background:var(--blue-tint);border:none;">
+      <div class="card-top" style="margin-bottom:0;">
+        <h3 style="font-size:15.5px;margin:0 0 6px;color:var(--navy);">🗓️ 30-Day Plan โครงคร่าวๆ</h3>
+        <span class="tag bonus">BONUS</span>
+      </div>
+      <div class="plan-grid">
+        <div class="plan-cell"><b>Week 1</b><span>ส่ง Offer ให้คนแรกดู</span></div>
+        <div class="plan-cell"><b>Week 2</b><span>ปรับจาก Feedback</span></div>
+        <div class="plan-cell"><b>Week 3</b><span>เริ่มขายผ่านช่องทางจริง</span></div>
+        <div class="plan-cell"><b>Week 4</b><span>ดูผลลัพธ์ + วางก้าวต่อไป</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <svg class="diamond-big" width="34" height="34" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 9L12 22L22 9L12 2Z" stroke="#FFC845" stroke-width="1.6" stroke-linejoin="round"/><path d="M2 9H22M8 9L12 2L16 9M8 9L12 22L16 9" stroke="#FFC845" stroke-width="1.2" stroke-linejoin="round"/></svg>
+    <h3>รู้ว่ามีอะไร · รู้ว่าใครต้องการ · ทำให้ซื้อได้ · เริ่มคุยกับคนจริง</h3>
+    <p>กลับไปเริ่มจาก 1 Offer / 1 คนจริง / 1 ก้าวแรก</p>
+    <p style="margin-top:14px;">Sell What You Know Workshop · โดย เชอรี่ · <span class="line">LINE: @825lshbc</span></p>
+  </div>
+
+</div>
+
+<script>
+function copyPrompt(btn){
+  const box = btn.previousElementSibling;
+  const text = box.innerText;
+  const original = btn.innerHTML;
+
+  function showCopied(){
+    btn.innerHTML = "✅ คัดลอกแล้ว";
+    btn.classList.add("copied");
+    setTimeout(()=>{ btn.innerHTML = original; btn.classList.remove("copied"); }, 1800);
+  }
+  function showFallbackHint(){
+    btn.innerHTML = "⚠️ กดค้างที่กล่องข้อความแล้วเลือก Copy";
+    setTimeout(()=>{ btn.innerHTML = original; }, 2600);
+  }
+  function fallbackCopy(){
+    try{
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      const ok = document.execCommand('copy');
+      document.body.removeChild(ta);
+      if(ok){ showCopied(); } else { showFallbackHint(); }
+    }catch(e){
+      showFallbackHint();
+    }
+  }
+
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(showCopied).catch(fallbackCopy);
+  } else {
+    fallbackCopy();
+  }
+}
+</script>
+
+</body>
+</html>
