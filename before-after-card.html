@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Before & After Card</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Itim&display=swap">
+<style>
+/* Layout: one folded sheet of paper, split by a fold line into Before | After (or top | bottom) */
+:root{
+  --bg:#e9ecf3; --paper:#fdfdf8; --ink:#1f2a8a; --muted:#6b7090; --line:#c9cde0; --accent:#e4572e;
+  --ui:"IBM Plex Sans Thai",system-ui,sans-serif; --hand:"Itim","Comic Sans MS",cursive;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12141c; --paper:#1d2030; --ink:#aab4ff; --muted:#8a8fab; --line:#343a55; --accent:#ff7a54; color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#12141c; --paper:#1d2030; --ink:#aab4ff; --muted:#8a8fab; --line:#343a55; --accent:#ff7a54; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+img{max-width:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--ui);font-size:15px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 40px}
+.wrap{max-width:820px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px;background:var(--paper)}
+.seg button{border:0;background:transparent;color:var(--muted);font:500 13px var(--ui);padding:6px 14px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+button:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.btn{border:1px solid var(--ink);background:transparent;color:var(--ink);font:500 13px var(--ui);padding:7px 14px;border-radius:999px;cursor:pointer}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+
+.sheet{background:var(--paper);border-radius:6px;box-shadow:0 1px 0 var(--line),0 12px 30px rgba(20,25,60,.12);padding:22px 22px 18px;display:flex;flex-direction:column;gap:16px}
+.q-label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.q{font-family:var(--hand);font-size:clamp(24px,5vw,32px);line-height:1.2;margin:2px 0 0;text-wrap:balance}
+.name{display:flex;gap:8px;align-items:baseline;color:var(--muted);font-size:13px}
+.name input{flex:1;min-width:0;border:0;border-bottom:1px dashed var(--line);background:transparent;color:var(--ink);font:18px var(--hand);padding:2px 0}
+.name input:focus{outline:none;border-bottom-color:var(--accent)}
+
+.panels{display:grid;grid-template-columns:1fr 1fr;position:relative;min-height:320px}
+.panels.stack{grid-template-columns:1fr;min-height:0}
+.panel{display:flex;flex-direction:column;gap:8px;padding:6px 18px 10px;min-width:0}
+.panel:first-child{padding-left:0}
+.panel:last-child{padding-right:0;border-left:2px dashed var(--line)}
+.stack .panel{padding:14px 0}
+.stack .panel:last-child{border-left:0;border-top:2px dashed var(--line)}
+.ph{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.ph h2{font-family:var(--hand);font-size:28px;margin:0;font-weight:400}
+.ph small{color:var(--muted);font-size:12px}
+textarea{flex:1;width:100%;min-height:200px;resize:vertical;border:0;background:
+  repeating-linear-gradient(transparent 0 33px,var(--line) 33px 34px);line-height:34px;
+  font:22px/34px var(--hand);color:var(--ink);padding:0}
+.stack textarea{min-height:136px}
+textarea::placeholder{color:var(--muted);opacity:.6}
+.foot{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;border-top:1px solid var(--line);padding-top:10px}
+.hint{color:var(--muted);font-size:13px;text-align:center}
+
+/* photo mode: hide chrome so the sheet is clean to screenshot */
+.photo .bar,.photo .hint{display:none}
+.photo textarea{resize:none}
+.exit{display:none}
+.photo .exit{display:block;margin:0 auto}
+.status{color:var(--muted);font-size:13px;text-align:center;min-height:1em;margin:0}
+.overlay{position:fixed;inset:0;background:rgba(10,12,25,.7);display:flex;align-items:center;justify-content:center;z-index:20;
+  padding:calc(16px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.ov-box{background:var(--paper);border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:12px;align-items:center;max-width:720px;max-height:100%;overflow:auto}
+.ov-box p{margin:0;color:var(--muted);font-size:13px;text-align:center}
+.ov-box img{max-width:100%;border:1px solid var(--line)}
+.photo #savephoto{display:none}
+@media (max-width:520px){.panels:not(.stack){min-height:260px}.ph h2{font-size:24px}textarea{font-size:19px}}
+</style>
+</head>
+<body>
+<div class="wrap" id="app">
+  <div class="bar">
+    <div class="seg" role="group" aria-label="Layout">
+      <button id="lay-side" aria-pressed="true">Left | Right</button>
+      <button id="lay-stack" aria-pressed="false">Top / Bottom</button>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn" id="clear">Clear</button>
+      <button class="btn" id="photo">Photo mode</button>
+      <button class="btn primary" id="savephoto">Save as photo</button>
+    </div>
+  </div>
+
+  <article class="sheet" id="sheet">
+    <div>
+      <div class="q-label">Question</div>
+      <p class="q">What do you like to eat today?</p>
+    </div>
+    <label class="name">Name <input id="name" placeholder="your name" autocomplete="off"></label>
+
+    <div class="panels" id="panels">
+      <section class="panel">
+        <div class="ph"><h2>Before</h2><small>at the start</small></div>
+        <textarea id="before" aria-label="Before answer" placeholder="Write your answer when the session opens…">Som tam and sticky rice</textarea>
+      </section>
+      <section class="panel">
+        <div class="ph"><h2>After</h2><small>at the end</small></div>
+        <textarea id="after" aria-label="After answer" placeholder="Answer again before the session closes…"></textarea>
+      </section>
+    </div>
+
+    <div class="foot"><span id="date"></span><span>Fold here &amp; compare</span></div>
+  </article>
+
+  <p class="hint">Answer “Before” when the session opens, “After” before it closes. Then tap Photo mode and take a screenshot to share.</p>
+  <button class="btn exit" id="exit">Back to editing</button>
+  <p class="status" id="status" role="status" aria-live="polite"></p>
+</div>
+
+<div class="overlay" id="overlay" hidden>
+  <div class="ov-box">
+    <p>Press and hold the image to save it, or right-click → Save image.</p>
+    <img id="ov-img" alt="Before and after card">
+    <button class="btn" id="ov-close">Close</button>
+  </div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const KEY="ba-card-v1";
+const fields=["name","before","after"];
+let state={layout:"side"};
+try{state=Object.assign(state,JSON.parse(localStorage.getItem(KEY)||"{}"))}catch(e){}
+fields.forEach(f=>{ if(state[f]!==undefined) $(f).value=state[f]; });
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
+fields.forEach(f=>$(f).addEventListener("input",e=>{state[f]=e.target.value;save()}));
+
+function setLayout(l){
+  state.layout=l; save();
+  $("panels").classList.toggle("stack",l==="stack");
+  $("lay-side").setAttribute("aria-pressed",l==="side");
+  $("lay-stack").setAttribute("aria-pressed",l==="stack");
+}
+$("lay-side").onclick=()=>setLayout("side");
+$("lay-stack").onclick=()=>setLayout("stack");
+setLayout(state.layout);
+
+$("photo").onclick=()=>{document.body.classList.add("photo");fields.forEach(f=>$(f).readOnly=true)};
+$("exit").onclick=()=>{document.body.classList.remove("photo");fields.forEach(f=>$(f).readOnly=false)};
+
+let armed=false;
+$("clear").onclick=()=>{
+  if(!armed){armed=true;$("clear").textContent="Tap again to clear";setTimeout(()=>{armed=false;$("clear").textContent="Clear"},2500);return}
+  fields.forEach(f=>{$(f).value="";state[f]=""});save();armed=false;$("clear").textContent="Clear";
+};
+$("date").textContent=new Date().toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"});
+
+/* ---------- Save as photo: draw the sheet onto a canvas ---------- */
+const seg=typeof Intl!=="undefined"&&Intl.Segmenter?new Intl.Segmenter("th",{granularity:"word"}):null;
+function pieces(s){return seg?[...seg.segment(s)].map(x=>x.segment):s.split(/(\s+)/)}
+function wrap(ctx,text,maxW){
+  const out=[];
+  (text||"").split("\n").forEach(par=>{
+    let line="";
+    pieces(par).forEach(p=>{
+      if(ctx.measureText(line+p).width<=maxW){line+=p;return}
+      if(line.trim())out.push(line.trimEnd());
+      line=p.trimStart();
+      while(ctx.measureText(line).width>maxW&&line.length>1){ // very long word: break by character
+        let i=line.length; while(i>1&&ctx.measureText(line.slice(0,i)).width>maxW)i--;
+        out.push(line.slice(0,i)); line=line.slice(i);
+      }
+    });
+    out.push(line);
+  });
+  return out;
+}
+async function renderPNG(){
+  try{await document.fonts.ready}catch(e){}
+  const cs=getComputedStyle(document.documentElement), v=n=>cs.getPropertyValue(n).trim();
+  const C={paper:v("--paper"),ink:v("--ink"),muted:v("--muted"),line:v("--line"),bg:v("--bg")};
+  const HAND='"Itim","Comic Sans MS",cursive', UI='"IBM Plex Sans Thai",system-ui,sans-serif';
+  const stack=state.layout==="stack";
+  const W=stack?1080:1600, M=70, gap=60, LH=58;
+  const colW=stack?W-2*M:(W-2*M-gap)/2;
+  const c=document.createElement("canvas"), ctx=c.getContext("2d");
+  ctx.font=`40px ${HAND}`;
+  const bL=wrap(ctx,$("before").value,colW), aL=wrap(ctx,$("after").value,colW);
+  const minRows=stack?4:6;
+  const rowsB=Math.max(minRows,bL.length), rowsA=Math.max(minRows,aL.length);
+  const head=M+260;                         // question + name block
+  const panelHead=80;
+  const bodyH=stack?(panelHead+rowsB*LH+gap+panelHead+rowsA*LH):(panelHead+Math.max(rowsB,rowsA)*LH);
+  const H=head+bodyH+M+80;
+  c.width=W;c.height=H;
+  ctx.fillStyle=C.paper;ctx.fillRect(0,0,W,H);
+
+  ctx.textBaseline="alphabetic";
+  ctx.fillStyle=C.muted;ctx.font=`500 22px ${UI}`;
+  ctx.fillText("QUESTION",M,M+20);
+  ctx.fillStyle=C.ink;ctx.font=`60px ${HAND}`;
+  ctx.fillText("What do you like to eat today?",M,M+100);
+  ctx.fillStyle=C.muted;ctx.font=`26px ${UI}`;ctx.fillText("Name",M,M+180);
+  ctx.fillStyle=C.ink;ctx.font=`38px ${HAND}`;ctx.fillText($("name").value||"",M+90,M+180);
+  ctx.strokeStyle=C.line;ctx.lineWidth=2;ctx.setLineDash([8,8]);
+  ctx.beginPath();ctx.moveTo(M+90,M+194);ctx.lineTo(W-M,M+194);ctx.stroke();
+
+  function panel(x,y,title,sub,lines,rows){
+    ctx.setLineDash([]);
+    ctx.fillStyle=C.ink;ctx.font=`54px ${HAND}`;ctx.fillText(title,x,y+50);
+    ctx.fillStyle=C.muted;ctx.font=`22px ${UI}`;ctx.textAlign="right";ctx.fillText(sub,x+colW,y+50);ctx.textAlign="left";
+    ctx.strokeStyle=C.line;ctx.lineWidth=2;
+    for(let r=1;r<=rows;r++){const ly=y+panelHead+r*LH;ctx.beginPath();ctx.moveTo(x,ly);ctx.lineTo(x+colW,ly);ctx.stroke()}
+    ctx.fillStyle=C.ink;ctx.font=`40px ${HAND}`;
+    lines.forEach((t,i)=>ctx.fillText(t,x,y+panelHead+(i+1)*LH-12));
+  }
+  const top=head;
+  if(stack){
+    panel(M,top,"Before","at the start",bL,rowsB);
+    const y2=top+panelHead+rowsB*LH+gap;
+    ctx.strokeStyle=C.line;ctx.lineWidth=3;ctx.setLineDash([14,10]);
+    ctx.beginPath();ctx.moveTo(M,y2-gap/2);ctx.lineTo(W-M,y2-gap/2);ctx.stroke();
+    panel(M,y2,"After","at the end",aL,rowsA);
+  }else{
+    panel(M,top,"Before","at the start",bL,rowsB);
+    const fx=M+colW+gap/2;
+    ctx.strokeStyle=C.line;ctx.lineWidth=3;ctx.setLineDash([14,10]);
+    ctx.beginPath();ctx.moveTo(fx,top);ctx.lineTo(fx,top+bodyH);ctx.stroke();
+    panel(M+colW+gap,top,"After","at the end",aL,rowsA);
+  }
+  ctx.setLineDash([]);ctx.strokeStyle=C.line;ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(M,H-M-30);ctx.lineTo(W-M,H-M-30);ctx.stroke();
+  ctx.fillStyle=C.muted;ctx.font=`22px ${UI}`;
+  ctx.fillText($("date").textContent,M,H-M+8);
+  ctx.textAlign="right";ctx.fillText("Before & After",W-M,H-M+8);ctx.textAlign="left";
+  return c;
+}
+function status(t){$("status").textContent=t}
+function fileName(){
+  const n=($("name").value||"").trim().replace(/[^\p{L}\p{N}]+/gu,"-").replace(/^-|-$/g,"");
+  return `before-after${n?"-"+n:""}.png`;
+}
+let downloadsP=null;
+window.addEventListener("load",()=>{downloadsP=window.claude?.use?window.claude.use("downloads"):Promise.resolve(null)});
+$("savephoto").onclick=async()=>{
+  status("Making your photo…");
+  const canvas=await renderPNG();
+  const blob=await new Promise(r=>canvas.toBlob(r,"image/png"));
+  let dl=null; try{dl=downloadsP?await downloadsP:null}catch(e){}
+  if(dl&&blob){
+    try{await dl.save({filename:fileName(),data:blob});status("Photo saved.");return}
+    catch(e){
+      if(e&&e.code==="declined"){status("Save cancelled.");return}
+      if(e&&e.code==="rate_limited"){status("A save is already open. Try again in a moment.");return}
+    }
+  }
+  // Outside Claude: phone share sheet (Save Image / send), else a normal download
+  if(!dl&&blob){
+    const file=new File([blob],fileName(),{type:"image/png"});
+    if(navigator.canShare&&navigator.canShare({files:[file]})){
+      try{await navigator.share({files:[file]});status("");return}
+      catch(e){if(e&&e.name==="AbortError"){status("");return}}
+    }else{
+      try{
+        const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=fileName();
+        document.body.appendChild(a);a.click();a.remove();
+        setTimeout(()=>URL.revokeObjectURL(a.href),4000);status("Photo saved.");return;
+      }catch(e){}
+    }
+  }
+  // Fallback: show the image so it can be saved by long-press / right-click
+  $("ov-img").src=canvas.toDataURL("image/png");
+  $("overlay").hidden=false;status("");
+};
+$("ov-close").onclick=()=>{$("overlay").hidden=true};
+</script>
+
+</body>
+</html>
