@@ -82,23 +82,6 @@ input[type=time]{font:34px var(--hand);color:var(--ink);background:transparent;b
 .qlist .edit{flex:none;font-size:13px}
 .confirm{border:1.5px solid var(--after);border-radius:12px;padding:14px;background:var(--after-soft);display:flex;flex-direction:column;gap:10px}
 
-/* results carousel */
-.carousel{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;scrollbar-width:none;padding-bottom:4px}
-.carousel::-webkit-scrollbar{display:none}
-.slide{flex:0 0 100%;scroll-snap-align:center;min-width:0}
-.slide .card{min-height:330px}
-.pair{display:grid;gap:10px}
-.side{border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
-.side.b{background:var(--before-soft)}
-.side.a{background:var(--after-soft)}
-.side .lab{font:600 12px var(--ui);letter-spacing:.1em}
-.side.b .lab{color:var(--before)} .side.a .lab{color:var(--after)}
-.side .val{font:26px/1.3 var(--hand);color:var(--ink);overflow-wrap:anywhere}
-.tag{align-self:flex-start;font:500 13px var(--ui);padding:4px 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
-.tag.changed{border-color:var(--after);color:var(--after)}
-.tag.same{border-color:var(--ok);color:var(--ok)}
-.cnav{display:flex;align-items:center;justify-content:space-between;gap:10px}
-
 /* export */
 .frames{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .fbtn{appearance:none;border:2px solid var(--line);background:transparent;border-radius:12px;padding:8px;cursor:pointer;color:var(--text);display:flex;flex-direction:column;align-items:center;gap:6px;font:500 13px var(--ui)}
@@ -194,16 +177,7 @@ input[type=time]{font:34px var(--hand);color:var(--ink);background:transparent;b
 
   <!-- RESULT -->
   <section class="screen" id="s-result" hidden>
-    <div class="row end">
-      <h2 id="r-title">ผลของคุณ</h2>
-      <span class="qnum" id="r-count">1 / 5</span>
-    </div>
-    <div class="carousel" id="carousel" tabindex="0" aria-label="ผลแต่ละข้อ"></div>
-    <div class="cnav">
-      <button class="btn ghost" id="c-prev">← ก่อนหน้า</button>
-      <div class="dots" id="c-dots" aria-hidden="true"></div>
-      <button class="btn ghost" id="c-next">ถัดไป →</button>
-    </div>
+    <h2 id="r-title">ผลของคุณ</h2>
 
     <div class="card" style="margin-top:8px">
       <span class="eyebrow">บันทึกเป็นรูป</span>
@@ -328,32 +302,9 @@ let cur=0;
 function renderResult(){
   show("s-result");
   $("r-title").textContent=S.name.trim()?`ผลของ ${S.name.trim()}`:"ผลของคุณ";
-  $("carousel").innerHTML=Q.map((q,i)=>{
-    const same=norm(S.before[i])===norm(S.after[i]);
-    return `<div class="slide"><div class="card">
-      <span class="qnum">ข้อ ${i+1}</span>
-      <p class="qtext" style="font-size:22px">${q.q}</p>
-      <div class="pair">
-        <div class="side b"><span class="lab">BEFORE · ต้น session</span><span class="val">${esc(fmt(i,S.before[i]))}</span></div>
-        <div class="side a"><span class="lab">AFTER · ท้าย session</span><span class="val">${esc(fmt(i,S.after[i]))}</span></div>
-      </div>
-      <span class="tag ${same?"same":"changed"}">${same?"เหมือนเดิม":"เปลี่ยนไป"}</span>
-    </div></div>`}).join("");
-  $("c-dots").innerHTML=Q.map(()=>"<i></i>").join("");
-  setCur(0);
   document.querySelectorAll(".fbtn").forEach(b=>b.setAttribute("aria-pressed",b.dataset.frame===S.frame));
   updatePreview();
 }
-function setCur(i){
-  cur=Math.max(0,Math.min(N-1,i));
-  $("r-count").textContent=`${cur+1} / ${N}`;
-  [...$("c-dots").children].forEach((d,k)=>d.className=k===cur?"on":"");
-  $("c-prev").disabled=cur===0;$("c-next").disabled=cur===N-1;
-}
-function go(i){const c=$("carousel");c.scrollTo({left:c.clientWidth*i+12*i,behavior:"smooth"});setCur(i)}
-$("c-prev").onclick=()=>go(cur-1);$("c-next").onclick=()=>go(cur+1);
-let st;$("carousel").addEventListener("scroll",()=>{clearTimeout(st);st=setTimeout(()=>{const c=$("carousel");setCur(Math.round(c.scrollLeft/(c.clientWidth+12)))},60)});
-$("carousel").addEventListener("keydown",e=>{if(e.key==="ArrowRight")go(cur+1);if(e.key==="ArrowLeft")go(cur-1)});
 document.querySelectorAll(".fbtn").forEach(b=>b.onclick=()=>{
   S.frame=b.dataset.frame;save();
   document.querySelectorAll(".fbtn").forEach(x=>x.setAttribute("aria-pressed",x===b));updatePreview();
