@@ -10,16 +10,18 @@
 /* Layout: one narrow phone column; each phase is a screen (intro → before ×5 → wait → review → after ×5 → result) */
 :root{
   --bg:#efe6d4; --paper:#fbf6ea; --ink:#27384d; --text:#2e2a22; --muted:#6f634e; --line:#dccfb4;
-  --before:#4a6078; --before-soft:#e9e0c9; --after:#b8482a; --after-soft:#f6dfd2; --ok:#4a7c59;
+  --before:#4a6078; --before-soft:#e9e0c9; --after:#b8482a; --after-soft:#f6dfd2; --ok:#4a7c59; --info:#2f6690; --info-soft:#e1edf6;
   --ui:"IBM Plex Sans Thai",system-ui,sans-serif; --hand:"Noto Serif Thai",Georgia,serif; --head:"Noto Serif Thai",Georgia,serif;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --info:#8cc0e6; --info-soft:#1c2b38;
   --bg:#16130e; --paper:#221d15; --ink:#e8d9b8; --text:#eee6d3; --muted:#a09578; --line:#3b3426;
   --before:#a9bdd3; --before-soft:#2b2f33; --after:#e98a66; --after-soft:#3d2519; --ok:#7cc392; color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#16130e; --paper:#221d15; --ink:#e8d9b8; --text:#eee6d3; --muted:#a09578; --line:#3b3426;
+:root[data-theme="dark"]{--info:#8cc0e6; --info-soft:#1c2b38; --bg:#16130e; --paper:#221d15; --ink:#e8d9b8; --text:#eee6d3; --muted:#a09578; --line:#3b3426;
   --before:#a9bdd3; --before-soft:#2b2f33; --after:#e98a66; --after-soft:#3d2519; --ok:#7cc392; color-scheme:dark}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
+.screen{display:flex;flex-direction:column;gap:16px}
 img{max-width:100%}
 body{margin:0;background:var(--bg);color:var(--text);font-family:var(--ui);font-size:16px;line-height:1.55;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
@@ -107,6 +109,8 @@ input.age{font:34px var(--hand);color:var(--ink);background:transparent;border:1
 .ov-box img{max-width:100%}
 .note{background:var(--after-soft);border-left:3px solid var(--after);border-radius:4px 12px 12px 4px;padding:12px 14px;color:var(--text);font-size:15px;line-height:1.6}
 .note b{color:var(--after);font-weight:600}
+.note.info{background:var(--info-soft);border-left-color:var(--info)}
+.note.info b{color:var(--info)}
 .foot{text-align:center;color:var(--muted);font-size:12px;opacity:.75;padding-top:20px}
 /* mobile-first: base styles target phones; tighten for very small screens, open up on tablets/desktop */
 @media (max-width:360px){
@@ -136,7 +140,6 @@ input.age{font:34px var(--hand);color:var(--ink);background:transparent;border:1
     <div class="card">
       <span class="eyebrow">Before → After</span>
       <h1>5 คำถาม ตอบตัวเอง 2 รอบ</h1>
-      <p class="note">ไม่มีคำตอบที่ถูกหรือผิด</p>
       <ol class="intro-steps">
         <li>ตอนเปิด session ตอบ <b>Before</b> ทีละข้อ</li>
         <li>ตอนท้าย session กดเปลี่ยนเป็น <b>After</b> แล้วตอบอีกรอบ</li>
@@ -144,6 +147,7 @@ input.age{font:34px var(--hand);color:var(--ink);background:transparent;border:1
       </ol>
       <label class="muted" for="name" style="font-size:14px">ชื่อเล่น (ไม่ใส่ก็ได้)</label>
       <input class="text" id="name" placeholder="ชื่อของคุณ" autocomplete="off" maxlength="30">
+      <p class="note info">ไม่มีคำตอบที่ถูกหรือผิด</p>
       <button class="btn primary" id="start">เริ่มตอบ Before</button>
     </div>
   </section>
@@ -204,7 +208,6 @@ input.age{font:34px var(--hand);color:var(--ink);background:transparent;border:1
   <!-- RESULT -->
   <section class="screen" id="s-result" hidden>
     <h2 id="r-title">ผลของคุณ</h2>
-    <p class="note">ถ้าคุณอยากบอกเรื่องราวเหล่านี้ (แคปหน้าสรุปคำตอบ) อย่าลืมแท็ก <b>@Nan Nichkamol</b> หมอรออ่านของทุกคนอยู่ แต่ถ้าคุณอยากเก็บไว้ในใจก็ได้เหมือนกัน</p>
 
     <div class="card" style="margin-top:8px">
       <span class="eyebrow">บันทึกเป็นรูป</span>
@@ -215,6 +218,7 @@ input.age{font:34px var(--hand);color:var(--ink);background:transparent;border:1
         <button class="fbtn" data-frame="C" aria-pressed="false"><span class="sw fc">C</span>สี่เหลี่ยม<small>1:1 จัตุรัส</small></button>
       </div>
       <div class="preview"><img id="preview" alt="ตัวอย่างรูปที่จะบันทึก"></div>
+      <p class="note info">ถ้าคุณอยากบอกเรื่องราวเหล่านี้ (แคปหน้าสรุปคำตอบ) อย่าลืมแท็ก <b>@Nan Nichkamol</b> หมอรออ่านของทุกคนอยู่ แต่ถ้าคุณอยากเก็บไว้ในใจก็ได้เหมือนกัน</p>
       <button class="btn after" id="save">บันทึกรูป</button>
       <p class="status" id="status" role="status" aria-live="polite"></p>
     </div>
@@ -411,7 +415,6 @@ function frameA(){ // open book spread, 4:5
     if(i<N-1){x.strokeStyle=line;x.lineWidth=1.5;x.beginPath();x.moveTo(P,y+rowH-6);x.lineTo(W-P,y+rowH-6);x.stroke()}
   }
   {const g=x.createLinearGradient(mid-26,0,mid+26,0);g.addColorStop(0,"rgba(120,90,40,0)");g.addColorStop(.5,"rgba(120,90,40,.16)");g.addColorStop(1,"rgba(120,90,40,0)");x.fillStyle=g;x.fillRect(mid-26,hy-50,52,bottom-hy+50);x.strokeStyle=line;x.lineWidth=2;x.beginPath();x.moveTo(mid,hy-50);x.lineTo(mid,bottom);x.stroke()}
-  txt(x,"ตอบตอนเปิด session  ·  ตอบอีกครั้งก่อนปิด session",P,H-P+8,`22px ${UI}`,mut);
   sign(x,W-P,H-P+10,acc);
   return c;
 }
@@ -437,7 +440,6 @@ function frameB(){ // story, 9:16
     });
     x.setLineDash([10,8]);x.strokeStyle="#dccfb4";x.lineWidth=2;x.beginPath();x.moveTo(ax-30,y+96);x.lineTo(ax-30,y+ch-32);x.stroke();x.setLineDash([]);
   }
-  txt(x,"ต้น session  →  ท้าย session",P,H-80,`26px ${UI}`,"#b3bccb");
   sign(x,W-P,H-78,"#f0b49b");
   return c;
 }
