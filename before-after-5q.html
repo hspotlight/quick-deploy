@@ -379,17 +379,19 @@ function frameB(){ // story, 9:16
   txt(x,"BEFORE → AFTER",P,170,`600 28px ${UI}`,"#ffb199");
   const t=fit(x,who(),s=>`${s}px ${HAND}`,W-2*P,1,92,50);txt(x,t.lines[0],P,275,`${t.size}px ${HAND}`,paper);
   txt(x,today(),P,330,`26px ${UI}`,"#a9b0d6");
-  const top=390,bot=H-150,gap=26,ch=(bot-top-gap*(N-1))/N;
+  const hy=420,colW=(W-2*P-80-60)/2,bx=P+40,ax=bx+colW+60;
+  [["BEFORE",bx,soft,ink],["AFTER",ax,acc,"#fff"]].forEach(([lab,cx,cb,ct])=>{
+    x.fillStyle=cb;rr(x,cx,hy-38,150,52,26);x.fill();txt(x,lab,cx+75,hy-2,`600 24px ${UI}`,ct,"center");
+  });
+  const top=hy+36,bot=H-150,gap=22,ch=(bot-top-gap*(N-1))/N;
   for(let i=0;i<N;i++){
     const y=top+i*(ch+gap);x.fillStyle=paper;rr(x,P,y,W-2*P,ch,30);x.fill();
-    const ix=P+40,iw=W-2*P-80;
-    txt(x,`${i+1}  ${Q[i].short}`,ix,y+58,`600 27px ${UI}`,mut);
-    [["BEFORE",B(i),soft,ink,ink,y+ch*0.52],["AFTER",A(i),acc,"#fff",acc,y+ch*0.82]].forEach(([lab,v,cb,ct,col,ly])=>{
-      x.fillStyle=cb;rr(x,ix,ly-36,140,48,24);x.fill();
-      txt(x,lab,ix+70,ly-3,`600 22px ${UI}`,ct,"center");
-      const f=fit(x,v,s=>`${s}px ${HAND}`,iw-170,1,46,26);
-      txt(x,f.lines[0],ix+170,ly+4,`${f.size}px ${HAND}`,col);
+    txt(x,`${i+1}  ${Q[i].short}`,bx,y+54,`600 26px ${UI}`,mut);
+    [[B(i),bx,ink],[A(i),ax,acc]].forEach(([v,cx,col])=>{
+      const f=fit(x,v,s=>`${s}px ${HAND}`,colW,2,46,26);
+      f.lines.forEach((l,k)=>txt(x,l,cx,y+78+f.size*1.4+k*f.size*1.2,`${f.size}px ${HAND}`,col));
     });
+    x.setLineDash([10,8]);x.strokeStyle="#d3d6e6";x.lineWidth=2;x.beginPath();x.moveTo(ax-30,y+96);x.lineTo(ax-30,y+ch-32);x.stroke();x.setLineDash([]);
   }
   txt(x,"ต้น session  →  ท้าย session",W/2,H-80,`26px ${UI}`,"#a9b0d6","center");
   return c;
