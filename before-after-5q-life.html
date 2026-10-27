@@ -240,18 +240,18 @@ input.age{font:34px var(--hand);color:var(--ink);background:transparent;border:1
 <script>
 const $=id=>document.getElementById(id);
 const Q=[
-  {type:"ages", q:"ถ้าเลือกได้\nอยากมีชีวิตอยู่ถึงอายุเท่าไหร่\nอยากเกษียณตอนอายุเท่าไหร่", short:"อยู่ถึงกี่ปี · เกษียณกี่ปี", labels:["อยากมีชีวิตอยู่ถึงอายุ","อยากเกษียณตอนอายุ"]},
+  {type:"ages", q:"ถ้าเลือกได้\nอยากเกษียณตอนอายุเท่าไหร่\nอยากมีชีวิตอยู่ถึงอายุเท่าไหร่", short:"เกษียณกี่ปี · อยู่ถึงกี่ปี", labels:["อยากเกษียณตอนอายุ","อยากมีชีวิตอยู่ถึงอายุ"]},
   {type:"text", q:"ในวันที่ไม่มีงานให้คุณตื่นขึ้นมาทำ\nคุณอยากตื่นขึ้นมาเพื่ออะไร?", hint:"คำตอบแรกที่แวบขึ้นมาใน 3 วินาที (ไม่มีให้ใส่ -)", short:"ไม่มีงาน อยากตื่นมาเพื่ออะไร", ph:"คำตอบแรกที่แวบขึ้นมา"},
   {type:"choice", q:"ระหว่าง คำถาม กับ คำตอบ\nคุณว่าอะไรสำคัญกว่ากัน", short:"คำถาม หรือ คำตอบ สำคัญกว่า", options:["คำถาม","คำตอบ"]},
   {type:"text", q:"ถ้าหน้านี้ เป็นหน้าสุดท้ายของ\nหนังสือที่ชื่อว่า ชีวิตคุณ...\n\nมีเรื่องอะไรที่คุณจะเสียดาย\nเพราะยังไม่ได้ใช้ชีวิตในแบบที่ตัวเองอยากใช้?", short:"ถ้านี่คือหน้าสุดท้าย จะเสียดายอะไร", ph:"เขียนได้ตามสบาย"},
   {type:"text", q:"ขอบคุณใครก็ได้ 3 คน\nที่คุณรู้สึกอยากบอกเขา", short:"ขอบคุณ 3 คน", ph:"เช่น แม่, เพื่อนสนิท, ตัวเอง"}
 ];
-const N=Q.length, KEY="ba5-life-v1";
+const N=Q.length, KEY="ba5-life-v2";
 let S={phase:"intro",idx:0,name:"",before:Array(N).fill(""),after:Array(N).fill(""),frame:"A"};
 try{const s=JSON.parse(localStorage.getItem(KEY)||"null");if(s&&Array.isArray(s.before))S=Object.assign(S,s)}catch(e){}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 const fmt=(i,v)=>{v=(v||"").trim();if(!v)return"—";
-  if(Q[i].type==="ages"){const[a,b]=v.split("|");return `อยู่ถึง ${a||"—"} · เกษียณ ${b||"—"}`}
+  if(Q[i].type==="ages"){const[a,b]=v.split("|");return `เกษียณ ${a||"—"} · อยู่ถึง ${b||"—"}`}
   return Q[i].type==="time"?v+" น.":v};
 const norm=v=>(v||"").trim().toLowerCase().replace(/\s+/g," ");
 
