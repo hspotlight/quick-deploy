@@ -342,8 +342,12 @@ function fit(ctx,text,font,maxW,maxLines,start,min){
   return{size:min,lines:L};
 }
 function rr(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
-function txt(ctx,s,x,y,font,color,align){ctx.font=font;ctx.fillStyle=color;ctx.textAlign=align||"left";ctx.fillText(s,x,y);ctx.textAlign="left"}
-const today=()=>new Date().toLocaleDateString("th-TH",{day:"numeric",month:"short",year:"numeric"});
+function txt(ctx,s,x,y,font,color,align){ // align by measuring: iOS Safari ignores textAlign for Thai
+  ctx.font=font;ctx.fillStyle=color;ctx.textAlign="left";
+  const w=align&&align!=="left"?ctx.measureText(s).width:0;
+  ctx.fillText(s,align==="center"?x-w/2:align==="right"?x-w:x,y);
+}
+const today=()=>new Date().toLocaleDateString("th-TH",{day:"numeric",month:"long",year:"numeric"});
 const who=()=>S.name.trim()||"คำตอบของฉัน";
 const B=i=>fmt(i,S.before[i]), A=i=>fmt(i,S.after[i]);
 
@@ -352,8 +356,8 @@ function frameA(){ // open book spread, 4:5
   const ink="#27384d",mut="#6f634e",line="#dccfb4",acc="#b8482a";
   x.fillStyle="#fbf6ea";x.fillRect(0,0,W,H);
   txt(x,"BEFORE → AFTER",P,P+16,`600 24px ${UI}`,mut);
-  const t=fit(x,who(),s=>`${s}px ${HAND}`,W-2*P-260,1,66,40);txt(x,t.lines[0],P,P+92,`${t.size}px ${HAND}`,ink);
-  txt(x,today(),W-P,P+92,`24px ${UI}`,mut,"right");
+  txt(x,today(),W-P,P+16,`500 24px ${UI}`,mut,"right");
+  const t=fit(x,who(),s=>`${s}px ${HAND}`,W-2*P,1,66,40);txt(x,t.lines[0],P,P+92,`${t.size}px ${HAND}`,ink);
   const mid=W/2, hy=P+170;
   txt(x,"Before",P,hy,`50px ${HAND}`,ink);txt(x,"After",mid+30,hy,`50px ${HAND}`,acc);
   x.strokeStyle=line;x.lineWidth=2;x.beginPath();x.moveTo(P,hy+22);x.lineTo(W-P,hy+22);x.stroke();
@@ -402,8 +406,8 @@ function frameC(){ // square, 1:1
   x.fillStyle=bg;x.fillRect(0,0,W,H);
   const P=56;
   txt(x,"BEFORE → AFTER",P,P+28,`600 24px ${UI}`,ink);
-  const t=fit(x,who(),s=>`${s}px ${HAND}`,W-2*P-260,1,60,36);txt(x,t.lines[0],P,P+100,`${t.size}px ${HAND}`,ink);
-  txt(x,today(),W-P,P+100,`24px ${UI}`,ink,"right");
+  txt(x,today(),W-P,P+28,`500 24px ${UI}`,mut,"right");
+  const t=fit(x,who(),s=>`${s}px ${HAND}`,W-2*P,1,60,36);txt(x,t.lines[0],P,P+100,`${t.size}px ${HAND}`,ink);
   const top=P+136,bot=H-P,gap=14,rh=(bot-top-gap*(N-1))/N;
   for(let i=0;i<N;i++){
     const y=top+i*(rh+gap);x.fillStyle="#fbf6ea";rr(x,P,y,W-2*P,rh,24);x.fill();
