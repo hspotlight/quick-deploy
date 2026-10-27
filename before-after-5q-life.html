@@ -105,6 +105,25 @@ input.age{font:34px var(--hand);color:var(--ink);background:transparent;border:1
 .ov-box{background:var(--paper);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px;align-items:center;max-width:520px;max-height:100%;overflow:auto}
 .ov-box p{color:var(--muted);font-size:14px;text-align:center}
 .ov-box img{max-width:100%}
+.note{background:var(--after-soft);border-left:3px solid var(--after);border-radius:4px 12px 12px 4px;padding:12px 14px;color:var(--text);font-size:15px;line-height:1.6}
+.note b{color:var(--after);font-weight:600}
+.foot{text-align:center;color:var(--muted);font-size:12px;opacity:.75;padding-top:20px}
+/* mobile-first: base styles target phones; tighten for very small screens, open up on tablets/desktop */
+@media (max-width:360px){
+  .card{padding:18px 14px}
+  h1{font-size:25px} .qtext{font-size:22px}
+  .frames{gap:6px} .fbtn{padding:6px;font-size:12px} .fbtn small{font-size:10px}
+  .choice{font-size:20px;padding:14px 6px} .choice svg{width:52px;height:52px}
+  input.age{font-size:28px;width:120px}
+}
+@media (min-width:768px){
+  body{padding-block:48px 64px}
+  .app{max-width:640px;gap:20px}
+  .card{padding:30px 32px}
+  h1{font-size:36px} .qtext{font-size:30px}
+  .preview img{max-height:620px}
+  .fbtn .sw{aspect-ratio:auto;height:110px}
+}
 .intro-steps{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;color:var(--text)}
 @media (prefers-reduced-motion:no-preference){.screen{animation:in .25s ease-out}@keyframes in{from{transform:translateY(6px)}to{transform:none}}}
 </style>
@@ -117,6 +136,7 @@ input.age{font:34px var(--hand);color:var(--ink);background:transparent;border:1
     <div class="card">
       <span class="eyebrow">Before → After</span>
       <h1>5 คำถาม ตอบตัวเอง 2 รอบ</h1>
+      <p class="note">ไม่มีคำตอบที่ถูกหรือผิด</p>
       <ol class="intro-steps">
         <li>ตอนเปิด session ตอบ <b>Before</b> ทีละข้อ</li>
         <li>ตอนท้าย session กดเปลี่ยนเป็น <b>After</b> แล้วตอบอีกรอบ</li>
@@ -184,6 +204,7 @@ input.age{font:34px var(--hand);color:var(--ink);background:transparent;border:1
   <!-- RESULT -->
   <section class="screen" id="s-result" hidden>
     <h2 id="r-title">ผลของคุณ</h2>
+    <p class="note">ถ้าคุณอยากบอกเรื่องราวเหล่านี้ (แคปหน้าสรุปคำตอบ) อย่าลืมแท็ก <b>@Nan Nichkamol</b> หมอรออ่านของทุกคนอยู่ แต่ถ้าคุณอยากเก็บไว้ในใจก็ได้เหมือนกัน</p>
 
     <div class="card" style="margin-top:8px">
       <span class="eyebrow">บันทึกเป็นรูป</span>
@@ -201,6 +222,7 @@ input.age{font:34px var(--hand);color:var(--ink);background:transparent;border:1
       <button class="btn ghost" id="reset">เริ่มใหม่ทั้งหมด</button>
     </div>
   </section>
+  <footer class="foot">developed by หัวหน้าฮง-โปรแกรมเมอร์ซาลาเปา</footer>
 </div>
 
 <div class="overlay" id="overlay" hidden>
@@ -352,7 +374,7 @@ function wrap(ctx,text,maxW){
 }
 function ellip(ctx,s,maxW){if(ctx.measureText(s).width<=maxW)return s;while(s.length&&ctx.measureText(s+"…").width>maxW)s=s.slice(0,-1);return s+"…"}
 function fit(ctx,text,font,maxW,maxLines,start,min,maxH){ // maxH: optional height budget for the whole block
-  for(let s=start;s>=min;s-=2){ctx.font=font(s);const L=wrap(ctx,text,maxW);if(L.length<=maxLines&&(!maxH||s*(1.65+1.2*(L.length-1))<=maxH))return{size:s,lines:L}}
+  for(let s=start;s>=min;s-=2){ctx.font=font(s);const L=wrap(ctx,text,maxW);if(L.length<=maxLines&&(!maxH||s*(1.65+1.2*(L.length-1))<=maxH)&&(L.length<2||ctx.measureText(L[L.length-1]).width>=maxW*.25))return{size:s,lines:L}}
   ctx.font=font(min);let L=wrap(ctx,text,maxW);
   if(L.length>maxLines){L=L.slice(0,maxLines);L[maxLines-1]=ellip(ctx,L[maxLines-1],maxW)}
   return{size:min,lines:L};
@@ -367,6 +389,7 @@ const today=()=>new Date().toLocaleDateString("th-TH",{day:"numeric",month:"long
 const who=()=>S.name.trim()||"คำตอบของฉัน";
 const B=i=>fmt(i,S.before[i]), A=i=>fmt(i,S.after[i]);
 
+const sign=(x,rx,y,col)=>txt(x,"หมอแนนชวนdeep",rx,y,`500 34px ${HEAD}`,col,"right");
 function frameA(){ // open book spread, 4:5
   const W=1080,H=1350,P=72,c=document.createElement("canvas"),x=c.getContext("2d");c.width=W;c.height=H;
   const ink="#27384d",mut="#6f634e",line="#dccfb4",acc="#b8482a";
@@ -388,7 +411,8 @@ function frameA(){ // open book spread, 4:5
     if(i<N-1){x.strokeStyle=line;x.lineWidth=1.5;x.beginPath();x.moveTo(P,y+rowH-6);x.lineTo(W-P,y+rowH-6);x.stroke()}
   }
   {const g=x.createLinearGradient(mid-26,0,mid+26,0);g.addColorStop(0,"rgba(120,90,40,0)");g.addColorStop(.5,"rgba(120,90,40,.16)");g.addColorStop(1,"rgba(120,90,40,0)");x.fillStyle=g;x.fillRect(mid-26,hy-50,52,bottom-hy+50);x.strokeStyle=line;x.lineWidth=2;x.beginPath();x.moveTo(mid,hy-50);x.lineTo(mid,bottom);x.stroke()}
-  txt(x,"ตอบตอนเปิด session  ·  ตอบอีกครั้งก่อนปิด session",W/2,H-P+8,`22px ${UI}`,mut,"center");
+  txt(x,"ตอบตอนเปิด session  ·  ตอบอีกครั้งก่อนปิด session",P,H-P+8,`22px ${UI}`,mut);
+  sign(x,W-P,H-P+10,acc);
   return c;
 }
 function frameB(){ // story, 9:16
@@ -413,7 +437,8 @@ function frameB(){ // story, 9:16
     });
     x.setLineDash([10,8]);x.strokeStyle="#dccfb4";x.lineWidth=2;x.beginPath();x.moveTo(ax-30,y+96);x.lineTo(ax-30,y+ch-32);x.stroke();x.setLineDash([]);
   }
-  txt(x,"ต้น session  →  ท้าย session",W/2,H-80,`26px ${UI}`,"#b3bccb","center");
+  txt(x,"ต้น session  →  ท้าย session",P,H-80,`26px ${UI}`,"#b3bccb");
+  sign(x,W-P,H-78,"#f0b49b");
   return c;
 }
 function frameC(){ // square, 1:1
@@ -424,7 +449,7 @@ function frameC(){ // square, 1:1
   txt(x,"BEFORE → AFTER",P,P+28,`600 24px ${UI}`,ink);
   txt(x,today(),W-P,P+28,`500 24px ${UI}`,mut,"right");
   const t=fit(x,who(),s=>`${s}px ${HAND}`,W-2*P,1,60,36);txt(x,t.lines[0],P,P+100,`${t.size}px ${HAND}`,ink);
-  const top=P+136,bot=H-P,gap=14,rh=(bot-top-gap*(N-1))/N;
+  const top=P+136,bot=H-P-44,gap=12,rh=(bot-top-gap*(N-1))/N;
   for(let i=0;i<N;i++){
     const y=top+i*(rh+gap);x.fillStyle="#fbf6ea";rr(x,P,y,W-2*P,rh,24);x.fill();
     x.fillStyle=ink;x.beginPath();x.arc(P+52,y+rh/2,28,0,7);x.fill();
@@ -438,6 +463,7 @@ function frameC(){ // square, 1:1
     txt(x,"→",ix+hw+32,ly,`36px ${UI}`,ink,"center");
     draw(fa,ix+hw+64,acc);
   }
+  sign(x,W-P,H-26,acc);
   return c;
 }
 async function fontsReady(){
