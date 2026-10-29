@@ -1,0 +1,276 @@
+<title>ตารางนัดหมาย</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+:root{
+  --bg:#faf7f2;--card:#fff;--ink:#2a2622;--muted:#7a7268;--line:#e8e1d6;
+  --accent:#e0592a;--accent-ink:#fff;--soft:#fdeee7;--chip:#f1ece3;
+  --c1:#e0592a;--c2:#2a8f7b;--c3:#5b6ee1;--c4:#c0398a;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){--bg:#171513;--card:#211e1b;--ink:#f0ebe3;--muted:#a39a8e;--line:#37322c;
+  --accent:#ff7a4a;--accent-ink:#1a1209;--soft:#35241c;--chip:#2c2824;color-scheme:dark}
+}
+:root[data-theme="dark"]{--bg:#171513;--card:#211e1b;--ink:#f0ebe3;--muted:#a39a8e;--line:#37322c;
+  --accent:#ff7a4a;--accent-ink:#1a1209;--soft:#35241c;--chip:#2c2824;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI","Noto Sans Thai",sans-serif}
+.wrap{max-width:920px;margin:0 auto;padding-block:24px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header{display:flex;flex-wrap:wrap;gap:12px;align-items:end;justify-content:space-between;margin-bottom:20px}
+h1{margin:0;font-size:1.7rem;letter-spacing:-.01em}
+header p{margin:2px 0 0;color:var(--muted);font-size:.92rem}
+.seg{display:inline-flex;background:var(--chip);border-radius:999px;padding:3px}
+.seg button{border:0;background:none;color:var(--muted);font:inherit;font-size:.92rem;padding:6px 16px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--card);color:var(--ink);box-shadow:0 1px 3px #0002;font-weight:600}
+button{font-family:inherit}
+.btn{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:7px 14px;border-radius:10px;font-size:.9rem;cursor:pointer;text-decoration:none;display:inline-flex;gap:6px;align-items:center}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:600}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* calendar */
+.calhead{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.calhead h2{margin:0 auto 0 4px;font-size:1.2rem}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--card)}
+.dow{padding:8px 4px;text-align:center;font-size:.78rem;color:var(--muted);background:var(--chip)}
+.day{min-height:92px;padding:5px;border-top:1px solid var(--line);border-left:1px solid var(--line);position:relative;min-width:0}
+.day:nth-child(7n+1){border-left:0}
+.day.out{opacity:.4}
+.day .n{font-size:.82rem;color:var(--muted)}
+.day.today .n{background:var(--accent);color:var(--accent-ink);border-radius:999px;padding:0 7px;font-weight:700}
+.pill{display:block;width:100%;text-align:left;border:0;margin-top:3px;padding:3px 6px;border-radius:6px;font-size:.74rem;line-height:1.3;color:#fff;cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:560px){
+  .day{min-height:64px;padding:3px}
+  .pill{font-size:0;height:8px;padding:0;border-radius:4px}
+  .dow{font-size:.7rem}
+}
+
+/* list */
+.group{margin:22px 0 8px;font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.card{display:flex;gap:16px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:12px;cursor:pointer;text-align:left;width:100%;color:inherit;font:inherit}
+.card:hover{border-color:var(--accent)}
+.card.past{opacity:.6}
+.date{flex:none;width:64px;text-align:center;border-radius:12px;padding:8px 0;color:#fff}
+.date b{display:block;font-size:1.6rem;line-height:1}
+.date span{font-size:.75rem;opacity:.9}
+.card h3{margin:0 0 4px;font-size:1.1rem}
+.meta{display:flex;flex-wrap:wrap;gap:4px 14px;color:var(--muted);font-size:.88rem}
+.empty{color:var(--muted);text-align:center;padding:40px 0}
+
+/* modal */
+dialog{border:0;border-radius:20px;padding:0;max-width:520px;width:calc(100% - 32px);background:var(--card);color:var(--ink);box-shadow:0 20px 60px #0006}
+dialog::backdrop{background:#0006}
+.dlg{padding:22px}
+.dlg h2{margin:0 0 4px;font-size:1.4rem}
+.badge{display:inline-block;font-size:.75rem;padding:2px 10px;border-radius:999px;background:var(--soft);color:var(--accent);margin-bottom:10px}
+dl{display:grid;grid-template-columns:auto 1fr;gap:8px 14px;margin:14px 0}
+dt{color:var(--muted);font-size:.88rem}
+dd{margin:0}
+.note{background:var(--chip);border-radius:12px;padding:10px 14px;margin:10px 0;white-space:pre-line}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.x{float:right;border:0;background:var(--chip);color:var(--ink);width:32px;height:32px;border-radius:50%;font-size:1.1rem;cursor:pointer}
+a{color:var(--accent)}
+footer{margin-top:36px;color:var(--muted);font-size:.8rem;text-align:center}
+.toast{margin-top:10px;font-size:.85rem;color:var(--muted)}
+</style>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>📅 ตารางนัดหมาย</h1>
+      <p>กดที่กิจกรรมเพื่อดูรายละเอียดและเพิ่มลงปฏิทิน</p>
+    </div>
+    <div class="seg" role="group" aria-label="มุมมอง">
+      <button id="vCal" aria-pressed="true">ปฏิทิน</button>
+      <button id="vList" aria-pressed="false">รายการ</button>
+    </div>
+  </header>
+  <main id="app"></main>
+  <footer>เวลาทั้งหมดเป็นเวลาประเทศไทย (GMT+7)</footer>
+</div>
+
+<dialog id="dlg" aria-label="รายละเอียดกิจกรรม"></dialog>
+
+<script>
+/* ===== แก้ข้อมูลกิจกรรมตรงนี้ =====
+   date: "YYYY-MM-DD"; start/end: "HH:MM" (ไม่ใส่ = ทั้งวัน)
+   attendees: รายชื่อผู้เข้าร่วม (ยังไม่มีระบบลงทะเบียน), capacity: จำนวนที่รับ (null = ยังไม่กำหนด)
+   mapUrl: ลิงก์ Google Maps (ไม่มีก็ปล่อยว่าง) */
+const EVENTS = [
+  {
+    id: "yoky-1",
+    title: "โยกี้พาเพื่อนเที่ยว",
+    date: "2026-11-07",
+    organizer: "Yoky",
+    location: "ยังไม่แน่นอน",
+    mapUrl: "",
+    capacity: null,
+    attendees: [],
+    note: "Location คิดว่าอาจจะโซนรถไฟฟ้าสายสีเขียว เล็งไว้ ศาลาแดง ไม่ก็สยามค่ะ ร้านหาอีกทีค่าา\nใครอยากทำอะไรรีเควสได้เลยค่ะ"
+  },
+  {
+    id: "hong-2",
+    title: "หัวหน้าฮง meet & eat 2",
+    date: "2026-12-12",
+    start: "13:00",
+    end: "17:00",
+    organizer: "หัวหน้าฮง",
+    location: "เซ้งยกซด",
+    mapUrl: "https://maps.app.goo.gl/zxaJ4DU9Qyfhdm326",
+    capacity: 12,
+    attendees: [],
+    note: "โต๊ะใหญ่ 12 ที่นั่ง\nอาหาร: ก๋วยเตี๋ยว เกี้ยวทอด ซาลาเปา ขนมจีบ บะจ๋าง 🥟"
+  }
+];
+/* =================================== */
+
+const COLORS = ["var(--c1)","var(--c2)","var(--c3)","var(--c4)"];
+const MONTHS = ["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
+const MON_S = ["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
+const DOW = ["อาทิตย์","จันทร์","อังคาร","พุธ","พฤหัสบดี","ศุกร์","เสาร์"];
+const DOW_S = ["อา","จ","อ","พ","พฤ","ศ","ส"];
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const pad = n => String(n).padStart(2,"0");
+const parse = d => { const [y,m,dd] = d.split("-").map(Number); return new Date(y,m-1,dd); };
+const iso = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const evs = EVENTS.map((e,i)=>({...e,color:COLORS[i%COLORS.length]})).sort((a,b)=>(a.date+(a.start||"")).localeCompare(b.date+(b.start||"")));
+const todayStr = iso(new Date());
+const fmtDate = d => { const x = parse(d); return `วัน${DOW[x.getDay()]}ที่ ${x.getDate()} ${MON_S[x.getMonth()]} ${x.getFullYear()}`; };
+const fmtTime = e => e.start ? `${e.start}${e.end?"–"+e.end:""} น.` : "ทั้งวัน";
+const people = e => {
+  const n = e.attendees.length;
+  return e.capacity ? `${n}/${e.capacity} คน` : (n ? `${n} คน` : "ยังไม่กำหนดจำนวน");
+};
+
+let view = "list";
+const upcoming = evs.find(e => e.date >= todayStr) || evs[evs.length-1];
+let cur = upcoming ? parse(upcoming.date) : new Date();
+cur = new Date(cur.getFullYear(), cur.getMonth(), 1);
+
+/* ---------- Add to calendar ---------- */
+function stamp(e, which){
+  const d = e.date.replace(/-/g,"");
+  if(!e.start) return which==="s" ? d : iso(new Date(parse(e.date).getTime()+864e5)).replace(/-/g,"");
+  const t = (which==="s"?e.start:(e.end||e.start)).replace(":","");
+  return `${d}T${t}00`;
+}
+function googleUrl(e){
+  const p = new URLSearchParams({
+    action:"TEMPLATE", text:e.title,
+    dates:`${stamp(e,"s")}/${stamp(e,"e")}`,
+    details:`ผู้จัด: ${e.organizer}\n${e.note||""}${e.mapUrl?"\n"+e.mapUrl:""}`,
+    location:e.mapUrl ? `${e.location} ${e.mapUrl}` : e.location
+  });
+  if(e.start) p.set("ctz","Asia/Bangkok");
+  return "https://calendar.google.com/calendar/render?"+p;
+}
+function outlookUrl(e){
+  const f = (d,t) => t ? `${d}T${t}:00+07:00` : d;
+  const p = new URLSearchParams({
+    path:"/calendar/action/compose", rru:"addevent", subject:e.title,
+    startdt:f(e.date,e.start), enddt:e.start ? f(e.date,e.end||e.start) : iso(new Date(parse(e.date).getTime()+864e5)),
+    location:e.location, body:`ผู้จัด: ${e.organizer}\n${e.note||""}${e.mapUrl?"\n"+e.mapUrl:""}`
+  });
+  if(!e.start) p.set("allday","true");
+  return "https://outlook.live.com/calendar/0/deeplink/compose?"+p;
+}
+async function downloadIcs(id){
+  const e = evs.find(x=>x.id===id);
+  const q = s => String(s||"").replace(/\\/g,"\\\\").replace(/\n/g,"\\n").replace(/[,;]/g,m=>"\\"+m);
+  const dt = (w) => e.start ? `DTSTART;TZID=Asia/Bangkok:${stamp(e,"s")}` : `DTSTART;VALUE=DATE:${stamp(e,"s")}`;
+  const de = e.start ? `DTEND;TZID=Asia/Bangkok:${stamp(e,"e")}` : `DTEND;VALUE=DATE:${stamp(e,"e")}`;
+  const now = new Date().toISOString().replace(/[-:]/g,"").replace(/\.\d+/,"");
+  const ics = ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//events//TH","CALSCALE:GREGORIAN","BEGIN:VEVENT",
+    `UID:${e.id}@events`,`DTSTAMP:${now}`,dt(),de,
+    `SUMMARY:${q(e.title)}`,`LOCATION:${q(e.location)}`,
+    `DESCRIPTION:${q(`ผู้จัด: ${e.organizer}\n${e.note||""}${e.mapUrl?"\n"+e.mapUrl:""}`)}`,
+    ...(e.mapUrl?[`URL:${e.mapUrl}`]:[]),"END:VEVENT","END:VCALENDAR"].join("\r\n");
+  const t = $("#toast");
+  try{ await navigator.clipboard.writeText(ics); t.textContent = "คัดลอกแล้ว วางลงไฟล์ .ics หรือแอปปฏิทินได้เลย"; }
+  catch{ t.textContent = "คัดลอกอัตโนมัติไม่ได้ ใช้ Google Calendar หรือ Outlook แทนได้"; }
+}
+
+/* ---------- Views ---------- */
+function renderCal(){
+  const y = cur.getFullYear(), m = cur.getMonth();
+  const first = new Date(y,m,1), start = new Date(y,m,1-first.getDay());
+  const weeks = Math.ceil((first.getDay()+new Date(y,m+1,0).getDate())/7);
+  let h = `<div class="calhead">
+    <button class="btn" data-nav="-1" aria-label="เดือนก่อน">‹</button>
+    <h2>${MONTHS[m]} ${y}</h2>
+    <button class="btn" data-nav="0">วันนี้</button>
+    <button class="btn" data-nav="1" aria-label="เดือนถัดไป">›</button></div>
+    <div class="grid">${DOW_S.map(d=>`<div class="dow">${d}</div>`).join("")}`;
+  for(let i=0;i<weeks*7;i++){
+    const d = new Date(start.getFullYear(),start.getMonth(),start.getDate()+i), s = iso(d);
+    const list = evs.filter(e=>e.date===s);
+    h += `<div class="day${d.getMonth()!==m?" out":""}${s===todayStr?" today":""}"><span class="n">${d.getDate()}</span>`
+      + list.map(e=>`<button class="pill" style="background:${e.color}" data-id="${e.id}" title="${esc(e.title)}">${e.start?e.start+" ":""}${esc(e.title)}</button>`).join("")
+      + `</div>`;
+  }
+  h += `</div>`;
+  const inMonth = evs.filter(e=>e.date.startsWith(`${y}-${pad(m+1)}`));
+  if(!inMonth.length) h += `<p class="empty">เดือนนี้ยังไม่มีนัดหมาย</p>`;
+  return h;
+}
+function card(e){
+  const d = parse(e.date);
+  return `<button class="card${e.date<todayStr?" past":""}" data-id="${e.id}">
+    <div class="date" style="background:${e.color}"><b>${d.getDate()}</b><span>${MON_S[d.getMonth()]} ${d.getFullYear()+543-2500}</span></div>
+    <div><h3>${esc(e.title)}</h3><div class="meta">
+      <span>🗓 ${DOW[d.getDay()]} · ${fmtTime(e)}</span>
+      <span>📍 ${esc(e.location)}</span>
+      <span>👤 ${esc(e.organizer)}</span>
+      <span>👥 ${people(e)}</span></div></div></button>`;
+}
+function renderList(){
+  const up = evs.filter(e=>e.date>=todayStr), past = evs.filter(e=>e.date<todayStr);
+  let h = "";
+  if(up.length) h += `<div class="group">กำลังจะมาถึง</div>` + up.map(card).join("");
+  if(past.length) h += `<div class="group">ผ่านไปแล้ว</div>` + past.map(card).join("");
+  return h || `<p class="empty">ยังไม่มีนัดหมาย</p>`;
+}
+function render(){
+  $("#app").innerHTML = view==="cal" ? renderCal() : renderList();
+  $("#vCal").setAttribute("aria-pressed", view==="cal");
+  $("#vList").setAttribute("aria-pressed", view==="list");
+}
+
+function openEvent(id){
+  const e = evs.find(x=>x.id===id); if(!e) return;
+  $("#dlg").innerHTML = `<div class="dlg">
+    <button class="x" aria-label="ปิด" onclick="dlg.close()">×</button>
+    ${e.date<todayStr?'<span class="badge">ผ่านไปแล้ว</span>':'<span class="badge">กำลังจะมาถึง</span>'}
+    <h2>${esc(e.title)}</h2>
+    <dl>
+      <dt>วันที่</dt><dd>${fmtDate(e.date)}</dd>
+      <dt>เวลา</dt><dd>${fmtTime(e)}</dd>
+      <dt>สถานที่</dt><dd>${esc(e.location)}${e.mapUrl?` · <a href="${esc(e.mapUrl)}" target="_blank" rel="noopener">เปิด Google Maps ↗</a>`:""}</dd>
+      <dt>ผู้จัด</dt><dd>${esc(e.organizer)}</dd>
+      <dt>ผู้เข้าร่วม</dt><dd>${people(e)}${e.capacity?` (รับ ${e.capacity} ที่นั่ง)`:""}${e.attendees.length?"<br>"+e.attendees.map(esc).join(", "):""}</dd>
+    </dl>
+    ${e.note?`<div class="note">${esc(e.note)}</div>`:""}
+    <div class="actions">
+      <a class="btn primary" href="${esc(googleUrl(e))}" target="_blank" rel="noopener">＋ Google Calendar</a>
+      <a class="btn" href="${esc(outlookUrl(e))}" target="_blank" rel="noopener">＋ Outlook</a>
+      <button class="btn" data-ics="${e.id}">คัดลอกข้อความ .ics</button>
+    </div>
+    <div class="toast" id="toast" role="status">.ics ใช้วางลงในปฏิทิน Apple หรือแอปอื่นที่นำเข้าไฟล์ได้</div></div>`;
+  $("#dlg").showModal();
+}
+
+document.addEventListener("click", ev => {
+  const t = ev.target.closest("[data-id],[data-nav],[data-ics]");
+  if(t){
+    if(t.dataset.id) return openEvent(t.dataset.id);
+    if(t.dataset.ics) return downloadIcs(t.dataset.ics);
+    const n = +t.dataset.nav;
+    cur = n===0 ? new Date(new Date().getFullYear(),new Date().getMonth(),1) : new Date(cur.getFullYear(),cur.getMonth()+n,1);
+    return render();
+  }
+  if(ev.target === dlg) dlg.close();           // คลิกพื้นหลังเพื่อปิด
+});
+$("#vCal").onclick = () => { view="cal"; render(); };
+$("#vList").onclick = () => { view="list"; render(); };
+render();
+</script>
