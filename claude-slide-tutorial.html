@@ -1,0 +1,940 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>สร้าง Slide ด้วย Claude</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&family=Mitr:wght@500;700&family=Noto+Serif+Thai:wght@600;700&display=swap">
+<style>
+:root{--bar-h:64px;--bw:1.5px;--radius:28px;--shadow:none;--gap-c:var(--bg)}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-b);line-height:1.5;overflow:hidden;-webkit-text-size-adjust:100%}
+button{font-family:inherit}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--a1);outline-offset:3px}
+
+#deck{position:fixed;inset:0;background:var(--bg);overflow:hidden}
+.glow{position:absolute;inset:0;background:var(--glow);pointer-events:none}
+.glow::after{content:"";position:absolute;inset:0;background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:64px 64px}
+#progress{position:fixed;left:0;top:0;height:5px;width:0;background:var(--progress);z-index:30;transition:width .45s cubic-bezier(.2,.8,.2,1)}
+#view{position:absolute;left:0;right:0;top:0;bottom:calc(var(--bar-h) + env(safe-area-inset-bottom,0px));overflow:hidden}
+#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform-origin:center center}
+
+/* navigation bar (real pixels, always tappable) */
+#bar{position:absolute;left:0;right:0;bottom:0;height:calc(var(--bar-h) + env(safe-area-inset-bottom,0px));padding-bottom:env(safe-area-inset-bottom,0px);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;align-items:center;gap:16px;border-top:1px solid var(--line);background:var(--bar-bg);z-index:20}
+.brand{flex:1 1 0;min-width:0;display:flex;align-items:center;gap:12px;font-size:15px;color:var(--muted);white-space:nowrap}
+.brand b{font-weight:500;overflow:hidden;text-overflow:ellipsis}
+#counter{font-variant-numeric:tabular-nums;padding-left:12px;border-left:1px solid var(--line)}
+#dots{display:flex;gap:8px;align-items:center;justify-content:center}
+#dots button{width:9px;height:9px;padding:0;border:0;border-radius:99px;background:var(--dot);cursor:pointer;transition:width .3s,background .3s}
+#dots button.on{width:34px;background:var(--a1)}
+.btns{flex:1 1 0;display:flex;justify-content:flex-end;gap:8px}
+.btns button{width:46px;height:40px;border-radius:11px;border:1px solid var(--line);background:var(--btn-bg);color:var(--ink);cursor:pointer;display:grid;place-items:center;transition:border-color .2s,background .2s}
+.btns button:hover{border-color:var(--a1);background:var(--tag-bg)}
+.btns svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+@media (max-width:760px){#dots{display:none}.brand b{display:none}.brand{flex:1}}
+
+/* slides */
+.slide{position:absolute;inset:0;padding:78px 110px 40px;display:flex;flex-direction:column;opacity:0;visibility:hidden;transition:opacity .4s ease,visibility 0s .4s}
+.slide.active{opacity:1;visibility:visible;transition:opacity .4s ease}
+.slide.active .rise{animation:rise .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--d,0)*90ms)}
+@keyframes rise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.slide.active .rise{animation:none}.slide,.slide.active{transition:none}}
+
+/* type */
+.tag{align-self:flex-start;display:inline-flex;align-items:center;gap:12px;padding:8px 26px;border:var(--bw) solid var(--tag-line);color:var(--a1);border-radius:999px;font-size:26px;font-weight:500;background:var(--tag-bg);margin-bottom:22px}
+.tag .dot{width:14px;height:14px;border-radius:50%;background:var(--good)}
+h1,h2,h3,p{margin:0}
+h1{font-family:var(--font-d);font-size:136px;line-height:1.22;font-weight:800;letter-spacing:-.01em}
+h2{font-family:var(--font-d);font-size:78px;line-height:1.28;font-weight:700}
+h3{font-family:var(--font-d);font-size:40px;line-height:1.3;font-weight:600}
+.sub{font-size:34px;color:var(--muted);margin-top:8px}
+.lead{font-size:44px;line-height:1.5;color:var(--ink);opacity:.92}
+.grad{background:var(--grad-text);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.hl{color:var(--a1);font-weight:700}
+.muted{color:var(--muted)}
+.txt{font-size:32px;line-height:1.55}
+.sm{font-size:27px;line-height:1.5}
+b,strong{font-weight:700}
+.num{font-variant-numeric:tabular-nums}
+
+/* blocks */
+.card{background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--radius);padding:34px 40px;box-shadow:var(--shadow);min-width:0}
+.g2,.g3,.g4{display:grid;gap:32px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.chips{display:flex;flex-wrap:wrap;gap:16px}
+.chip{display:inline-flex;align-items:center;gap:10px;padding:10px 26px;border-radius:999px;border:var(--bw) solid var(--line);background:var(--card);font-size:28px}
+.chip.on{border-color:var(--a1);color:var(--a1)}
+.ico{width:76px;height:76px;border-radius:20px;display:grid;place-items:center;flex:none}
+.ico svg{width:40px;height:40px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.c1{color:var(--a1);background:color-mix(in srgb,var(--a1) 16%,transparent)}
+.c2{color:var(--a2);background:color-mix(in srgb,var(--a2) 16%,transparent)}
+.c3{color:var(--a3);background:color-mix(in srgb,var(--a3) 16%,transparent)}
+.c4{color:var(--a4);background:color-mix(in srgb,var(--a4) 16%,transparent)}
+.c5{color:var(--a5);background:color-mix(in srgb,var(--a5) 16%,transparent)}
+.bignum{width:68px;height:68px;border-radius:50%;display:grid;place-items:center;font-size:36px;font-weight:700;background:var(--a1);color:var(--on-a1);flex:none}
+.url{display:inline-flex;align-items:center;gap:16px;padding:16px 38px;border-radius:22px;border:var(--bw) solid var(--tag-line);background:var(--tag-bg);color:var(--a1);font-size:54px;font-weight:700;text-decoration:none}
+.mark{display:inline-grid;place-items:center;width:44px;height:44px;border-radius:50%;font-weight:700;font-size:26px;flex:none}
+.mark.ok{background:color-mix(in srgb,var(--good) 22%,transparent);color:var(--good)}
+.mark.no{background:color-mix(in srgb,var(--bad) 22%,transparent);color:var(--bad)}
+kbd{font-family:var(--font-m);font-size:.78em;padding:2px 14px;border-radius:10px;border:var(--bw) solid var(--line);background:var(--card)}
+code{font-family:var(--font-m);font-size:.9em;padding:2px 12px;border-radius:10px;background:var(--code-bg)}
+.prompt{position:relative;background:var(--code-bg);border:var(--bw) solid var(--line);border-radius:26px;padding:34px 44px;font-size:31px;line-height:1.65;white-space:pre-wrap;font-family:var(--font-b);color:var(--ink)}
+.copy{position:absolute;right:20px;top:18px;display:inline-flex;align-items:center;gap:10px;padding:8px 22px;border-radius:12px;border:var(--bw) solid var(--tag-line);background:var(--tag-bg);color:var(--a1);font-size:24px;font-weight:600;cursor:pointer}
+.copy:hover{background:var(--a1);color:var(--on-a1)}
+.copy svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.hint{display:flex;align-items:center;gap:16px;font-size:28px;color:var(--muted)}
+.hint b{color:var(--a1)}
+.foot{margin-top:auto;padding-top:18px}
+
+/* charts */
+.chartbox{position:relative}
+.chartbox svg{display:block;overflow:visible}
+.chartbox text{font-family:var(--font-b)}
+.gl{stroke:var(--line);stroke-width:1}
+.ax{fill:var(--muted)}
+.bar{transform-box:fill-box;transform-origin:50% 100%;animation:grow .9s cubic-bezier(.2,.8,.2,1) both}
+@keyframes grow{from{transform:scaleY(0)}to{transform:none}}
+.ln{fill:none;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;animation:draw 1.5s ease both}
+.ln.dash{stroke-width:3.5;stroke-dasharray:10 9;animation:fadein 1s .6s both}
+@keyframes draw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+.area{animation:fadein 1.2s .5s both}
+.pt{animation:fadein .5s both}
+.slice{animation:pop .8s cubic-bezier(.2,.8,.2,1) both}
+@keyframes pop{from{opacity:0;transform:scale(.82)}to{opacity:1;transform:none}}
+.pie-wrap{display:flex;align-items:center;gap:56px;height:100%}
+.legend{display:flex;flex-direction:column;gap:16px;font-size:30px;min-width:0}
+.legend div{display:flex;align-items:center;gap:16px}
+.legend i{width:22px;height:22px;border-radius:7px;flex:none}
+.legend span{flex:1}
+.legend b{font-variant-numeric:tabular-nums}
+.pieC{fill:var(--ink);font-family:var(--font-d)}
+
+/* โทนสี: กรมท่าเข้ม + ส้ม (ปรับสีได้ที่นี่ที่เดียว) */
+:root{
+  --bg:#070a14;--ink:#eef1fb;--muted:#9099b6;--card:rgba(255,255,255,.045);--line:rgba(255,255,255,.11);
+  --a1:#ff7a1a;--a2:#22d3ee;--a3:#34d399;--a4:#a78bfa;--a5:#fbbf24;--bad:#f87171;--good:#34d399;--on-a1:#1a0d00;
+  --font-d:'Prompt','Noto Sans Thai',system-ui,sans-serif;--font-b:'Prompt','Noto Sans Thai',system-ui,sans-serif;--font-m:ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+  --glow:radial-gradient(ellipse 55% 50% at 10% 6%,rgba(255,122,26,.30),transparent 70%),radial-gradient(ellipse 45% 55% at 96% 42%,rgba(34,211,238,.20),transparent 70%),radial-gradient(ellipse 40% 40% at 50% 108%,rgba(167,139,250,.30),transparent 70%);
+  --grid:rgba(255,255,255,.035);--progress:linear-gradient(90deg,#ff7a1a,#a78bfa,#22d3ee);
+  --tag-bg:rgba(255,122,26,.09);--tag-line:rgba(255,122,26,.55);--code-bg:rgba(0,0,0,.38);--btn-bg:rgba(255,255,255,.04);
+  --bar-bg:rgba(7,10,20,.85);--dot:rgba(255,255,255,.22);--grad-text:linear-gradient(90deg,#34d399,#22d3ee);
+}
+
+.btns .i-pause{display:none}.btns .playing .i-pause{display:block}.btns .playing .i-play{display:none}
+/* ---- สไลด์สอน: ส่วนที่เฉพาะของ deck นี้ ---- */
+.cover{flex-direction:row;align-items:center;gap:60px;padding-top:40px}
+.cover-l{flex:1;display:flex;flex-direction:column;gap:30px;min-width:0}
+.cover h1{font-size:150px}
+.cover-r{width:640px;flex:none;display:grid;place-items:center;position:relative}
+.ring{width:600px;height:600px;position:relative}
+.ring svg{position:absolute;inset:0;width:100%;height:100%}
+.ring .spin{transform-origin:300px 300px;animation:spin 24s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ring-c{position:absolute;inset:70px;border-radius:50%;background:#0a0e1c;border:1.5px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-align:center}
+.ring-c small{font-size:30px;color:var(--muted)}
+.ring-c strong{font-size:84px;line-height:1.15;font-weight:800;letter-spacing:-.01em}
+.ring-c em{font-style:normal;font-size:60px;font-weight:700;color:var(--a1);line-height:1.2}
+
+.row{display:flex;gap:56px;align-items:center;flex:1;min-height:0}
+.col{display:flex;flex-direction:column;gap:26px;min-width:0}
+.items{display:flex;flex-direction:column;gap:22px}
+.item{display:flex;gap:26px;align-items:flex-start}
+.item h3{font-size:38px}
+.item p{font-size:29px;color:var(--muted);margin-top:2px}
+
+/* mock slide (หน้า 2) */
+.mock{position:relative;width:860px;height:484px;border-radius:26px;border:var(--bw) solid var(--line);background:#080b18;overflow:visible;flex:none;box-shadow:0 30px 80px rgba(0,0,0,.45)}
+.mock .in{position:absolute;inset:0;border-radius:26px;overflow:hidden;background:radial-gradient(ellipse 60% 60% at 8% 0,rgba(255,122,26,.3),transparent 70%),radial-gradient(ellipse 50% 60% at 100% 50%,rgba(34,211,238,.2),transparent 70%)}
+.mock .mp{position:absolute;left:0;top:0;height:6px;width:36%;background:var(--progress)}
+.mock .mt{position:absolute;left:44px;top:62px;font-size:23px;color:var(--a1);border:1px solid var(--tag-line);padding:2px 18px;border-radius:99px}
+.mock .mh{position:absolute;left:44px;top:114px;font-size:54px;font-weight:700;line-height:1.3}
+.mock .mn{position:absolute;left:44px;top:205px;font-size:96px;font-weight:800;line-height:1.2}
+.mock .mn small{font-size:30px;color:var(--good);font-weight:600;margin-left:14px}
+.mock .mb{position:absolute;left:0;right:0;bottom:0;height:68px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:20px;color:var(--muted)}
+.mock .md{display:flex;gap:8px}.mock .md i{width:10px;height:10px;border-radius:9px;background:rgba(255,255,255,.25)}.mock .md i.on{width:34px;background:var(--a1)}
+.mock .mx{display:flex;gap:8px}.mock .mx i{width:40px;height:34px;border-radius:9px;border:1px solid var(--line);background:rgba(255,255,255,.05)}
+.callout{position:absolute;display:flex;align-items:center;gap:12px;font-size:26px;font-weight:600;white-space:nowrap}
+.callout .bignum{width:46px;height:46px;font-size:26px;box-shadow:0 0 0 6px rgba(255,122,26,.25)}
+
+/* ตาราง เปรียบเทียบ */
+.cmp{display:grid;grid-template-columns:300px 1fr 1fr;border:var(--bw) solid var(--line);border-radius:var(--radius);overflow:hidden;background:var(--card)}
+.cmp>div{padding:24px 34px;font-size:30px;border-top:1px solid var(--line);display:flex;align-items:center}
+.cmp>div.h{border-top:0;font-weight:700;font-size:32px;background:rgba(255,255,255,.04)}
+.cmp>div.l{color:var(--muted)}
+.cmp>div.win{color:var(--ink);background:color-mix(in srgb,var(--a1) 9%,transparent)}
+.cmp>div.h.win{color:var(--a1)}
+
+/* key slide */
+.key{align-items:center;justify-content:center;text-align:center;gap:34px}
+.key .tag{align-self:center}
+.keybox{padding:40px 90px 46px;border-radius:44px;border:2px solid var(--tag-line);background:linear-gradient(180deg,rgba(255,122,26,.12),rgba(255,122,26,.03));box-shadow:0 0 120px rgba(255,122,26,.18)}
+.keybox p{font-size:50px;color:var(--muted)}
+.keybox h2{font-size:150px;line-height:1.25;font-weight:800}
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:34px;width:100%;text-align:left}
+.vs .card{display:flex;gap:24px;align-items:flex-start;padding:28px 34px}
+.vs h3{font-size:34px}.vs p{font-size:27px;color:var(--muted);margin-top:4px}
+
+/* 4 steps */
+.step{display:flex;flex-direction:column;gap:20px;position:relative}
+.step .bignum{width:84px;height:84px;font-size:46px}
+.step h3{font-size:42px}
+.step p{font-size:29px;color:var(--muted)}
+.step .arrow{position:absolute;right:-30px;top:50px;color:var(--muted);font-size:44px}
+
+/* mock chat */
+.chat{width:820px;flex:none;border-radius:34px;border:var(--bw) solid var(--line);background:rgba(255,255,255,.035);padding:34px 36px 30px;display:flex;flex-direction:column;gap:22px;box-shadow:0 30px 80px rgba(0,0,0,.4)}
+.chat .hi{font-size:46px;font-weight:600;text-align:center;padding:26px 0 16px}
+.chat .box{border:var(--bw) solid var(--line);background:rgba(0,0,0,.35);border-radius:26px;padding:26px 28px;min-height:230px;font-size:34px;line-height:1.6;display:flex;flex-direction:column;justify-content:space-between}
+.chat .caret{display:inline-block;width:3px;height:1.1em;background:var(--a1);vertical-align:-.15em;margin-left:3px;animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+.chat .send{align-self:flex-end;width:62px;height:62px;border-radius:18px;background:var(--a1);color:var(--on-a1);display:grid;place-items:center}
+.chat .send svg{width:30px;height:30px;fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.cap{font-size:24px;color:var(--muted);text-align:center}
+
+/* flow */
+.flow{display:flex;align-items:stretch;gap:24px}
+.node{flex:1;display:flex;flex-direction:column;gap:16px;align-items:flex-start}
+.node h3{font-size:40px}.node p{font-size:28px;color:var(--muted)}
+.fa{align-self:center;font-size:56px;color:var(--a1);flex:none}
+
+/* media demo */
+.media{display:flex;flex-direction:column;gap:22px;padding:26px}
+.media .shot{height:340px;border-radius:22px;overflow:hidden;position:relative;background:#0c1124}
+.media canvas,.media svg.art{width:100%;height:100%;display:block}
+.media h3{font-size:36px}.media p{font-size:26px;color:var(--muted)}
+.player{position:relative}
+.player .play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:110px;height:110px;border-radius:50%;background:rgba(255,122,26,.92);border:0;color:var(--on-a1);cursor:pointer;display:grid;place-items:center;transition:transform .2s}
+.player .play:hover{transform:translate(-50%,-50%) scale(1.08)}
+.player .play svg{width:46px;height:46px;fill:currentColor;margin-left:6px}
+.player.on .play{opacity:0;pointer-events:none}
+.player .bar2{position:absolute;left:24px;right:24px;bottom:20px;height:8px;border-radius:9px;background:rgba(255,255,255,.2);overflow:hidden}
+.player .bar2 i{display:block;height:100%;width:0;background:var(--a1)}
+.player.on .bar2 i{animation:vid 8s linear infinite}
+@keyframes vid{to{width:100%}}
+.player .vtxt{position:absolute;left:24px;top:20px;font-size:24px;padding:4px 18px;border-radius:99px;background:rgba(0,0,0,.5)}
+
+/* tabs for chart demo */
+.tabs{display:flex;gap:14px;flex-wrap:wrap}
+.tabs button{padding:10px 30px;border-radius:99px;border:var(--bw) solid var(--line);background:var(--card);color:var(--ink);font-size:28px;cursor:pointer}
+.tabs button.on{border-color:var(--a1);color:var(--a1);background:var(--tag-bg);font-weight:600}
+.tabs button:hover{border-color:var(--a1)}
+
+/* score cards */
+.sc{display:flex;flex-direction:column;gap:6px;padding:30px 38px}
+.sc .top{display:flex;justify-content:space-between;align-items:center;font-size:30px;color:var(--muted)}
+.sc .top .ico{width:62px;height:62px;border-radius:16px}
+.sc .top .ico svg{width:32px;height:32px}
+.sc .v{font-size:92px;font-weight:800;line-height:1.25;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.sc .d{font-size:28px;color:var(--muted)}
+.up{color:var(--good);font-weight:600}.dn{color:var(--bad);font-weight:600}
+
+/* examples */
+.ex{display:flex;flex-direction:column;gap:22px;padding:26px;text-decoration:none;transition:transform .25s,border-color .25s}
+.ex:hover{transform:translateY(-6px);border-color:var(--a1)}
+.thumb{height:290px;border-radius:20px;overflow:hidden;position:relative;border:1px solid var(--line)}
+.ex h3{font-size:38px}.ex p{font-size:27px;color:var(--muted)}
+.ex .go{font-size:28px;color:var(--a1);font-weight:600}
+
+.big3{display:flex;flex-direction:column;gap:30px}
+.big3 .item h3{font-size:50px}
+.thanks{align-items:center;justify-content:center;text-align:center;gap:30px}
+.thanks h1{font-size:190px}
+
+</style>
+</head>
+<body>
+<div id="deck">
+<div class="glow"></div>
+<div id="progress"></div>
+<div id="view"><div id="stage">
+<!-- 1 ปก -->
+<section class="slide cover">
+  <div class="cover-l">
+    <span class="tag rise" style="--d:0"><i class="dot"></i>Workshop สำหรับมือใหม่</span>
+    <h1 class="rise" style="--d:1">สร้าง Slide<br><span class="grad">ด้วย Claude</span></h1>
+    <p class="lead rise" style="--d:2">แค่พิมพ์ 1 ประโยค ก็ได้สไลด์สวยๆ<br>ไม่ต้องเขียนโค้ด ไม่ต้องจ่ายเงิน</p>
+    <div class="chips rise" style="--d:3">
+      <span class="chip">ใช้ Claude แบบฟรีได้</span>
+      <span class="chip">ไม่ต้องใช้ Claude Code</span>
+      <span class="chip">เซฟเก็บไว้ใช้ซ้ำได้</span>
+    </div>
+  </div>
+  <div class="cover-r rise" style="--d:2">
+    <div class="ring">
+      <svg viewBox="0 0 600 600" aria-hidden="true">
+        <circle cx="300" cy="300" r="290" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="3"/>
+        <circle cx="300" cy="300" r="270" fill="none" stroke="rgba(34,211,238,.35)" stroke-width="22" stroke-dasharray="340 1356"/>
+        <g class="spin"><circle cx="300" cy="300" r="290" fill="none" stroke="#ff7a1a" stroke-width="16" stroke-linecap="round" stroke-dasharray="360 1463"/></g>
+      </svg>
+      <div class="ring-c"><small>คำที่ต้องพิมพ์</small><strong>HTML</strong><em>slide</em></div>
+    </div>
+  </div>
+</section>
+
+<!-- 2 หน้าตาสไลด์ -->
+<section class="slide">
+  <span class="tag rise" style="--d:0">สิ่งที่คุณจะได้</span>
+  <h2 class="rise" style="--d:1">สไลด์ที่ได้ หน้าตาเป็นแบบนี้</h2>
+  <p class="sub rise" style="--d:2">เหมือนที่คุณกำลังดูอยู่ตอนนี้เลย</p>
+  <div class="row" style="margin-top:20px">
+    <div class="mock rise" style="--d:3">
+      <div class="in">
+        <div class="mp"></div>
+        <div class="mt">01 · ตัวอย่าง</div>
+        <div class="mh">ยอดขายไตรมาส 3</div>
+        <div class="mn">$12.4M<small>▲ 18%</small></div>
+        <div class="mb"><span>1 / 8</span><div class="md"><i></i><i class="on"></i><i></i><i></i><i></i></div><div class="mx"><i></i><i></i><i></i><i></i></div></div>
+      </div>
+      <div class="callout" style="left:300px;top:-62px"><span class="bignum">1</span>แถบความคืบหน้า</div>
+      <div class="callout" style="right:-10px;bottom:-66px"><span class="bignum">2</span>ปุ่มเลื่อนหน้า</div>
+    </div>
+    <div class="items col">
+      <div class="item rise" style="--d:4"><span class="bignum">1</span><div><h3>แถบความคืบหน้า</h3><p>เส้นสีด้านบน บอกว่าอยู่หน้าไหนจากทั้งหมด</p></div></div>
+      <div class="item rise" style="--d:5"><span class="bignum">2</span><div><h3>ปุ่มเลื่อนหน้า</h3><p>ย้อนกลับ · เล่นอัตโนมัติ · ถัดไป · เต็มจอ</p></div></div>
+      <div class="item rise" style="--d:6"><span class="bignum">3</span><div><h3>กดคีย์บอร์ดได้</h3><p><kbd>←</kbd> <kbd>→</kbd> เลื่อนหน้า · <kbd>F</kbd> เต็มจอ · <kbd>P</kbd> เล่นอัตโนมัติ</p></div></div>
+      <div class="item rise" style="--d:7"><span class="bignum">4</span><div><h3>ใช้บนมือถือได้</h3><p>ปัดซ้าย-ขวาเพื่อเปลี่ยนหน้า</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 HTML คืออะไร -->
+<section class="slide">
+  <span class="tag rise" style="--d:0">ทำความเข้าใจก่อน</span>
+  <h2 class="rise" style="--d:1">HTML คืออะไร? พูดง่ายๆ</h2>
+  <p class="lead rise" style="--d:2;margin:14px 0 34px;font-size:40px"><span class="hl">HTML</span> = ไฟล์หน้าเว็บ 1 ไฟล์ เปิดได้ด้วย Chrome, Safari, Edge<br>เหมือนเปิดไฟล์ PDF แต่กราฟขยับได้ กดได้ มี animation</p>
+  <div class="cmp rise" style="--d:3">
+    <div class="h"></div><div class="h">สไลด์แบบเดิม (PowerPoint)</div><div class="h win">HTML slide</div>
+    <div class="l">ต้องมีโปรแกรม?</div><div>ต้องลง PowerPoint / Keynote</div><div class="win">ไม่ต้อง ใช้เบราว์เซอร์ที่มีอยู่แล้ว</div>
+    <div class="l">หน้าตา</div><div>ส่วนใหญ่นิ่ง</div><div class="win">กราฟขยับ ตัวเลขวิ่ง กดโต้ตอบได้</div>
+    <div class="l">การแชร์</div><div>ส่งไฟล์ใหญ่ ฟอนต์เพี้ยนได้</div><div class="win">ส่งเป็นลิงก์ หรือไฟล์เล็กๆ 1 ไฟล์</div>
+    <div class="l">วิธีทำ</div><div>ลากวางทีละกล่อง</div><div class="win">สั่ง Claude เป็นภาษาไทย</div>
+  </div>
+</section>
+
+<!-- 4 ต้องมีอะไร -->
+<section class="slide">
+  <span class="tag rise" style="--d:0">เตรียมตัว</span>
+  <h2 class="rise" style="--d:1">สิ่งที่ต้องมี มีแค่ 3 อย่าง</h2>
+  <div class="g3" style="margin-top:44px">
+    <div class="card rise" style="--d:2;display:flex;flex-direction:column;gap:20px">
+      <span class="ico c1"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></span>
+      <h3>บัญชี Claude (ฟรี)</h3><p class="txt muted">สมัครที่ claude.ai ด้วย Google หรืออีเมล ใช้แบบฟรีได้เลย</p>
+    </div>
+    <div class="card rise" style="--d:3;display:flex;flex-direction:column;gap:20px">
+      <span class="ico c2"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg></span>
+      <h3>เบราว์เซอร์ + อินเทอร์เน็ต</h3><p class="txt muted">Chrome, Safari หรือ Edge บนคอมพิวเตอร์ แท็บเล็ต หรือมือถือ</p>
+    </div>
+    <div class="card rise" style="--d:4;display:flex;flex-direction:column;gap:20px">
+      <span class="ico c3"><svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg></span>
+      <h3>เนื้อหาที่อยากนำเสนอ</h3><p class="txt muted">พิมพ์เล่าให้ฟัง หรือแนบไฟล์ เช่น Excel, PDF, Word ให้ Claude อ่านก็ได้</p>
+    </div>
+  </div>
+  <div class="card rise" style="--d:5;margin-top:36px;display:flex;align-items:center;gap:28px;padding:26px 40px">
+    <span class="mark ok">✓</span><p class="txt"><b>ไม่ต้องมี</b> Claude Code · ความรู้เรื่องโค้ด · โปรแกรมทำสไลด์ · ค่าใช้จ่าย</p>
+  </div>
+</section>
+
+<!-- 5 KEY -->
+<section class="slide key">
+  <span class="tag rise" style="--d:0">หัวใจสำคัญ</span>
+  <div class="keybox rise" style="--d:1">
+    <p>บอก Claude แค่ว่า ให้</p>
+    <h2>สร้าง <span class="grad">"HTML slide"</span></h2>
+  </div>
+  <p class="lead rise" style="--d:2;font-size:36px;color:var(--muted)">คำนี้ทำให้ Claude รู้ทันทีว่าต้องทำสไลด์เป็นหน้าเว็บ มีปุ่มเลื่อน กราฟ และดีไซน์สวย</p>
+  <div class="vs rise" style="--d:3">
+    <div class="card"><span class="mark no">✕</span><div><h3>"ทำสไลด์ให้หน่อย"</h3><p>Claude อาจถามกลับ หรือให้มาแค่โครงข้อความ</p></div></div>
+    <div class="card" style="border-color:var(--tag-line)"><span class="mark ok">✓</span><div><h3>"สร้าง HTML slide เรื่อง …"</h3><p>ได้สไลด์พร้อมปุ่มเลื่อนหน้า ดูได้ทันที</p></div></div>
+  </div>
+</section>
+
+<!-- 6 4 ขั้นตอน -->
+<section class="slide">
+  <span class="tag rise" style="--d:0">ภาพรวม</span>
+  <h2 class="rise" style="--d:1">4 ขั้นตอน จบในไม่กี่นาที</h2>
+  <div class="g4" style="margin-top:50px;gap:46px">
+    <div class="step rise" style="--d:2"><span class="bignum">1</span><h3>เปิด Claude</h3><p>เข้า claude.ai/new แล้วล็อกอิน</p><span class="arrow">›</span></div>
+    <div class="step rise" style="--d:3"><span class="bignum">2</span><h3>พิมพ์ prompt</h3><p>"ช่วยสร้าง HTML slide เรื่อง …"</p><span class="arrow">›</span></div>
+    <div class="step rise" style="--d:4"><span class="bignum">3</span><h3>ดูและสั่งแก้</h3><p>สไลด์โผล่ในหน้าต่าง Artifact พิมพ์สั่งแก้เพิ่มได้</p><span class="arrow">›</span></div>
+    <div class="step rise" style="--d:5"><span class="bignum">4</span><h3>เผยแพร่ + เซฟ</h3><p>กด Publish ได้ลิงก์ แล้วเซฟไฟล์ HTML เก็บไว้</p></div>
+  </div>
+  <div class="card rise" style="--d:6;margin-top:auto;display:flex;gap:24px;align-items:center;padding:26px 40px">
+    <span class="ico c1" style="width:60px;height:60px"><svg viewBox="0 0 24 24"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></svg></span>
+    <p class="txt">ขั้นตอนที่ 2 คือส่วนที่สำคัญที่สุด ส่วนที่เหลือคือกดปุ่มตามหน้าจอ</p>
+  </div>
+</section>
+
+<!-- 7 เปิด claude.ai/new -->
+<section class="slide">
+  <span class="tag rise" style="--d:0">ขั้นที่ 1–2</span>
+  <h2 class="rise" style="--d:1">เปิดหน้าแชทใหม่ แล้วพิมพ์ได้เลย</h2>
+  <div class="row" style="margin-top:20px">
+    <div class="col" style="gap:34px;flex:1">
+      <a class="url rise" style="--d:2" href="https://claude.ai/new" target="_blank" rel="noopener">claude.ai/new</a>
+      <div class="items">
+        <div class="item rise" style="--d:3"><span class="mark ok">✓</span><p class="txt">ล็อกอินด้วย Google หรืออีเมล (สมัครฟรี)</p></div>
+        <div class="item rise" style="--d:4"><span class="mark ok">✓</span><p class="txt">พิมพ์ในช่องข้อความ แล้วกดส่ง ใช้ภาษาไทยได้ปกติ</p></div>
+        <div class="item rise" style="--d:5"><span class="mark ok">✓</span><p class="txt">รอสักครู่ สไลด์จะโผล่ในหน้าต่างด้านขวา เรียกว่า <b>Artifact</b></p></div>
+        <div class="item rise" style="--d:6"><span class="mark ok">?</span><p class="txt">ถ้าไม่ขึ้น พิมพ์ต่อว่า <span class="hl">"ทำเป็น artifact ให้หน่อย"</span></p></div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px" class="rise">
+      <div class="chat" style="--d:3">
+        <div class="hi">วันนี้อยากทำอะไร</div>
+        <div class="box"><div>ช่วยสร้าง <span class="hl">HTML slide</span> เรื่อง "แผนการตลาดไตรมาส 4" 8 หน้า<span class="caret"></span></div><div class="send"><svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg></div></div>
+      </div>
+      <p class="cap">ภาพจำลองช่องพิมพ์ ปุ่มและหน้าตาจริงอาจต่างไปเล็กน้อย</p>
+    </div>
+  </div>
+</section>
+
+<!-- 8 สูตร prompt -->
+<section class="slide">
+  <span class="tag rise" style="--d:0">ขั้นที่ 2</span>
+  <h2 class="rise" style="--d:1">prompt ตัวอย่าง คัดลอกไปใช้ได้เลย</h2>
+  <div class="row" style="margin-top:16px;align-items:stretch">
+    <div class="rise" style="--d:2;flex:1.35;display:flex;flex-direction:column;gap:20px;justify-content:center">
+      <div class="prompt" id="p-tut">ช่วยสร้าง HTML slide เรื่อง "แผนการตลาดไตรมาส 4"
+- 8 หน้า สำหรับนำเสนอผู้บริหาร
+- โทนสีเข้ม ดูทันสมัย ตัวอักษรใหญ่อ่านง่าย
+- มีแถบ progress ด้านบน และปุ่มเลื่อนหน้าด้านล่าง
+- มีหน้าตัวเลขสำคัญ และกราฟแท่ง 1 หน้า
+- เป็นไฟล์ HTML ไฟล์เดียว<button class="copy" data-target="p-tut"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg><span>คัดลอก</span></button></div>
+      <p class="hint"><b>เปลี่ยนแค่ในเครื่องหมายคำพูด</b> เป็นเรื่องของคุณเอง</p>
+    </div>
+    <div class="col" style="flex:1;justify-content:center;gap:20px">
+      <h3 class="rise" style="--d:3;color:var(--muted);font-size:32px">สูตร prompt = 5 อย่าง</h3>
+      <div class="chips" style="flex-direction:column;align-items:flex-start;gap:14px">
+        <span class="chip on rise" style="--d:3">ต้องมี: "HTML slide"</span>
+        <span class="chip rise" style="--d:4">เรื่องอะไร</span>
+        <span class="chip rise" style="--d:5">กี่หน้า / ใครดู</span>
+        <span class="chip rise" style="--d:6">โทนสี / สไตล์</span>
+        <span class="chip rise" style="--d:7">อยากให้มีอะไร (กราฟ รูป ตัวเลข)</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 9 ทำผ่านอะไรก็ได้ -->
+<section class="slide">
+  <span class="tag rise" style="--d:0">ทำที่ไหนก็ได้</span>
+  <h2 class="rise" style="--d:1">ใช้ตัวไหนก็ได้ผลเหมือนกัน</h2>
+  <p class="sub rise" style="--d:2">เพราะสุดท้ายมันคือการสร้าง "ไฟล์ HTML" 1 ไฟล์ เท่านั้น</p>
+  <div class="g2" style="margin-top:36px">
+    <div class="card rise" style="--d:3;display:flex;gap:28px;border-color:var(--tag-line);background:var(--tag-bg)">
+      <span class="ico c1"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg></span>
+      <div><h3>claude.ai/new <span class="chip on" style="font-size:22px;padding:2px 16px;margin-left:8px">แนะนำ</span></h3><p class="txt muted">เปิดผ่านเบราว์เซอร์ ไม่ต้องลงอะไร ใช้ฟรีได้ เริ่มง่ายที่สุด</p></div>
+    </div>
+    <div class="card rise" style="--d:4;display:flex;gap:28px">
+      <span class="ico c2"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></span>
+      <div><h3>Claude Desktop app</h3><p class="txt muted">แอปบนคอมพิวเตอร์ พิมพ์สั่งแบบเดียวกัน</p></div>
+    </div>
+    <div class="card rise" style="--d:5;display:flex;gap:28px">
+      <span class="ico c4"><svg viewBox="0 0 24 24"><path d="M4 7h16v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></span>
+      <div><h3>Cowork</h3><p class="txt muted">ให้ Claude ทำงานกับไฟล์ในเครื่องคุณ แล้วบันทึกไฟล์ HTML ให้เลย</p></div>
+    </div>
+    <div class="card rise" style="--d:6;display:flex;gap:28px">
+      <span class="ico c3"><svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M11 18h2"/></svg></span>
+      <div><h3>แอปมือถือ</h3><p class="txt muted">สั่งได้เหมือนกัน แต่เซฟและจัดการไฟล์สะดวกกว่าบนคอม</p></div>
+    </div>
+  </div>
+  <p class="hint rise" style="--d:7;margin-top:auto"><b>จำไว้:</b> จะใช้ตัวไหน ก็พิมพ์ว่า "สร้าง HTML slide" เหมือนกัน</p>
+</section>
+
+<!-- 10 Deploy ด้วย Artifact -->
+<section class="slide">
+  <span class="tag rise" style="--d:0">ขั้นที่ 3–4</span>
+  <h2 class="rise" style="--d:1">Deploy ด้วย Claude Artifact</h2>
+  <p class="sub rise" style="--d:2">Deploy = เอาสไลด์ขึ้นเว็บให้เปิดดูผ่านลิงก์ได้ ไม่ต้องหาที่ฝากไฟล์เอง</p>
+  <div class="flow rise" style="--d:3;margin-top:48px">
+    <div class="card node"><span class="ico c1"><svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.5 7.2L4 20l1-4.5A8 8 0 1 1 21 12z"/></svg></span><h3>1. สั่งในแชท</h3><p>"สร้าง HTML slide …"</p></div>
+    <span class="fa">›</span>
+    <div class="card node"><span class="ico c2"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18"/></svg></span><h3>2. ดูใน Artifact</h3><p>สไลด์โผล่ข้างแชท ลองกดเลื่อนดูได้</p></div>
+    <span class="fa">›</span>
+    <div class="card node" style="border-color:var(--tag-line)"><span class="ico c3"><svg viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3A4 4 0 0 0 11 18.7l1-1"/></svg></span><h3>3. กด Publish</h3><p>ได้ลิงก์ ส่งให้คนอื่นเปิดดูได้</p></div>
+  </div>
+  <div class="items rise" style="--d:5;margin-top:44px;gap:16px">
+    <div class="item"><span class="mark ok">✓</span><p class="txt">ค่าเริ่มต้นเป็นส่วนตัว คุณเลือกเองว่าจะแชร์ให้ใคร</p></div>
+    <div class="item"><span class="mark ok">✓</span><p class="txt">แก้สไลด์แล้ว Publish ซ้ำ ลิงก์เดิมจะอัปเดตเป็นเวอร์ชันใหม่</p></div>
+    <div class="item"><span class="mark ok">?</span><p class="txt muted">ตัวเลือกการแชร์อาจต่างกันตามแผนที่ใช้ ถ้าไม่เห็นปุ่ม ให้ดูเมนูของ Artifact</p></div>
+  </div>
+</section>
+
+<!-- 11 Save HTML -->
+<section class="slide">
+  <span class="tag rise" style="--d:0">เก็บไว้ใช้ครั้งถัดไป</span>
+  <h2 class="rise" style="--d:1">Save ไฟล์ HTML ลงเครื่อง</h2>
+  <div class="g3" style="margin-top:32px">
+    <div class="card rise" style="--d:2;display:flex;flex-direction:column;gap:16px">
+      <span class="ico c1"><svg viewBox="0 0 24 24"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg></span>
+      <h3>วิธี A: กดดาวน์โหลด</h3><p class="txt muted">ที่เมนูของ Artifact เลือก Download ถ้ามี จะได้ไฟล์ .html ทันที</p>
+    </div>
+    <div class="card rise" style="--d:3;display:flex;flex-direction:column;gap:16px">
+      <span class="ico c2"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg></span>
+      <h3>วิธี B: คัดลอกโค้ด</h3><p class="txt muted">กด Copy ที่ Artifact วางใน Notepad หรือ TextEdit แล้วบันทึกเป็น <code>slide.html</code></p>
+    </div>
+    <div class="card rise" style="--d:4;display:flex;flex-direction:column;gap:16px">
+      <span class="ico c3"><svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg></span>
+      <h3>วิธี C: ให้ Claude ทำให้</h3><p class="txt muted">พิมพ์ว่า <span class="hl">"ทำเป็นไฟล์ HTML ไฟล์เดียวให้ดาวน์โหลด"</span></p>
+    </div>
+  </div>
+  <div class="card rise" style="--d:5;margin-top:28px;display:grid;grid-template-columns:1fr 1fr;gap:34px;padding:28px 40px">
+    <div><h3 style="font-size:34px;color:var(--a1)">เปิดดูทีหลัง</h3><p class="txt muted" style="margin-top:6px">ดับเบิลคลิกไฟล์ .html จะเปิดในเบราว์เซอร์ ใช้ได้โดยไม่ต้องล็อกอินและไม่ต้องใช้ Claude</p></div>
+    <div><h3 style="font-size:34px;color:var(--a1)">แก้ต่อครั้งหน้า</h3><p class="txt muted" style="margin-top:6px">แนบไฟล์ .html ที่ claude.ai/new แล้วพิมพ์ "แก้สไลด์นี้: …"</p></div>
+  </div>
+  <p class="hint rise" style="--d:6;margin-top:auto">ตั้งชื่อไฟล์เป็นภาษาอังกฤษ ไม่เว้นวรรค เช่น <b>my-slide.html</b></p>
+</section>
+
+<!-- 12 ตัวอย่าง: stats -->
+<section class="slide">
+  <span class="tag rise" style="--d:0">ตัวอย่างที่ 1 · ตัวเลขสำคัญ</span>
+  <h2 class="rise" style="--d:1">แสดงตัวเลข (Stats) ได้</h2>
+  <p class="sub rise" style="--d:2">ตัวเลขวิ่งขึ้นเอง พร้อมลูกศรเทียบปีก่อน (ข้อมูลตัวอย่าง)</p>
+  <div class="g3" style="margin-top:28px;gap:26px">
+    <div class="card sc rise" style="--d:3"><div class="top">ยอดขายสุทธิ<span class="ico c1"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5C9.5 8 14.5 8 14.5 10s-5 2-5 4 5 2 5.1.5"/></svg></span></div><div class="v count" data-to="118.73" data-dec="2" data-pre="$" data-suf="M">$118.73M</div><div class="d"><span class="up">▲ 36.9%</span> เทียบปีก่อน</div></div>
+    <div class="card sc rise" style="--d:4"><div class="top">กำไรสุทธิ<span class="ico c3"><svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8M15 7h6v6"/></svg></span></div><div class="v count" data-to="16.89" data-dec="2" data-pre="$" data-suf="M">$16.89M</div><div class="d"><span class="up">▲ 40.1%</span> เทียบปีก่อน</div></div>
+    <div class="card sc rise" style="--d:5"><div class="top">อัตรากำไร<span class="ico c4"><svg viewBox="0 0 24 24"><path d="M19 5L5 19"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/></svg></span></div><div class="v count" data-to="14.2" data-dec="1" data-suf="%">14.2%</div><div class="d"><span class="up">▲ 0.4 จุด</span> เทียบปีก่อน</div></div>
+    <div class="card sc rise" style="--d:6"><div class="top">จำนวนขาย (หน่วย)<span class="ico c2"><svg viewBox="0 0 24 24"><path d="M21 8l-9-5-9 5v8l9 5 9-5zM3 8l9 5 9-5M12 13v8"/></svg></span></div><div class="v count" data-to="1.13" data-dec="2" data-suf="M">1.13M</div><div class="d"><span class="up">▲ 21.2%</span> เทียบปีก่อน</div></div>
+    <div class="card sc rise" style="--d:7"><div class="top">ส่วนลดรวม<span class="ico c5"><svg viewBox="0 0 24 24"><path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.3"/></svg></span></div><div class="v count" data-to="9.21" data-dec="2" data-pre="$" data-suf="M">$9.21M</div><div class="d"><span class="dn">▲ 14.5%</span> เทียบปีก่อน</div></div>
+    <div class="card sc rise" style="--d:8"><div class="top">ต้นทุนขาย<span class="ico c1"><svg viewBox="0 0 24 24"><path d="M3 21V9l6 4V9l6 4V5h6v16z"/></svg></span></div><div class="v count" data-to="101.83" data-dec="2" data-pre="$" data-suf="M">$101.83M</div><div class="d"><span class="dn">▲ 36.3%</span> เทียบปีก่อน</div></div>
+  </div>
+  <p class="hint rise" style="--d:9;margin-top:auto">ขอว่า: <b>"ใส่หน้าตัวเลขสำคัญ 6 ช่อง มีลูกศรเทียบปีก่อน"</b></p>
+</section>
+
+<!-- 13 ตัวอย่าง: charts -->
+<section class="slide">
+  <span class="tag rise" style="--d:0">ตัวอย่างที่ 2 · กราฟ</span>
+  <h2 class="rise" style="--d:1">ใส่กราฟได้ทุกแบบ ลองกดเลย</h2>
+  <div class="tabs rise" style="--d:2;margin-top:18px" id="tabs">
+    <button type="button" data-k="bar" class="on">แท่ง</button>
+    <button type="button" data-k="line">เส้น</button>
+    <button type="button" data-k="pie">วงกลม</button>
+    <button type="button" data-k="donut">โดนัท</button>
+    <button type="button" data-k="combo">ผสม แท่ง+เส้น</button>
+  </div>
+  <div class="card chartbox rise" style="--d:3;margin-top:22px;flex:1;padding:16px 24px;min-height:0"><div id="demo-chart" data-chart="demo" style="width:100%;height:100%"></div></div>
+  <p class="hint rise" style="--d:4;margin-top:16px">ขอว่า: <b>"ใส่กราฟแท่งยอดขายรายเดือน"</b> หรือ <b>"กราฟวงกลมสัดส่วนช่องทางขาย"</b></p>
+</section>
+
+<!-- 14 ภาพ วิดีโอ animation -->
+<section class="slide">
+  <span class="tag rise" style="--d:0">ตัวอย่างที่ 3 · สื่อและการเคลื่อนไหว</span>
+  <h2 class="rise" style="--d:1">ภาพ วิดีโอ และ animation</h2>
+  <div class="g3" style="margin-top:28px;gap:28px">
+    <div class="card media rise" style="--d:2">
+      <div class="shot"><svg class="art" viewBox="0 0 400 340" preserveAspectRatio="xMidYMid slice" aria-label="ภาพวาดภูเขาและพระอาทิตย์"><defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b2a6b"/><stop offset=".6" stop-color="#ff7a1a"/><stop offset="1" stop-color="#ffcf70"/></linearGradient></defs><rect width="400" height="340" fill="url(#sky)"/><circle cx="270" cy="190" r="52" fill="#fff3c4"/><path d="M0 260 L90 140 L150 215 L215 120 L320 250 L400 190 V340 H0Z" fill="#241a4d"/><path d="M0 300 L110 225 L190 285 L290 215 L400 290 V340 H0Z" fill="#120d2e"/></svg></div>
+      <h3>ภาพ</h3><p>ภาพวาดแบบเวกเตอร์ (SVG) หรือใส่รูปที่แนบให้ Claude ก็ได้</p>
+    </div>
+    <div class="card media rise" style="--d:3">
+      <div class="shot player" id="player">
+        <svg class="art" viewBox="0 0 400 340" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="400" height="340" fill="#16123a"/><circle cx="100" cy="80" r="140" fill="#2b2170"/><circle cx="330" cy="260" r="120" fill="#0f4a64"/></svg>
+        <span class="vtxt">ตัวอย่างหน้าจอวิดีโอ (จำลอง)</span>
+        <button type="button" class="play" aria-label="เล่นตัวอย่าง" id="playvid"><svg viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z"/></svg></button>
+        <div class="bar2"><i></i></div>
+      </div>
+      <h3>วิดีโอ</h3><p>แปะลิงก์ให้กดเปิด หรือฝังไฟล์ .mp4 สั้นๆ ไว้ในสไลด์</p>
+    </div>
+    <div class="card media rise" style="--d:4">
+      <div class="shot"><canvas data-anim="orbit" aria-label="แอนิเมชันวงโคจร"></canvas></div>
+      <h3>Animation</h3><p>JavaScript ทำให้สไลด์ขยับได้ เช่น วงโคจรนี้</p>
+    </div>
+  </div>
+  <p class="hint rise" style="--d:5;margin-top:auto">ขอว่า: <b>"ใส่ภาพประกอบ" · "ใส่ animation พื้นหลังที่ขยับช้าๆ" · "ใส่ปุ่มวิดีโอลิงก์ YouTube"</b></p>
+</section>
+
+<!-- 15 ตัวอย่าง 3 แบบ -->
+<section class="slide">
+  <span class="tag rise" style="--d:0">ตัวอย่างสไลด์เต็มๆ</span>
+  <h2 class="rise" style="--d:1">3 แบบ ลองกดเปิดดูได้</h2>
+  <p class="sub rise" style="--d:2">ทุกแบบสร้างจาก prompt สั้นๆ ท้ายสไลด์มี prompt ให้คัดลอก</p>
+  <div class="g3" style="margin-top:30px;gap:30px">
+    <a class="card ex rise" style="--d:3" href="slide-examples/executive-dark.html" target="_blank" rel="noopener">
+      <div class="thumb" style="background:radial-gradient(ellipse 60% 60% at 10% 0,rgba(255,122,26,.45),transparent 70%),radial-gradient(ellipse 50% 60% at 100% 60%,rgba(34,211,238,.3),transparent 70%),#070a14">
+        <div style="position:absolute;left:30px;top:44px;font-size:44px;font-weight:800;line-height:1.3">รายงานผลประกอบการ</div>
+        <div style="position:absolute;left:30px;top:150px;font-size:70px;font-weight:800;color:#34d399">$16.89M</div>
+        <svg viewBox="0 0 120 120" style="position:absolute;right:26px;bottom:20px;width:150px"><circle cx="60" cy="60" r="48" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="12"/><circle cx="60" cy="60" r="48" fill="none" stroke="#ff7a1a" stroke-width="12" stroke-dasharray="80 302" transform="rotate(-90 60 60)"/></svg>
+      </div>
+      <h3>1. Executive Dark</h3><p>รายงานผู้บริหาร โทนมืด เน้นตัวเลขและกราฟ</p><span class="go">เปิดดู ›</span>
+    </a>
+    <a class="card ex rise" style="--d:4" href="slide-examples/paper-light.html" target="_blank" rel="noopener">
+      <div class="thumb" style="background:#eef2f6;color:#0f1f33">
+        <div style="position:absolute;left:30px;top:40px;font-size:24px;color:#0b6bcb;font-weight:600;letter-spacing:.08em">COFFEE CORNER · Q3</div>
+        <div style="position:absolute;left:30px;top:84px;font-size:50px;font-weight:700;line-height:1.3;font-family:'Noto Serif Thai',serif">ร้านกาแฟ<br>ไตรมาสนี้</div>
+        <div style="position:absolute;right:30px;bottom:26px;display:flex;gap:12px;align-items:flex-end;height:130px"><i style="width:34px;height:55px;background:#0b6bcb;border-radius:6px"></i><i style="width:34px;height:90px;background:#0b6bcb;border-radius:6px"></i><i style="width:34px;height:70px;background:#0b6bcb;border-radius:6px"></i><i style="width:34px;height:125px;background:#ff6b35;border-radius:6px"></i></div>
+      </div>
+      <h3>2. Paper Light</h3><p>โทนสว่าง เรียบ อ่านง่าย เหมาะกับงานเอกสาร</p><span class="go">เปิดดู ›</span>
+    </a>
+    <a class="card ex rise" style="--d:5" href="slide-examples/playful-trip.html" target="_blank" rel="noopener">
+      <div class="thumb" style="background:#ffe45e;color:#111">
+        <div style="position:absolute;left:30px;top:36px;font-size:54px;font-weight:800;line-height:1.25;font-family:'Mitr',sans-serif">เที่ยวเชียงใหม่<br>3 วัน 2 คืน</div>
+        <div style="position:absolute;right:28px;bottom:26px;width:150px;height:110px;background:#ff6fb1;border:4px solid #111;border-radius:20px;box-shadow:7px 7px 0 #111;display:grid;place-items:center;font-size:40px;font-weight:800;font-family:'Mitr',sans-serif">฿12k</div>
+      </div>
+      <h3>3. Playful</h3><p>สีสด สนุก เหมาะกับงานกันเอง งานเที่ยว งานเด็ก</p><span class="go">เปิดดู ›</span>
+    </a>
+  </div>
+  <p class="hint rise" style="--d:6;margin-top:auto">ถ้าเปิดสไลด์นี้จากไฟล์ที่เซฟลงเครื่อง ให้วางโฟลเดอร์ <b>slide-examples</b> ไว้ข้างๆ ไฟล์นี้</p>
+</section>
+
+<!-- 16 สั่งแก้ + แก้ปัญหา -->
+<section class="slide">
+  <span class="tag rise" style="--d:0">เคล็ดลับ</span>
+  <h2 class="rise" style="--d:1">ไม่ถูกใจ? สั่งแก้ได้เรื่อยๆ</h2>
+  <div class="g2" style="margin-top:32px;gap:30px">
+    <div class="card rise" style="--d:2;display:flex;flex-direction:column;gap:14px">
+      <h3 style="color:var(--a1)">ประโยคแก้ไขที่ใช้บ่อย</h3>
+      <p class="txt">"ทำตัวอักษรใหญ่ขึ้น"</p>
+      <p class="txt">"เปลี่ยนเป็นโทนสีสว่าง"</p>
+      <p class="txt">"เพิ่มหน้ากราฟวงกลม"</p>
+      <p class="txt">"ตัดให้เหลือ 6 หน้า"</p>
+      <p class="txt">"เปลี่ยนภาษาเป็นอังกฤษ"</p>
+      <p class="txt">"ใส่ปุ่มเล่นอัตโนมัติ"</p>
+    </div>
+    <div class="card rise" style="--d:3;display:flex;flex-direction:column;gap:16px">
+      <h3 style="color:var(--a2)">ถ้าเจอปัญหา</h3>
+      <div class="item"><span class="mark no">!</span><p class="txt">ไม่เห็นหน้าต่างสไลด์<br><span class="muted">พิมพ์ "ทำเป็น artifact ให้หน่อย"</span></p></div>
+      <div class="item"><span class="mark no">!</span><p class="txt">ฟอนต์หรือสีเพี้ยน<br><span class="muted">ต้องต่ออินเทอร์เน็ตตอนเปิด หรือสั่งให้ใช้ฟอนต์ระบบ</span></p></div>
+      <div class="item"><span class="mark no">!</span><p class="txt">สไลด์ยาวไปหรือแน่นไป<br><span class="muted">สั่ง "1 หน้าต่อ 1 ประเด็น ตัวอักษรใหญ่"</span></p></div>
+    </div>
+  </div>
+  <p class="hint rise" style="--d:4;margin-top:auto">Claude จำบทสนทนาไว้ แก้ได้กี่รอบก็ได้ ไม่ต้องเริ่มใหม่</p>
+</section>
+
+<!-- 17 สรุป -->
+<section class="slide thanks">
+  <span class="tag rise" style="--d:0">สรุป</span>
+  <div class="big3 rise" style="--d:1;align-items:center">
+    <p class="lead" style="font-size:52px">เปิด <span class="hl">claude.ai/new</span> · พิมพ์ว่า <span class="hl">"สร้าง HTML slide"</span></p>
+    <p class="lead" style="font-size:52px">กด <span class="hl">Publish</span> เพื่อแชร์ · <span class="hl">Save .html</span> เพื่อเก็บ</p>
+  </div>
+  <h1 class="rise grad" style="--d:3">ขอบคุณครับ</h1>
+  <p class="sub rise" style="--d:4">ลองสร้างสไลด์แรกของคุณได้เลยวันนี้</p>
+</section>
+
+</div></div>
+<nav id="bar" aria-label="ควบคุมสไลด์">
+  <div class="brand"><b>สร้าง Slide ด้วย Claude</b><span id="counter">1 / 1</span></div>
+  <div id="dots"></div>
+  <div class="btns">
+    <button type="button" id="b-prev" aria-label="หน้าก่อนหน้า"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <button type="button" id="b-play" aria-label="เล่นอัตโนมัติ"><svg viewBox="0 0 24 24" class="i-play"><path d="M7 4l13 8-13 8z"/></svg><svg viewBox="0 0 24 24" class="i-pause"><path d="M8 5v14M16 5v14"/></svg></button>
+    <button type="button" id="b-next" aria-label="หน้าถัดไป"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+    <button type="button" id="b-full" aria-label="เต็มจอ"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+  </div>
+</nav>
+</div>
+<script>
+/* ===== Slide engine: ไม่ต้องแก้ส่วนนี้ ===== */
+(function () {
+  'use strict';
+  var D = window.Deck = { charts: {}, anims: {} };
+  function $(s, r) { return (r || document).querySelector(s); }
+  function $$(s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); }
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var uid = 0;
+
+  /* ---------- helpers ---------- */
+  D.fmt = {
+    m: function (v) { return '$' + (Math.round(v * 100) / 100).toFixed(v % 1 ? 1 : 0).replace(/\.0$/, '') + 'M'; },
+    k: function (v) { return v >= 1000 ? (v / 1000) + 'k' : String(v); },
+    pct: function (v) { return Math.round(v * 10) / 10 + '%'; },
+    n: function (v) { return String(Math.round(v * 100) / 100); }
+  };
+  function niceStep(v) {
+    var p = Math.pow(10, Math.floor(Math.log(v) / Math.LN10)), f = v / p, c = [1, 2, 2.5, 5, 10];
+    for (var i = 0; i < c.length; i++) if (f <= c[i] + 1e-9) return c[i] * p;
+    return 10 * p;
+  }
+  function scale(max) { var st = niceStep(max / 4); return { step: st, max: st * 4 }; }
+  function smooth(pts) {
+    if (pts.length < 2) return '';
+    var d = 'M' + pts[0][0] + ',' + pts[0][1];
+    for (var i = 0; i < pts.length - 1; i++) {
+      var p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2;
+      d += ' C' + (p1[0] + (p2[0] - p0[0]) / 6) + ',' + (p1[1] + (p2[1] - p0[1]) / 6) + ' ' +
+        (p2[0] - (p3[0] - p1[0]) / 6) + ',' + (p2[1] - (p3[1] - p1[1]) / 6) + ' ' + p2[0] + ',' + p2[1];
+    }
+    return d;
+  }
+  function maxOf(a) { return Math.max.apply(null, a); }
+
+  /* ---------- กราฟแท่ง / เส้น / ผสม ---------- */
+  function xy(el, o) {
+    var W = el.clientWidth, H = el.clientHeight, fs = o.fs || 22, id = 'g' + (++uid);
+    var bars = o.bars || [], lines = o.lines || [], N = o.labels.length;
+    var hasY2 = lines.some(function (l) { return l.axis === 'y2'; });
+    var m = { l: 96, r: hasY2 ? 96 : 28, t: o.legend === false ? 24 : 70, b: 62 };
+    var pw = W - m.l - m.r, ph = H - m.t - m.b;
+    var ys = [], y2 = [];
+    bars.forEach(function (s) { ys = ys.concat(s.data); });
+    lines.forEach(function (s) { (s.axis === 'y2' ? y2 : ys).push.apply(s.axis === 'y2' ? y2 : ys, s.data); });
+    var sc = scale(maxOf(ys)), sc2 = hasY2 ? scale(maxOf(y2)) : null;
+    var fmt = o.fmt || D.fmt.n, fmt2 = o.fmt2 || D.fmt.pct;
+    var X = function (i) { return m.l + pw * (i + .5) / N; };
+    var Y = function (v) { return m.t + ph * (1 - v / sc.max); };
+    var Y2 = function (v) { return m.t + ph * (1 - v / sc2.max); };
+    var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '" role="img" aria-label="' + esc(o.title || 'กราฟ') + '"><defs>';
+    bars.concat(lines).forEach(function (sr, i) {
+      s += '<linearGradient id="' + id + 'b' + i + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:' + sr.color + '"/><stop offset="1" style="stop-color:' + sr.color + ';stop-opacity:' + (sr.area ? 0 : .45) + '"/></linearGradient>';
+    });
+    s += '</defs>';
+    for (var t = 0; t <= 4; t++) {
+      var yy = m.t + ph * (1 - t / 4);
+      s += '<line class="gl" x1="' + m.l + '" x2="' + (W - m.r) + '" y1="' + yy + '" y2="' + yy + '"/>';
+      s += '<text class="ax" x="' + (m.l - 14) + '" y="' + (yy + fs * .35) + '" text-anchor="end" font-size="' + fs + '">' + fmt(sc.step * t) + '</text>';
+      if (hasY2) s += '<text class="ax" x="' + (W - m.r + 14) + '" y="' + (yy + fs * .35) + '" font-size="' + fs + '">' + fmt2(sc2.step * t) + '</text>';
+    }
+    o.labels.forEach(function (lb, i) {
+      s += '<text class="ax" x="' + X(i) + '" y="' + (H - 20) + '" text-anchor="middle" font-size="' + fs + '">' + esc(lb) + '</text>';
+    });
+    var gw = pw / N, bw = Math.min(gw * .62 / Math.max(bars.length, 1), 120);
+    bars.forEach(function (sr, k) {
+      sr.data.forEach(function (v, i) {
+        var x = X(i) - bw * bars.length / 2 + k * bw, y = Y(v);
+        s += '<rect class="bar" style="fill:url(#' + id + 'b' + k + ');animation-delay:' + (i * 45) + 'ms" x="' + x + '" y="' + y + '" width="' + (bw - 4) + '" height="' + (m.t + ph - y) + '" rx="' + (o.radius === undefined ? 8 : o.radius) + '"><title>' + esc(sr.name + ' ' + o.labels[i] + ': ' + fmt(v)) + '</title></rect>';
+        if (o.valueLabels) s += '<text x="' + (x + (bw - 4) / 2) + '" y="' + (y - 12) + '" text-anchor="middle" font-size="' + (fs - 2) + '" style="fill:var(--ink)">' + fmt(v) + '</text>';
+      });
+    });
+    lines.forEach(function (sr, k) {
+      var yf = sr.axis === 'y2' ? Y2 : Y, kk = bars.length + k;
+      var pts = sr.data.map(function (v, i) { return [X(i), yf(v)]; });
+      var d = sr.straight ? 'M' + pts.map(function (p) { return p[0] + ',' + p[1]; }).join(' L') : smooth(pts);
+      if (sr.area) s += '<path class="area" d="' + d + ' L' + pts[pts.length - 1][0] + ',' + (m.t + ph) + ' L' + pts[0][0] + ',' + (m.t + ph) + ' Z" style="fill:url(#' + id + 'b' + kk + ')"/>';
+      s += '<path class="ln' + (sr.dashed ? ' dash' : '') + '" pathLength="1" d="' + d + '" style="stroke:' + sr.color + '"/>';
+      if (!sr.dashed) pts.forEach(function (p, i) {
+        s += '<circle class="pt" style="fill:' + sr.color + ';animation-delay:' + (700 + i * 40) + 'ms" cx="' + p[0] + '" cy="' + p[1] + '" r="7"><title>' + esc(sr.name + ' ' + o.labels[i] + ': ' + (sr.axis === 'y2' ? fmt2 : fmt)(sr.data[i])) + '</title></circle>';
+      });
+    });
+    if (o.legend !== false) {
+      var items = bars.concat(lines), x = W - m.r;
+      for (var i = items.length - 1; i >= 0; i--) {
+        var w = items[i].name.length * fs * .62 + fs * 2.4;
+        x -= w;
+        s += '<circle cx="' + (x + fs * .5) + '" cy="' + (fs) + '" r="' + (fs * .42) + '" style="fill:' + items[i].color + '"/><text class="ax" style="fill:var(--ink)" x="' + (x + fs * 1.2) + '" y="' + (fs * 1.35) + '" font-size="' + fs + '">' + esc(items[i].name) + '</text>';
+      }
+    }
+    el.innerHTML = s + '</svg>';
+  }
+
+  /* ---------- กราฟวงกลม / โดนัท ---------- */
+  function pie(el, o) {
+    var S = Math.min(el.clientWidth, el.clientHeight), R = S / 2 - 6, r = o.donut ? R * .62 : 0, c = S / 2;
+    var tot = o.data.reduce(function (a, d) { return a + d.value; }, 0), a = -Math.PI / 2;
+    var s = '<svg viewBox="0 0 ' + S + ' ' + S + '" width="' + S + '" height="' + S + '" role="img" aria-label="' + esc(o.title || 'กราฟวงกลม') + '">';
+    o.data.forEach(function (d, i) {
+      var b = a + d.value / tot * Math.PI * 2, large = b - a > Math.PI ? 1 : 0;
+      var p = function (rad, ang) { return (c + rad * Math.cos(ang)).toFixed(2) + ',' + (c + rad * Math.sin(ang)).toFixed(2); };
+      var path = r
+        ? 'M' + p(R, a) + ' A' + R + ',' + R + ' 0 ' + large + ' 1 ' + p(R, b) + ' L' + p(r, b) + ' A' + r + ',' + r + ' 0 ' + large + ' 0 ' + p(r, a) + ' Z'
+        : 'M' + c + ',' + c + ' L' + p(R, a) + ' A' + R + ',' + R + ' 0 ' + large + ' 1 ' + p(R, b) + ' Z';
+      s += '<path class="slice" style="fill:' + d.color + ';stroke:var(--gap-c);stroke-width:4;transform-origin:' + c + 'px ' + c + 'px;animation-delay:' + (i * 90) + 'ms" d="' + path + '"><title>' + esc(d.label + ': ' + d.value) + '</title></path>';
+      a = b;
+    });
+    if (o.donut && o.center) {
+      s += '<text class="pieC" x="' + c + '" y="' + (c + 14) + '" text-anchor="middle" font-size="' + (S * .15) + '" font-weight="800">' + esc(o.center[0]) + '</text>';
+      s += '<text class="ax" x="' + c + '" y="' + (c + S * .1) + '" text-anchor="middle" font-size="' + (S * .056) + '">' + esc(o.center[1] || '') + '</text>';
+    }
+    var leg = o.data.map(function (d) {
+      return '<div><i style="background:' + d.color + '"></i><span>' + esc(d.label) + '</span><b>' + (o.raw ? d.value : Math.round(d.value / tot * 100) + '%') + '</b></div>';
+    }).join('');
+    el.innerHTML = '<div class="pie-wrap">' + s + '</svg><div class="legend">' + leg + '</div></div>';
+  }
+  D.Charts = { xy: xy, pie: pie };
+
+  /* ---------- ตัวเลขวิ่ง ---------- */
+  function countUp(slide) {
+    $$('.count', slide).forEach(function (el) {
+      var to = parseFloat(el.dataset.to), dec = +(el.dataset.dec || 0), pre = el.dataset.pre || '', suf = el.dataset.suf || '';
+      var show = function (v) { el.textContent = pre + v.toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec }) + suf; };
+      if (reduce) { show(to); return; }
+      var t0 = null;
+      (function step(t) {
+        if (t0 === null) t0 = t;
+        var p = Math.min(1, (t - t0) / 1100), e = 1 - Math.pow(1 - p, 3);
+        show(to * e);
+        if (p < 1) requestAnimationFrame(step); else show(to);
+      })(performance.now());
+    });
+  }
+
+  /* ---------- main ---------- */
+  D.start = function () {
+    var slides = $$('.slide'), n = slides.length, cur = -1, timer = null;
+    var view = $('#view'), stage = $('#stage'), prog = $('#progress'), counter = $('#counter'), dotsEl = $('#dots');
+    var playBtn = $('#b-play'), runStops = [];
+
+    slides.forEach(function (_, i) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.setAttribute('aria-label', 'ไปหน้า ' + (i + 1));
+      b.addEventListener('click', function () { go(i); });
+      dotsEl.appendChild(b);
+    });
+    var dots = $$('button', dotsEl);
+
+    function fit() {
+      var s = Math.min(view.clientWidth / 1920, view.clientHeight / 1080);
+      stage.style.transform = 'translate(-50%,-50%) scale(' + s + ')';
+    }
+    function leave(k) {
+      slides[k].classList.remove('active');
+      runStops.forEach(function (f) { try { f(); } catch (e) {} });
+      runStops = [];
+    }
+    function enter(s) {
+      $$('[data-chart]', s).forEach(function (el) { var f = D.charts[el.dataset.chart]; if (f) { el.innerHTML = ''; f(el); } });
+      $$('[data-anim]', s).forEach(function (el) { var f = D.anims[el.dataset.anim]; if (f) { var stop = f(el); if (stop) runStops.push(stop); } });
+      countUp(s);
+    }
+    function go(k) {
+      k = Math.max(0, Math.min(n - 1, k));
+      if (k === cur) return;
+      if (cur >= 0) leave(cur);
+      cur = k;
+      slides[k].classList.add('active');
+      prog.style.width = ((k + 1) / n * 100) + '%';
+      counter.textContent = (k + 1) + ' / ' + n;
+      dots.forEach(function (d, i) { d.classList.toggle('on', i === k); });
+      enter(slides[k]);
+      try { history.replaceState(null, '', '#s' + (k + 1)); } catch (e) {}
+      if (k === n - 1) setPlay(false);
+    }
+    function next() { go(cur + 1); }
+    function prev() { go(cur - 1); }
+    function setPlay(on) {
+      if (timer) { clearInterval(timer); timer = null; }
+      if (on) timer = setInterval(function () { if (cur >= n - 1) setPlay(false); else next(); }, 7000);
+      playBtn.classList.toggle('playing', !!on);
+      playBtn.setAttribute('aria-label', on ? 'หยุดเล่นอัตโนมัติ' : 'เล่นอัตโนมัติ');
+    }
+    function full() {
+      var d = document, e = d.documentElement;
+      try {
+        if (d.fullscreenElement) d.exitFullscreen();
+        else if (e.requestFullscreen) e.requestFullscreen().catch(function () {});
+      } catch (x) {}
+    }
+    $('#b-prev').addEventListener('click', prev);
+    $('#b-next').addEventListener('click', next);
+    $('#b-full').addEventListener('click', full);
+    playBtn.addEventListener('click', function () { setPlay(!timer); });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      var t = e.target && e.target.tagName;
+      if (t === 'INPUT' || t === 'TEXTAREA') return;
+      var k = e.key;
+      if (k === 'ArrowRight' || k === 'ArrowDown' || k === 'PageDown' || k === ' ') { e.preventDefault(); next(); }
+      else if (k === 'ArrowLeft' || k === 'ArrowUp' || k === 'PageUp') { e.preventDefault(); prev(); }
+      else if (k === 'Home') go(0);
+      else if (k === 'End') go(n - 1);
+      else if (k === 'f' || k === 'F') full();
+      else if (k === 'p' || k === 'P') setPlay(!timer);
+    });
+    var tx = null, ty = null;
+    document.addEventListener('touchstart', function (e) { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend', function (e) {
+      if (tx === null) return;
+      var dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) { dx < 0 ? next() : prev(); }
+      tx = null;
+    }, { passive: true });
+
+    /* ปุ่มคัดลอก prompt */
+    document.addEventListener('click', function (e) {
+      var b = e.target.closest && e.target.closest('.copy');
+      if (!b) return;
+      var src = document.getElementById(b.dataset.target), text = src ? src.textContent.trim() : '';
+      var lab = b.querySelector('span'), old = lab.textContent;
+      var done = function () { lab.textContent = 'คัดลอกแล้ว'; setTimeout(function () { lab.textContent = old; }, 1800); };
+      var fallback = function () {
+        var ta = document.createElement('textarea');
+        ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); done(); } catch (x) {}
+        document.body.removeChild(ta);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, fallback);
+      else fallback();
+    });
+
+    window.addEventListener('resize', fit);
+    fit();
+    var m = /^#s(\d+)$/.exec(location.hash || '');
+    go(m ? +m[1] - 1 : 0);
+    window.addEventListener('hashchange', function () {
+      var h = /^#s(\d+)$/.exec(location.hash || ''); if (h) go(+h[1] - 1);
+    });
+  };
+})();
+
+</script>
+<script>
+/* ===== ส่วนของ deck นี้: กราฟตัวอย่าง + animation ===== */
+(function () {
+  var D = window.Deck;
+  var months = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.'];
+  var sales = [4.2, 5.1, 4.8, 6.3, 7.4, 8.9];
+  var profit = [0.6, 0.8, 0.7, 1.0, 1.2, 1.5];
+  var kind = 'bar';
+
+  D.charts.demo = function (el) {
+    var C = D.Charts, m = D.fmt.m;
+    if (kind === 'bar') C.xy(el, { labels: months, bars: [{ name: 'ยอดขาย', data: sales, color: 'var(--a1)' }], fmt: m, valueLabels: true, fs: 26, title: 'กราฟแท่งยอดขายรายเดือน' });
+    else if (kind === 'line') C.xy(el, { labels: months, lines: [{ name: 'ยอดขาย', data: sales, color: 'var(--a1)', area: true }, { name: 'กำไร', data: profit, color: 'var(--a2)' }], fmt: m, fs: 26, title: 'กราฟเส้นยอดขายและกำไร' });
+    else if (kind === 'combo') C.xy(el, { labels: months, bars: [{ name: 'ยอดขาย', data: sales, color: 'var(--a1)' }], lines: [{ name: 'อัตรากำไร', data: profit.map(function (p, i) { return p / sales[i] * 100; }), color: 'var(--a2)', axis: 'y2' }], fmt: m, fmt2: D.fmt.pct, fs: 26, title: 'กราฟผสมยอดขายและอัตรากำไร' });
+    else {
+      var data = [{ label: 'หน้าร้าน', value: 42, color: 'var(--a1)' }, { label: 'เว็บไซต์', value: 28, color: 'var(--a2)' }, { label: 'แอป', value: 18, color: 'var(--a4)' }, { label: 'ตัวแทน', value: 12, color: 'var(--a3)' }];
+      C.pie(el, { data: data, donut: kind === 'donut', center: ['100%', 'ช่องทางขาย'], title: 'กราฟสัดส่วนช่องทางขาย' });
+      el.firstChild.style.justifyContent = 'center';
+    }
+  };
+  document.getElementById('tabs').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    kind = b.dataset.k;
+    Array.prototype.forEach.call(this.children, function (x) { x.classList.toggle('on', x === b); });
+    var el = document.getElementById('demo-chart'); el.innerHTML = ''; D.charts.demo(el);
+  });
+
+  /* วงโคจร (canvas) */
+  D.anims.orbit = function (cv) {
+    var ctx = cv.getContext('2d'), dpr = Math.min(2, window.devicePixelRatio || 1), raf, t0 = performance.now();
+    var W = cv.clientWidth, H = cv.clientHeight; cv.width = W * dpr; cv.height = H * dpr; ctx.scale(dpr, dpr);
+    var cols = ['#ff7a1a', '#22d3ee', '#a78bfa', '#34d399'];
+    var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function draw(now) {
+      var t = (now - t0) / 1000;
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = '#0c1124'; ctx.fillRect(0, 0, W, H);
+      var cx = W / 2, cy = H / 2;
+      for (var i = 0; i < 4; i++) {
+        var r = 46 + i * 36, a = t * (1.1 - i * .22) + i * 1.7;
+        ctx.strokeStyle = 'rgba(255,255,255,.12)'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(cx, cy, r, 0, 7); ctx.stroke();
+        ctx.fillStyle = cols[i]; ctx.shadowColor = cols[i]; ctx.shadowBlur = 18;
+        ctx.beginPath(); ctx.arc(cx + Math.cos(a) * r, cy + Math.sin(a) * r, 11 - i, 0, 7); ctx.fill(); ctx.shadowBlur = 0;
+      }
+      ctx.fillStyle = '#fbbf24'; ctx.shadowColor = '#fbbf24'; ctx.shadowBlur = 30; ctx.beginPath(); ctx.arc(cx, cy, 22, 0, 7); ctx.fill(); ctx.shadowBlur = 0;
+      if (!still) raf = requestAnimationFrame(draw);
+    }
+    raf = requestAnimationFrame(draw);
+    return function () { cancelAnimationFrame(raf); };
+  };
+
+  /* ปุ่มเล่นวิดีโอจำลอง */
+  document.getElementById('playvid').addEventListener('click', function () {
+    document.getElementById('player').classList.add('on');
+  });
+
+  D.start();
+})();
+
+</script>
+</body>
+</html>

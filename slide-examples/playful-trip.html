@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ตัวอย่าง Slide: Playful Trip</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mitr:wght@400;500;600;700&family=Kanit:wght@300;400;500;600&display=swap">
+<style>
+:root{--bar-h:64px;--bw:1.5px;--radius:28px;--shadow:none;--gap-c:var(--bg)}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-b);line-height:1.5;overflow:hidden;-webkit-text-size-adjust:100%}
+button{font-family:inherit}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--a1);outline-offset:3px}
+
+#deck{position:fixed;inset:0;background:var(--bg);overflow:hidden}
+.glow{position:absolute;inset:0;background:var(--glow);pointer-events:none}
+.glow::after{content:"";position:absolute;inset:0;background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:64px 64px}
+#progress{position:fixed;left:0;top:0;height:5px;width:0;background:var(--progress);z-index:30;transition:width .45s cubic-bezier(.2,.8,.2,1)}
+#view{position:absolute;left:0;right:0;top:0;bottom:calc(var(--bar-h) + env(safe-area-inset-bottom,0px));overflow:hidden}
+#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform-origin:center center}
+
+/* navigation bar (real pixels, always tappable) */
+#bar{position:absolute;left:0;right:0;bottom:0;height:calc(var(--bar-h) + env(safe-area-inset-bottom,0px));padding-bottom:env(safe-area-inset-bottom,0px);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;align-items:center;gap:16px;border-top:1px solid var(--line);background:var(--bar-bg);z-index:20}
+.brand{flex:1 1 0;min-width:0;display:flex;align-items:center;gap:12px;font-size:15px;color:var(--muted);white-space:nowrap}
+.brand b{font-weight:500;overflow:hidden;text-overflow:ellipsis}
+#counter{font-variant-numeric:tabular-nums;padding-left:12px;border-left:1px solid var(--line)}
+#dots{display:flex;gap:8px;align-items:center;justify-content:center}
+#dots button{width:9px;height:9px;padding:0;border:0;border-radius:99px;background:var(--dot);cursor:pointer;transition:width .3s,background .3s}
+#dots button.on{width:34px;background:var(--a1)}
+.btns{flex:1 1 0;display:flex;justify-content:flex-end;gap:8px}
+.btns button{width:46px;height:40px;border-radius:11px;border:1px solid var(--line);background:var(--btn-bg);color:var(--ink);cursor:pointer;display:grid;place-items:center;transition:border-color .2s,background .2s}
+.btns button:hover{border-color:var(--a1);background:var(--tag-bg)}
+.btns svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+@media (max-width:760px){#dots{display:none}.brand b{display:none}.brand{flex:1}}
+
+/* slides */
+.slide{position:absolute;inset:0;padding:78px 110px 40px;display:flex;flex-direction:column;opacity:0;visibility:hidden;transition:opacity .4s ease,visibility 0s .4s}
+.slide.active{opacity:1;visibility:visible;transition:opacity .4s ease}
+.slide.active .rise{animation:rise .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--d,0)*90ms)}
+@keyframes rise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.slide.active .rise{animation:none}.slide,.slide.active{transition:none}}
+
+/* type */
+.tag{align-self:flex-start;display:inline-flex;align-items:center;gap:12px;padding:8px 26px;border:var(--bw) solid var(--tag-line);color:var(--a1);border-radius:999px;font-size:26px;font-weight:500;background:var(--tag-bg);margin-bottom:22px}
+.tag .dot{width:14px;height:14px;border-radius:50%;background:var(--good)}
+h1,h2,h3,p{margin:0}
+h1{font-family:var(--font-d);font-size:136px;line-height:1.22;font-weight:800;letter-spacing:-.01em}
+h2{font-family:var(--font-d);font-size:78px;line-height:1.28;font-weight:700}
+h3{font-family:var(--font-d);font-size:40px;line-height:1.3;font-weight:600}
+.sub{font-size:34px;color:var(--muted);margin-top:8px}
+.lead{font-size:44px;line-height:1.5;color:var(--ink);opacity:.92}
+.grad{background:var(--grad-text);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.hl{color:var(--a1);font-weight:700}
+.muted{color:var(--muted)}
+.txt{font-size:32px;line-height:1.55}
+.sm{font-size:27px;line-height:1.5}
+b,strong{font-weight:700}
+.num{font-variant-numeric:tabular-nums}
+
+/* blocks */
+.card{background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--radius);padding:34px 40px;box-shadow:var(--shadow);min-width:0}
+.g2,.g3,.g4{display:grid;gap:32px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.chips{display:flex;flex-wrap:wrap;gap:16px}
+.chip{display:inline-flex;align-items:center;gap:10px;padding:10px 26px;border-radius:999px;border:var(--bw) solid var(--line);background:var(--card);font-size:28px}
+.chip.on{border-color:var(--a1);color:var(--a1)}
+.ico{width:76px;height:76px;border-radius:20px;display:grid;place-items:center;flex:none}
+.ico svg{width:40px;height:40px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.c1{color:var(--a1);background:color-mix(in srgb,var(--a1) 16%,transparent)}
+.c2{color:var(--a2);background:color-mix(in srgb,var(--a2) 16%,transparent)}
+.c3{color:var(--a3);background:color-mix(in srgb,var(--a3) 16%,transparent)}
+.c4{color:var(--a4);background:color-mix(in srgb,var(--a4) 16%,transparent)}
+.c5{color:var(--a5);background:color-mix(in srgb,var(--a5) 16%,transparent)}
+.bignum{width:68px;height:68px;border-radius:50%;display:grid;place-items:center;font-size:36px;font-weight:700;background:var(--a1);color:var(--on-a1);flex:none}
+.url{display:inline-flex;align-items:center;gap:16px;padding:16px 38px;border-radius:22px;border:var(--bw) solid var(--tag-line);background:var(--tag-bg);color:var(--a1);font-size:54px;font-weight:700;text-decoration:none}
+.mark{display:inline-grid;place-items:center;width:44px;height:44px;border-radius:50%;font-weight:700;font-size:26px;flex:none}
+.mark.ok{background:color-mix(in srgb,var(--good) 22%,transparent);color:var(--good)}
+.mark.no{background:color-mix(in srgb,var(--bad) 22%,transparent);color:var(--bad)}
+kbd{font-family:var(--font-m);font-size:.78em;padding:2px 14px;border-radius:10px;border:var(--bw) solid var(--line);background:var(--card)}
+code{font-family:var(--font-m);font-size:.9em;padding:2px 12px;border-radius:10px;background:var(--code-bg)}
+.prompt{position:relative;background:var(--code-bg);border:var(--bw) solid var(--line);border-radius:26px;padding:34px 44px;font-size:31px;line-height:1.65;white-space:pre-wrap;font-family:var(--font-b);color:var(--ink)}
+.copy{position:absolute;right:20px;top:18px;display:inline-flex;align-items:center;gap:10px;padding:8px 22px;border-radius:12px;border:var(--bw) solid var(--tag-line);background:var(--tag-bg);color:var(--a1);font-size:24px;font-weight:600;cursor:pointer}
+.copy:hover{background:var(--a1);color:var(--on-a1)}
+.copy svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.hint{display:flex;align-items:center;gap:16px;font-size:28px;color:var(--muted)}
+.hint b{color:var(--a1)}
+.foot{margin-top:auto;padding-top:18px}
+
+/* charts */
+.chartbox{position:relative}
+.chartbox svg{display:block;overflow:visible}
+.chartbox text{font-family:var(--font-b)}
+.gl{stroke:var(--line);stroke-width:1}
+.ax{fill:var(--muted)}
+.bar{transform-box:fill-box;transform-origin:50% 100%;animation:grow .9s cubic-bezier(.2,.8,.2,1) both}
+@keyframes grow{from{transform:scaleY(0)}to{transform:none}}
+.ln{fill:none;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;animation:draw 1.5s ease both}
+.ln.dash{stroke-width:3.5;stroke-dasharray:10 9;animation:fadein 1s .6s both}
+@keyframes draw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+.area{animation:fadein 1.2s .5s both}
+.pt{animation:fadein .5s both}
+.slice{animation:pop .8s cubic-bezier(.2,.8,.2,1) both}
+@keyframes pop{from{opacity:0;transform:scale(.82)}to{opacity:1;transform:none}}
+.pie-wrap{display:flex;align-items:center;gap:56px;height:100%}
+.legend{display:flex;flex-direction:column;gap:16px;font-size:30px;min-width:0}
+.legend div{display:flex;align-items:center;gap:16px}
+.legend i{width:22px;height:22px;border-radius:7px;flex:none}
+.legend span{flex:1}
+.legend b{font-variant-numeric:tabular-nums}
+.pieC{fill:var(--ink);font-family:var(--font-d)}
+
+/* โทนสนุก: เหลืองสด ขอบดำหนา เงาแข็ง */
+:root{
+  --bg:#ffe45e;--ink:#111111;--muted:#3b3b3b;--card:#ffffff;--line:#111111;
+  --a1:#ff4d6d;--a2:#2d9cff;--a3:#18b26b;--a4:#8a5cff;--a5:#ff9f1c;--bad:#e5173f;--good:#0f8a52;--on-a1:#ffffff;
+  --font-d:'Mitr','Kanit',system-ui,sans-serif;--font-b:'Kanit','Noto Sans Thai',system-ui,sans-serif;--font-m:ui-monospace,Menlo,Consolas,monospace;
+  --glow:none;--grid:rgba(0,0,0,.05);--progress:linear-gradient(90deg,#ff4d6d,#8a5cff,#2d9cff);
+  --tag-bg:#fff;--tag-line:#111;--code-bg:#fff;--btn-bg:#fff;--bar-bg:#ffe45e;--dot:rgba(0,0,0,.28);--grad-text:linear-gradient(90deg,#ff4d6d,#8a5cff);
+  --bw:4px;--radius:26px;--shadow:8px 8px 0 #111;--gap-c:#fff;
+}
+#progress{height:9px}
+.tag{box-shadow:4px 4px 0 #111;color:#111}
+.btns button,#dots button{box-shadow:none}
+.btns button{border-width:3px}
+#bar{border-top:4px solid #111}
+.hl{color:var(--a1)}
+.chip{box-shadow:4px 4px 0 #111}
+
+.btns .i-pause{display:none}.btns .playing .i-pause{display:block}.btns .playing .i-play{display:none}
+.cover{flex-direction:row;align-items:center;gap:40px}
+.cover-l{flex:1;display:flex;flex-direction:column;gap:26px;min-width:0}
+.cover h1{font-size:132px;font-weight:700;line-height:1.25}
+.cover h1 span{background:#ff4d6d;color:#fff;padding:0 26px;border:4px solid #111;border-radius:22px;box-shadow:8px 8px 0 #111;display:inline-block;margin-top:10px}
+.cover-r{width:700px;height:640px;flex:none;position:relative}
+.scene{width:100%;height:100%;border:4px solid #111;border-radius:40px;box-shadow:10px 10px 0 #111;background:#8fd3ff;overflow:hidden}
+.cloud{animation:drift 14s linear infinite}.cloud.b{animation-duration:22s;animation-delay:-8s}
+@keyframes drift{from{transform:translateX(-160px)}to{transform:translateX(860px)}}
+.sun{transform-origin:540px 150px;animation:spin 18s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.bob{animation:bob 3s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-14px)}}
+.st{padding:34px 40px;display:flex;flex-direction:column;gap:6px}
+.st small{font-size:34px;font-weight:500}
+.st strong{white-space:nowrap;font-family:var(--font-d);font-size:98px;line-height:1.2;font-weight:700;font-variant-numeric:tabular-nums}
+.st span{font-size:30px}
+.day{display:flex;flex-direction:column;gap:14px;padding:34px 38px}
+.day .n{align-self:flex-start;font-family:var(--font-d);font-size:36px;padding:2px 24px;border:4px solid #111;border-radius:99px;color:#fff}
+.day h3{font-size:46px}
+.day p{font-size:31px;line-height:1.6}
+.chart-card{flex:1;min-height:0;padding:16px 26px;margin-top:20px}
+.pop{animation:wob 2.4s ease-in-out infinite}
+@keyframes wob{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}
+@media (prefers-reduced-motion:reduce){.cloud,.sun,.bob,.pop{animation:none}}
+
+</style>
+</head>
+<body>
+<div id="deck">
+<div class="glow"></div>
+<div id="progress"></div>
+<div id="view"><div id="stage">
+<section class="slide cover">
+  <div class="cover-l">
+    <span class="tag rise" style="--d:0">แผนเที่ยวสไตล์สนุก</span>
+    <h1 class="rise" style="--d:1">เที่ยวเชียงใหม่<br><span>3 วัน 2 คืน</span></h1>
+    <p class="lead rise" style="--d:2;font-size:40px">งบ ที่พัก ที่กิน ครบในไม่กี่หน้า · ข้อมูลตัวอย่าง</p>
+  </div>
+  <div class="cover-r rise" style="--d:2"><svg class="scene" viewBox="0 0 700 640" aria-label="ภาพวาดภูเขา พระอาทิตย์ และเมฆ">
+    <g class="sun"><circle cx="540" cy="150" r="64" fill="#ffd23f" stroke="#111" stroke-width="5"/><g stroke="#111" stroke-width="6" stroke-linecap="round"><path d="M540 40v-20M540 260v20M430 150h-20M650 150h20M462 72l-14-14M618 228l14 14M618 72l14-14M462 228l-14 14"/></g></g>
+    <g class="cloud" style="transform-box:fill-box"><ellipse cx="120" cy="120" rx="70" ry="28" fill="#fff" stroke="#111" stroke-width="5"/><ellipse cx="160" cy="100" rx="44" ry="26" fill="#fff" stroke="#111" stroke-width="5"/><ellipse cx="120" cy="124" rx="68" ry="24" fill="#fff"/></g>
+    <g class="cloud b"><ellipse cx="80" cy="230" rx="56" ry="22" fill="#fff" stroke="#111" stroke-width="5"/><ellipse cx="108" cy="214" rx="34" ry="20" fill="#fff" stroke="#111" stroke-width="5"/><ellipse cx="80" cy="233" rx="54" ry="19" fill="#fff"/></g>
+    <path d="M-10 520 L170 250 L300 430 L420 300 L560 470 L710 330 V660 H-10Z" fill="#18b26b" stroke="#111" stroke-width="6" stroke-linejoin="round"/>
+    <path d="M-10 600 L120 470 L250 580 L400 450 L520 570 L710 460 V660 H-10Z" fill="#0f8a52" stroke="#111" stroke-width="6" stroke-linejoin="round"/>
+    <g class="bob"><rect x="300" y="470" width="110" height="64" rx="14" fill="#ff4d6d" stroke="#111" stroke-width="5"/><circle cx="332" cy="540" r="16" fill="#111"/><circle cx="380" cy="540" r="16" fill="#111"/><rect x="322" y="486" width="30" height="24" rx="5" fill="#fff" stroke="#111" stroke-width="4"/><rect x="362" y="486" width="30" height="24" rx="5" fill="#fff" stroke="#111" stroke-width="4"/></g>
+  </svg></div>
+</section>
+
+<section class="slide">
+  <span class="tag rise" style="--d:0">ภาพรวมทริป</span>
+  <h2 class="rise" style="--d:1">ตัวเลขทริปนี้</h2>
+  <div class="g3" style="margin-top:44px;gap:34px">
+    <div class="card st rise" style="--d:2;background:#ff9bb0"><small>งบต่อคน</small><strong class="count" data-to="12400" data-pre="฿">฿12,400</strong><span>รวมทุกอย่างแล้ว</span></div>
+    <div class="card st rise" style="--d:3;background:#9fd2ff"><small>ระยะทางขับรถ</small><strong class="count" data-to="410" data-suf=" กม.">410 กม.</strong><span>รอบเมืองและดอยสุเทพ</span></div>
+    <div class="card st rise" style="--d:4;background:#a8f0c6"><small>ร้านอร่อยที่จะไป</small><strong class="count" data-to="9">9</strong><span>ร้าน ใน 3 วัน</span></div>
+  </div>
+  <p class="hint rise" style="--d:5;margin-top:auto;color:#111"><b style="color:#111;background:#fff;border:3px solid #111;border-radius:12px;padding:2px 16px">เคล็ดลับ</b> ไปช่วงเช้า อากาศเย็นและรถไม่ติด</p>
+</section>
+
+<section class="slide">
+  <span class="tag rise" style="--d:0">กำหนดการ</span>
+  <h2 class="rise" style="--d:1">3 วัน ทำอะไรบ้าง</h2>
+  <div class="g3" style="margin-top:40px;gap:34px">
+    <div class="card day rise" style="--d:2"><span class="n" style="background:var(--a1)">วันที่ 1</span><h3>เมืองเก่า</h3><p>วัดเจดีย์หลวง · ถนนคนเดินท่าแพ · ข้าวซอยมื้อเย็น</p></div>
+    <div class="card day rise" style="--d:3"><span class="n" style="background:var(--a2)">วันที่ 2</span><h3>ดอยสุเทพ</h3><p>ขึ้นดอยตอนเช้า · พระธาตุ · คาเฟ่วิวภูเขา · ตลาดกลางคืน</p></div>
+    <div class="card day rise" style="--d:4"><span class="n" style="background:var(--a3)">วันที่ 3</span><h3>แม่ริม</h3><p>สวนผัก · ซื้อของฝาก · ไส้อั่วและน้ำพริกหนุ่ม</p></div>
+  </div>
+</section>
+
+<section class="slide">
+  <span class="tag rise" style="--d:0">งบประมาณ</span>
+  <h2 class="rise" style="--d:1">เงินไปอยู่ตรงไหน (กราฟโดนัท)</h2>
+  <div class="card chartbox rise chart-card" style="--d:2"><div data-chart="budget" style="width:100%;height:100%"></div></div>
+</section>
+
+<section class="slide">
+  <span class="tag rise" style="--d:0">อากาศ</span>
+  <h2 class="rise" style="--d:1">อุณหภูมิตลอดวัน (กราฟเส้น)</h2>
+  <p class="sub rise" style="--d:2;color:#111">วันที่ 2 บนดอย เย็นกว่าในเมืองประมาณ 6 องศา</p>
+  <div class="card chartbox rise chart-card" style="--d:3"><div data-chart="temp" style="width:100%;height:100%"></div></div>
+</section>
+
+<section class="slide">
+  <span class="tag rise" style="--d:0">Prompt</span>
+  <h2 class="rise" style="--d:1">prompt ที่ใช้สร้างสไลด์นี้</h2>
+  <div class="prompt rise" style="--d:2;margin-top:34px;box-shadow:8px 8px 0 #111" id="pp">ช่วยสร้าง HTML slide แผนเที่ยวเชียงใหม่ 3 วัน 2 คืน สำหรับเพื่อนกลุ่มเล็ก
+- 6 หน้า สไตล์สนุก สีสด ขอบดำหนา มีเงาแข็งแบบการ์ตูน ตัวอักษรใหญ่
+- มีแถบ progress ด้านบน และปุ่มเลื่อนหน้าด้านล่าง
+- ปกมีภาพวาดภูเขา พระอาทิตย์หมุน เมฆลอย และรถขยับขึ้นลง
+- หน้าตัวเลข กำหนดการ 3 วัน กราฟโดนัทงบประมาณ และกราฟเส้นอุณหภูมิ
+- เป็นไฟล์ HTML ไฟล์เดียว<button class="copy" data-target="pp"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg><span>คัดลอก</span></button></div>
+</section>
+
+</div></div>
+<nav id="bar" aria-label="ควบคุมสไลด์">
+  <div class="brand"><b>เที่ยวเชียงใหม่ · ตัวอย่าง</b><span id="counter">1 / 1</span></div>
+  <div id="dots"></div>
+  <div class="btns">
+    <button type="button" id="b-prev" aria-label="หน้าก่อนหน้า"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <button type="button" id="b-play" aria-label="เล่นอัตโนมัติ"><svg viewBox="0 0 24 24" class="i-play"><path d="M7 4l13 8-13 8z"/></svg><svg viewBox="0 0 24 24" class="i-pause"><path d="M8 5v14M16 5v14"/></svg></button>
+    <button type="button" id="b-next" aria-label="หน้าถัดไป"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+    <button type="button" id="b-full" aria-label="เต็มจอ"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+  </div>
+</nav>
+</div>
+<script>
+/* ===== Slide engine: ไม่ต้องแก้ส่วนนี้ ===== */
+(function () {
+  'use strict';
+  var D = window.Deck = { charts: {}, anims: {} };
+  function $(s, r) { return (r || document).querySelector(s); }
+  function $$(s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); }
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var uid = 0;
+
+  /* ---------- helpers ---------- */
+  D.fmt = {
+    m: function (v) { return '$' + (Math.round(v * 100) / 100).toFixed(v % 1 ? 1 : 0).replace(/\.0$/, '') + 'M'; },
+    k: function (v) { return v >= 1000 ? (v / 1000) + 'k' : String(v); },
+    pct: function (v) { return Math.round(v * 10) / 10 + '%'; },
+    n: function (v) { return String(Math.round(v * 100) / 100); }
+  };
+  function niceStep(v) {
+    var p = Math.pow(10, Math.floor(Math.log(v) / Math.LN10)), f = v / p, c = [1, 2, 2.5, 5, 10];
+    for (var i = 0; i < c.length; i++) if (f <= c[i] + 1e-9) return c[i] * p;
+    return 10 * p;
+  }
+  function scale(max) { var st = niceStep(max / 4); return { step: st, max: st * 4 }; }
+  function smooth(pts) {
+    if (pts.length < 2) return '';
+    var d = 'M' + pts[0][0] + ',' + pts[0][1];
+    for (var i = 0; i < pts.length - 1; i++) {
+      var p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2;
+      d += ' C' + (p1[0] + (p2[0] - p0[0]) / 6) + ',' + (p1[1] + (p2[1] - p0[1]) / 6) + ' ' +
+        (p2[0] - (p3[0] - p1[0]) / 6) + ',' + (p2[1] - (p3[1] - p1[1]) / 6) + ' ' + p2[0] + ',' + p2[1];
+    }
+    return d;
+  }
+  function maxOf(a) { return Math.max.apply(null, a); }
+
+  /* ---------- กราฟแท่ง / เส้น / ผสม ---------- */
+  function xy(el, o) {
+    var W = el.clientWidth, H = el.clientHeight, fs = o.fs || 22, id = 'g' + (++uid);
+    var bars = o.bars || [], lines = o.lines || [], N = o.labels.length;
+    var hasY2 = lines.some(function (l) { return l.axis === 'y2'; });
+    var m = { l: 96, r: hasY2 ? 96 : 28, t: o.legend === false ? 24 : 70, b: 62 };
+    var pw = W - m.l - m.r, ph = H - m.t - m.b;
+    var ys = [], y2 = [];
+    bars.forEach(function (s) { ys = ys.concat(s.data); });
+    lines.forEach(function (s) { (s.axis === 'y2' ? y2 : ys).push.apply(s.axis === 'y2' ? y2 : ys, s.data); });
+    var sc = scale(maxOf(ys)), sc2 = hasY2 ? scale(maxOf(y2)) : null;
+    var fmt = o.fmt || D.fmt.n, fmt2 = o.fmt2 || D.fmt.pct;
+    var X = function (i) { return m.l + pw * (i + .5) / N; };
+    var Y = function (v) { return m.t + ph * (1 - v / sc.max); };
+    var Y2 = function (v) { return m.t + ph * (1 - v / sc2.max); };
+    var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '" role="img" aria-label="' + esc(o.title || 'กราฟ') + '"><defs>';
+    bars.concat(lines).forEach(function (sr, i) {
+      s += '<linearGradient id="' + id + 'b' + i + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:' + sr.color + '"/><stop offset="1" style="stop-color:' + sr.color + ';stop-opacity:' + (sr.area ? 0 : .45) + '"/></linearGradient>';
+    });
+    s += '</defs>';
+    for (var t = 0; t <= 4; t++) {
+      var yy = m.t + ph * (1 - t / 4);
+      s += '<line class="gl" x1="' + m.l + '" x2="' + (W - m.r) + '" y1="' + yy + '" y2="' + yy + '"/>';
+      s += '<text class="ax" x="' + (m.l - 14) + '" y="' + (yy + fs * .35) + '" text-anchor="end" font-size="' + fs + '">' + fmt(sc.step * t) + '</text>';
+      if (hasY2) s += '<text class="ax" x="' + (W - m.r + 14) + '" y="' + (yy + fs * .35) + '" font-size="' + fs + '">' + fmt2(sc2.step * t) + '</text>';
+    }
+    o.labels.forEach(function (lb, i) {
+      s += '<text class="ax" x="' + X(i) + '" y="' + (H - 20) + '" text-anchor="middle" font-size="' + fs + '">' + esc(lb) + '</text>';
+    });
+    var gw = pw / N, bw = Math.min(gw * .62 / Math.max(bars.length, 1), 120);
+    bars.forEach(function (sr, k) {
+      sr.data.forEach(function (v, i) {
+        var x = X(i) - bw * bars.length / 2 + k * bw, y = Y(v);
+        s += '<rect class="bar" style="fill:url(#' + id + 'b' + k + ');animation-delay:' + (i * 45) + 'ms" x="' + x + '" y="' + y + '" width="' + (bw - 4) + '" height="' + (m.t + ph - y) + '" rx="' + (o.radius === undefined ? 8 : o.radius) + '"><title>' + esc(sr.name + ' ' + o.labels[i] + ': ' + fmt(v)) + '</title></rect>';
+        if (o.valueLabels) s += '<text x="' + (x + (bw - 4) / 2) + '" y="' + (y - 12) + '" text-anchor="middle" font-size="' + (fs - 2) + '" style="fill:var(--ink)">' + fmt(v) + '</text>';
+      });
+    });
+    lines.forEach(function (sr, k) {
+      var yf = sr.axis === 'y2' ? Y2 : Y, kk = bars.length + k;
+      var pts = sr.data.map(function (v, i) { return [X(i), yf(v)]; });
+      var d = sr.straight ? 'M' + pts.map(function (p) { return p[0] + ',' + p[1]; }).join(' L') : smooth(pts);
+      if (sr.area) s += '<path class="area" d="' + d + ' L' + pts[pts.length - 1][0] + ',' + (m.t + ph) + ' L' + pts[0][0] + ',' + (m.t + ph) + ' Z" style="fill:url(#' + id + 'b' + kk + ')"/>';
+      s += '<path class="ln' + (sr.dashed ? ' dash' : '') + '" pathLength="1" d="' + d + '" style="stroke:' + sr.color + '"/>';
+      if (!sr.dashed) pts.forEach(function (p, i) {
+        s += '<circle class="pt" style="fill:' + sr.color + ';animation-delay:' + (700 + i * 40) + 'ms" cx="' + p[0] + '" cy="' + p[1] + '" r="7"><title>' + esc(sr.name + ' ' + o.labels[i] + ': ' + (sr.axis === 'y2' ? fmt2 : fmt)(sr.data[i])) + '</title></circle>';
+      });
+    });
+    if (o.legend !== false) {
+      var items = bars.concat(lines), x = W - m.r;
+      for (var i = items.length - 1; i >= 0; i--) {
+        var w = items[i].name.length * fs * .62 + fs * 2.4;
+        x -= w;
+        s += '<circle cx="' + (x + fs * .5) + '" cy="' + (fs) + '" r="' + (fs * .42) + '" style="fill:' + items[i].color + '"/><text class="ax" style="fill:var(--ink)" x="' + (x + fs * 1.2) + '" y="' + (fs * 1.35) + '" font-size="' + fs + '">' + esc(items[i].name) + '</text>';
+      }
+    }
+    el.innerHTML = s + '</svg>';
+  }
+
+  /* ---------- กราฟวงกลม / โดนัท ---------- */
+  function pie(el, o) {
+    var S = Math.min(el.clientWidth, el.clientHeight), R = S / 2 - 6, r = o.donut ? R * .62 : 0, c = S / 2;
+    var tot = o.data.reduce(function (a, d) { return a + d.value; }, 0), a = -Math.PI / 2;
+    var s = '<svg viewBox="0 0 ' + S + ' ' + S + '" width="' + S + '" height="' + S + '" role="img" aria-label="' + esc(o.title || 'กราฟวงกลม') + '">';
+    o.data.forEach(function (d, i) {
+      var b = a + d.value / tot * Math.PI * 2, large = b - a > Math.PI ? 1 : 0;
+      var p = function (rad, ang) { return (c + rad * Math.cos(ang)).toFixed(2) + ',' + (c + rad * Math.sin(ang)).toFixed(2); };
+      var path = r
+        ? 'M' + p(R, a) + ' A' + R + ',' + R + ' 0 ' + large + ' 1 ' + p(R, b) + ' L' + p(r, b) + ' A' + r + ',' + r + ' 0 ' + large + ' 0 ' + p(r, a) + ' Z'
+        : 'M' + c + ',' + c + ' L' + p(R, a) + ' A' + R + ',' + R + ' 0 ' + large + ' 1 ' + p(R, b) + ' Z';
+      s += '<path class="slice" style="fill:' + d.color + ';stroke:var(--gap-c);stroke-width:4;transform-origin:' + c + 'px ' + c + 'px;animation-delay:' + (i * 90) + 'ms" d="' + path + '"><title>' + esc(d.label + ': ' + d.value) + '</title></path>';
+      a = b;
+    });
+    if (o.donut && o.center) {
+      s += '<text class="pieC" x="' + c + '" y="' + (c + 14) + '" text-anchor="middle" font-size="' + (S * .15) + '" font-weight="800">' + esc(o.center[0]) + '</text>';
+      s += '<text class="ax" x="' + c + '" y="' + (c + S * .1) + '" text-anchor="middle" font-size="' + (S * .056) + '">' + esc(o.center[1] || '') + '</text>';
+    }
+    var leg = o.data.map(function (d) {
+      return '<div><i style="background:' + d.color + '"></i><span>' + esc(d.label) + '</span><b>' + (o.raw ? d.value : Math.round(d.value / tot * 100) + '%') + '</b></div>';
+    }).join('');
+    el.innerHTML = '<div class="pie-wrap">' + s + '</svg><div class="legend">' + leg + '</div></div>';
+  }
+  D.Charts = { xy: xy, pie: pie };
+
+  /* ---------- ตัวเลขวิ่ง ---------- */
+  function countUp(slide) {
+    $$('.count', slide).forEach(function (el) {
+      var to = parseFloat(el.dataset.to), dec = +(el.dataset.dec || 0), pre = el.dataset.pre || '', suf = el.dataset.suf || '';
+      var show = function (v) { el.textContent = pre + v.toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec }) + suf; };
+      if (reduce) { show(to); return; }
+      var t0 = null;
+      (function step(t) {
+        if (t0 === null) t0 = t;
+        var p = Math.min(1, (t - t0) / 1100), e = 1 - Math.pow(1 - p, 3);
+        show(to * e);
+        if (p < 1) requestAnimationFrame(step); else show(to);
+      })(performance.now());
+    });
+  }
+
+  /* ---------- main ---------- */
+  D.start = function () {
+    var slides = $$('.slide'), n = slides.length, cur = -1, timer = null;
+    var view = $('#view'), stage = $('#stage'), prog = $('#progress'), counter = $('#counter'), dotsEl = $('#dots');
+    var playBtn = $('#b-play'), runStops = [];
+
+    slides.forEach(function (_, i) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.setAttribute('aria-label', 'ไปหน้า ' + (i + 1));
+      b.addEventListener('click', function () { go(i); });
+      dotsEl.appendChild(b);
+    });
+    var dots = $$('button', dotsEl);
+
+    function fit() {
+      var s = Math.min(view.clientWidth / 1920, view.clientHeight / 1080);
+      stage.style.transform = 'translate(-50%,-50%) scale(' + s + ')';
+    }
+    function leave(k) {
+      slides[k].classList.remove('active');
+      runStops.forEach(function (f) { try { f(); } catch (e) {} });
+      runStops = [];
+    }
+    function enter(s) {
+      $$('[data-chart]', s).forEach(function (el) { var f = D.charts[el.dataset.chart]; if (f) { el.innerHTML = ''; f(el); } });
+      $$('[data-anim]', s).forEach(function (el) { var f = D.anims[el.dataset.anim]; if (f) { var stop = f(el); if (stop) runStops.push(stop); } });
+      countUp(s);
+    }
+    function go(k) {
+      k = Math.max(0, Math.min(n - 1, k));
+      if (k === cur) return;
+      if (cur >= 0) leave(cur);
+      cur = k;
+      slides[k].classList.add('active');
+      prog.style.width = ((k + 1) / n * 100) + '%';
+      counter.textContent = (k + 1) + ' / ' + n;
+      dots.forEach(function (d, i) { d.classList.toggle('on', i === k); });
+      enter(slides[k]);
+      try { history.replaceState(null, '', '#s' + (k + 1)); } catch (e) {}
+      if (k === n - 1) setPlay(false);
+    }
+    function next() { go(cur + 1); }
+    function prev() { go(cur - 1); }
+    function setPlay(on) {
+      if (timer) { clearInterval(timer); timer = null; }
+      if (on) timer = setInterval(function () { if (cur >= n - 1) setPlay(false); else next(); }, 7000);
+      playBtn.classList.toggle('playing', !!on);
+      playBtn.setAttribute('aria-label', on ? 'หยุดเล่นอัตโนมัติ' : 'เล่นอัตโนมัติ');
+    }
+    function full() {
+      var d = document, e = d.documentElement;
+      try {
+        if (d.fullscreenElement) d.exitFullscreen();
+        else if (e.requestFullscreen) e.requestFullscreen().catch(function () {});
+      } catch (x) {}
+    }
+    $('#b-prev').addEventListener('click', prev);
+    $('#b-next').addEventListener('click', next);
+    $('#b-full').addEventListener('click', full);
+    playBtn.addEventListener('click', function () { setPlay(!timer); });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      var t = e.target && e.target.tagName;
+      if (t === 'INPUT' || t === 'TEXTAREA') return;
+      var k = e.key;
+      if (k === 'ArrowRight' || k === 'ArrowDown' || k === 'PageDown' || k === ' ') { e.preventDefault(); next(); }
+      else if (k === 'ArrowLeft' || k === 'ArrowUp' || k === 'PageUp') { e.preventDefault(); prev(); }
+      else if (k === 'Home') go(0);
+      else if (k === 'End') go(n - 1);
+      else if (k === 'f' || k === 'F') full();
+      else if (k === 'p' || k === 'P') setPlay(!timer);
+    });
+    var tx = null, ty = null;
+    document.addEventListener('touchstart', function (e) { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend', function (e) {
+      if (tx === null) return;
+      var dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) { dx < 0 ? next() : prev(); }
+      tx = null;
+    }, { passive: true });
+
+    /* ปุ่มคัดลอก prompt */
+    document.addEventListener('click', function (e) {
+      var b = e.target.closest && e.target.closest('.copy');
+      if (!b) return;
+      var src = document.getElementById(b.dataset.target), text = src ? src.textContent.trim() : '';
+      var lab = b.querySelector('span'), old = lab.textContent;
+      var done = function () { lab.textContent = 'คัดลอกแล้ว'; setTimeout(function () { lab.textContent = old; }, 1800); };
+      var fallback = function () {
+        var ta = document.createElement('textarea');
+        ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); done(); } catch (x) {}
+        document.body.removeChild(ta);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, fallback);
+      else fallback();
+    });
+
+    window.addEventListener('resize', fit);
+    fit();
+    var m = /^#s(\d+)$/.exec(location.hash || '');
+    go(m ? +m[1] - 1 : 0);
+    window.addEventListener('hashchange', function () {
+      var h = /^#s(\d+)$/.exec(location.hash || ''); if (h) go(+h[1] - 1);
+    });
+  };
+})();
+
+</script>
+<script>
+(function () {
+  var D = window.Deck, C = D.Charts;
+  D.charts.budget = function (el) {
+    C.pie(el, { donut: true, center: ['฿12.4k', 'ต่อคน'], data: [
+      { label: 'ที่พัก', value: 4800, color: 'var(--a1)' }, { label: 'ค่ารถและน้ำมัน', value: 2600, color: 'var(--a2)' },
+      { label: 'อาหาร', value: 3200, color: 'var(--a5)' }, { label: 'ค่าเข้าชมและกิจกรรม', value: 1100, color: 'var(--a4)' }, { label: 'ของฝาก', value: 700, color: 'var(--a3)' }], title: 'สัดส่วนงบประมาณ' });
+    el.querySelectorAll('.slice').forEach(function (s) { s.style.stroke = '#111'; s.style.strokeWidth = '4'; });
+  };
+  D.charts.temp = function (el) {
+    C.xy(el, { labels: ['6 โมง', '9 โมง', 'เที่ยง', '15 โมง', '18 โมง', '21 โมง'], lines: [
+      { name: 'ในเมือง', data: [22, 27, 33, 34, 29, 25], color: 'var(--a1)' },
+      { name: 'บนดอย', data: [16, 21, 27, 28, 23, 19], color: 'var(--a2)' }], fmt: function (v) { return v + '°C'; }, fs: 26, title: 'อุณหภูมิตลอดวัน' });
+    el.querySelectorAll('.ln').forEach(function (l) { l.style.strokeWidth = '8'; });
+  };
+  D.start();
+})();
+
+</script>
+</body>
+</html>
