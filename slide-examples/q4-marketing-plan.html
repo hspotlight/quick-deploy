@@ -1,0 +1,530 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>แผนการตลาดไตรมาส 4</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap">
+<style>
+:root{--bar-h:64px;--bw:1.5px;--radius:28px;--shadow:none;--gap-c:var(--bg)}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-b);line-height:1.5;overflow:hidden;-webkit-text-size-adjust:100%}
+button{font-family:inherit}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--a1);outline-offset:3px}
+
+#deck{position:fixed;inset:0;background:var(--bg);overflow:hidden}
+.glow{position:absolute;inset:0;background:var(--glow);pointer-events:none}
+.glow::after{content:"";position:absolute;inset:0;background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:64px 64px}
+#progress{position:fixed;left:0;top:0;height:5px;width:0;background:var(--progress);z-index:30;transition:width .45s cubic-bezier(.2,.8,.2,1)}
+#view{position:absolute;left:0;right:0;top:0;bottom:calc(var(--bar-h) + env(safe-area-inset-bottom,0px));overflow:hidden}
+#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform-origin:center center}
+
+/* navigation bar (real pixels, always tappable) */
+#bar{position:absolute;left:0;right:0;bottom:0;height:calc(var(--bar-h) + env(safe-area-inset-bottom,0px));padding-bottom:env(safe-area-inset-bottom,0px);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;align-items:center;gap:16px;border-top:1px solid var(--line);background:var(--bar-bg);z-index:20}
+.brand{flex:1 1 0;min-width:0;display:flex;align-items:center;gap:12px;font-size:15px;color:var(--muted);white-space:nowrap}
+.brand b{font-weight:500;overflow:hidden;text-overflow:ellipsis}
+#counter{font-variant-numeric:tabular-nums;padding-left:12px;border-left:1px solid var(--line)}
+#dots{display:flex;gap:8px;align-items:center;justify-content:center}
+#dots button{width:9px;height:9px;padding:0;border:0;border-radius:99px;background:var(--dot);cursor:pointer;transition:width .3s,background .3s}
+#dots button.on{width:34px;background:var(--a1)}
+.btns{flex:1 1 0;display:flex;justify-content:flex-end;gap:8px}
+.btns button{width:46px;height:40px;border-radius:11px;border:1px solid var(--line);background:var(--btn-bg);color:var(--ink);cursor:pointer;display:grid;place-items:center;transition:border-color .2s,background .2s}
+.btns button:hover{border-color:var(--a1);background:var(--tag-bg)}
+.btns svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+@media (max-width:760px){#dots{display:none}.brand b{display:none}.brand{flex:1}}
+
+/* slides */
+.slide{position:absolute;inset:0;padding:78px 110px 40px;display:flex;flex-direction:column;opacity:0;visibility:hidden;transition:opacity .4s ease,visibility 0s .4s}
+.slide.active{opacity:1;visibility:visible;transition:opacity .4s ease}
+.slide.active .rise{animation:rise .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--d,0)*90ms)}
+@keyframes rise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.slide.active .rise{animation:none}.slide,.slide.active{transition:none}}
+
+/* type */
+.tag{align-self:flex-start;display:inline-flex;align-items:center;gap:12px;padding:8px 26px;border:var(--bw) solid var(--tag-line);color:var(--a1);border-radius:999px;font-size:26px;font-weight:500;background:var(--tag-bg);margin-bottom:22px}
+.tag .dot{width:14px;height:14px;border-radius:50%;background:var(--good)}
+h1,h2,h3,p{margin:0}
+h1{font-family:var(--font-d);font-size:136px;line-height:1.22;font-weight:800;letter-spacing:-.01em}
+h2{font-family:var(--font-d);font-size:78px;line-height:1.28;font-weight:700}
+h3{font-family:var(--font-d);font-size:40px;line-height:1.3;font-weight:600}
+.sub{font-size:34px;color:var(--muted);margin-top:8px}
+.lead{font-size:44px;line-height:1.5;color:var(--ink);opacity:.92}
+.grad{background:var(--grad-text);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.hl{color:var(--a1);font-weight:700}
+.muted{color:var(--muted)}
+.txt{font-size:32px;line-height:1.55}
+.sm{font-size:27px;line-height:1.5}
+b,strong{font-weight:700}
+.num{font-variant-numeric:tabular-nums}
+
+/* blocks */
+.card{background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--radius);padding:34px 40px;box-shadow:var(--shadow);min-width:0}
+.g2,.g3,.g4{display:grid;gap:32px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.chips{display:flex;flex-wrap:wrap;gap:16px}
+.chip{display:inline-flex;align-items:center;gap:10px;padding:10px 26px;border-radius:999px;border:var(--bw) solid var(--line);background:var(--card);font-size:28px}
+.chip.on{border-color:var(--a1);color:var(--a1)}
+.ico{width:76px;height:76px;border-radius:20px;display:grid;place-items:center;flex:none}
+.ico svg{width:40px;height:40px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.c1{color:var(--a1);background:color-mix(in srgb,var(--a1) 16%,transparent)}
+.c2{color:var(--a2);background:color-mix(in srgb,var(--a2) 16%,transparent)}
+.c3{color:var(--a3);background:color-mix(in srgb,var(--a3) 16%,transparent)}
+.c4{color:var(--a4);background:color-mix(in srgb,var(--a4) 16%,transparent)}
+.c5{color:var(--a5);background:color-mix(in srgb,var(--a5) 16%,transparent)}
+.bignum{width:68px;height:68px;border-radius:50%;display:grid;place-items:center;font-size:36px;font-weight:700;background:var(--a1);color:var(--on-a1);flex:none}
+.url{display:inline-flex;align-items:center;gap:16px;padding:16px 38px;border-radius:22px;border:var(--bw) solid var(--tag-line);background:var(--tag-bg);color:var(--a1);font-size:54px;font-weight:700;text-decoration:none}
+.mark{display:inline-grid;place-items:center;width:44px;height:44px;border-radius:50%;font-weight:700;font-size:26px;flex:none}
+.mark.ok{background:color-mix(in srgb,var(--good) 22%,transparent);color:var(--good)}
+.mark.no{background:color-mix(in srgb,var(--bad) 22%,transparent);color:var(--bad)}
+kbd{font-family:var(--font-m);font-size:.78em;padding:2px 14px;border-radius:10px;border:var(--bw) solid var(--line);background:var(--card)}
+code{font-family:var(--font-m);font-size:.9em;padding:2px 12px;border-radius:10px;background:var(--code-bg)}
+.prompt{position:relative;background:var(--code-bg);border:var(--bw) solid var(--line);border-radius:26px;padding:34px 44px;font-size:31px;line-height:1.65;white-space:pre-wrap;font-family:var(--font-b);color:var(--ink)}
+.copy{position:absolute;right:20px;top:18px;display:inline-flex;align-items:center;gap:10px;padding:8px 22px;border-radius:12px;border:var(--bw) solid var(--tag-line);background:var(--tag-bg);color:var(--a1);font-size:24px;font-weight:600;cursor:pointer}
+.copy:hover{background:var(--a1);color:var(--on-a1)}
+.copy svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.hint{display:flex;align-items:center;gap:16px;font-size:28px;color:var(--muted)}
+.hint b{color:var(--a1)}
+.foot{margin-top:auto;padding-top:18px}
+
+/* charts */
+.chartbox{position:relative}
+.chartbox svg{display:block;overflow:visible}
+.chartbox text{font-family:var(--font-b)}
+.gl{stroke:var(--line);stroke-width:1}
+.ax{fill:var(--muted)}
+.bar{transform-box:fill-box;transform-origin:50% 100%;animation:grow .9s cubic-bezier(.2,.8,.2,1) both}
+@keyframes grow{from{transform:scaleY(0)}to{transform:none}}
+.ln{fill:none;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;animation:draw 1.5s ease both}
+.ln.dash{stroke-width:3.5;stroke-dasharray:10 9;animation:fadein 1s .6s both}
+@keyframes draw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+.area{animation:fadein 1.2s .5s both}
+.pt{animation:fadein .5s both}
+.slice{animation:pop .8s cubic-bezier(.2,.8,.2,1) both}
+@keyframes pop{from{opacity:0;transform:scale(.82)}to{opacity:1;transform:none}}
+.pie-wrap{display:flex;align-items:center;gap:56px;height:100%}
+.legend{display:flex;flex-direction:column;gap:16px;font-size:30px;min-width:0}
+.legend div{display:flex;align-items:center;gap:16px}
+.legend i{width:22px;height:22px;border-radius:7px;flex:none}
+.legend span{flex:1}
+.legend b{font-variant-numeric:tabular-nums}
+.pieC{fill:var(--ink);font-family:var(--font-d)}
+
+/* โทนสี: กรมท่าเข้ม + ส้ม (ปรับสีได้ที่นี่ที่เดียว) */
+:root{
+  --bg:#070a14;--ink:#eef1fb;--muted:#9099b6;--card:rgba(255,255,255,.045);--line:rgba(255,255,255,.11);
+  --a1:#ff7a1a;--a2:#22d3ee;--a3:#34d399;--a4:#a78bfa;--a5:#fbbf24;--bad:#f87171;--good:#34d399;--on-a1:#1a0d00;
+  --font-d:'Prompt','Noto Sans Thai',system-ui,sans-serif;--font-b:'Prompt','Noto Sans Thai',system-ui,sans-serif;--font-m:ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+  --glow:radial-gradient(ellipse 55% 50% at 10% 6%,rgba(255,122,26,.30),transparent 70%),radial-gradient(ellipse 45% 55% at 96% 42%,rgba(34,211,238,.20),transparent 70%),radial-gradient(ellipse 40% 40% at 50% 108%,rgba(167,139,250,.30),transparent 70%);
+  --grid:rgba(255,255,255,.035);--progress:linear-gradient(90deg,#ff7a1a,#a78bfa,#22d3ee);
+  --tag-bg:rgba(255,122,26,.09);--tag-line:rgba(255,122,26,.55);--code-bg:rgba(0,0,0,.38);--btn-bg:rgba(255,255,255,.04);
+  --bar-bg:rgba(7,10,20,.85);--dot:rgba(255,255,255,.22);--grad-text:linear-gradient(90deg,#34d399,#22d3ee);
+}
+
+.btns .i-pause{display:none}.btns .playing .i-pause{display:block}.btns .playing .i-play{display:none}
+.cover{flex-direction:row;align-items:center;gap:60px;padding-top:40px}
+.cover-l{flex:1;display:flex;flex-direction:column;gap:26px;min-width:0}
+.cover h1{font-size:98px}
+.cover-r{width:620px;flex:none;display:grid;place-items:center}
+.ring{width:580px;height:580px;position:relative}
+.ring svg{position:absolute;inset:0;width:100%;height:100%}
+.ring-c{position:absolute;inset:64px;border-radius:50%;background:#0a0e1c;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring-c small{font-size:34px;color:var(--muted)}.ring-c strong{font-size:130px;font-weight:800;line-height:1.2}.ring-c span{font-size:30px;color:var(--muted)}
+.mini{display:flex;gap:70px;margin-top:10px}.mini small{display:block;font-size:28px;color:var(--muted)}.mini b{font-size:68px;font-weight:800;line-height:1.3}
+.sc{display:flex;flex-direction:column;gap:6px;padding:30px 38px}
+.sc .top{display:flex;justify-content:space-between;align-items:center;font-size:30px;color:var(--muted)}
+.sc .v{font-size:92px;font-weight:800;line-height:1.25;letter-spacing:-.02em}
+.sc .d{font-size:28px;color:var(--muted)}
+.up{color:var(--good);font-weight:600}.dn{color:var(--bad);font-weight:600}
+.split{display:flex;gap:44px;flex:1;min-height:0;align-items:center}
+.rank{display:flex;flex-direction:column;gap:22px;flex:1}
+.rk{display:grid;grid-template-columns:230px 1fr 130px;align-items:center;gap:20px;font-size:30px}
+.rk .tr{height:26px;border-radius:14px;background:rgba(255,255,255,.07);overflow:hidden}
+.rk .tr i{display:block;height:100%;border-radius:14px;transform-origin:left;animation:sx 1s cubic-bezier(.2,.8,.2,1) both}
+@keyframes sx{from{transform:scaleX(0)}to{transform:none}}
+.rk b{text-align:right;font-variant-numeric:tabular-nums}
+.ins{display:flex;gap:24px;align-items:flex-start}.ins{flex-direction:column;padding:44px 44px 54px}.ins h3{font-size:50px}.ins p{font-size:34px;color:var(--muted);margin-top:12px}.nolegend .legend{display:none}.nolegend .pie-wrap{justify-content:center}
+.chart-card{flex:1;min-height:0;padding:14px 22px;margin-top:20px}
+.tl{display:grid;grid-template-columns:repeat(3,1fr);gap:34px;margin-top:44px}
+.tl .card{padding:40px 44px;display:flex;flex-direction:column;gap:16px}
+.tl h3{font-size:50px}.tl p{font-size:34px;color:var(--muted);line-height:1.55}
+.tl .m{font-size:30px;font-weight:700;color:var(--a1)}
+.bud{display:flex;flex-direction:column;gap:30px;margin-top:40px}
+.bud .rk{grid-template-columns:330px 1fr 190px;font-size:36px}
+.bud .rk .tr{height:34px}
+.nx{display:flex;flex-direction:column;gap:26px;margin-top:40px}
+.nx .card{display:flex;gap:30px;align-items:center;padding:30px 40px}
+.nx h3{font-size:42px}.nx p{font-size:30px;color:var(--muted)}
+.nx .bignum{width:72px;height:72px;font-size:40px}
+.cover h1{font-size:112px}
+
+</style>
+</head>
+<body>
+<div id="deck">
+<div class="glow"></div>
+<div id="progress"></div>
+<div id="view"><div id="stage">
+<section class="slide cover">
+  <div class="cover-l">
+    <span class="tag rise" style="--d:0"><i class="dot"></i>Marketing Plan · Q4</span>
+    <h1 class="rise" style="--d:1">แผนการตลาด<br><span class="grad">ไตรมาส 4</span></h1>
+    <p class="sub rise" style="--d:2">นำเสนอผู้บริหาร · ตุลาคม – ธันวาคม · ข้อมูลตัวอย่าง</p>
+    <div class="mini rise" style="--d:3"><div><small>เป้ายอดขาย</small><b class="count" data-to="48" data-pre="฿" data-suf="M">฿48M</b></div><div><small>งบการตลาด</small><b class="grad count" data-to="6.5" data-dec="1" data-pre="฿" data-suf="M">฿6.5M</b></div></div>
+  </div>
+  <div class="cover-r rise" style="--d:2"><div class="ring">
+    <svg viewBox="0 0 580 580"><circle cx="290" cy="290" r="270" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="34"/><circle cx="290" cy="290" r="270" fill="none" stroke="#ff7a1a" stroke-width="34" stroke-linecap="round" stroke-dasharray="1273 1697" transform="rotate(-90 290 290)"/></svg>
+    <div class="ring-c"><small>เป้าโตจากไตรมาส 3</small><strong class="count" data-to="25" data-pre="+" data-suf="%">+25%</strong><span>ภายใน 3 เดือน</span></div>
+  </div></div>
+</section>
+
+<section class="slide">
+  <span class="tag rise" style="--d:0">01 · เป้าหมาย</span>
+  <h2 class="rise" style="--d:1">3 เป้าหมายหลักของไตรมาสนี้</h2>
+  <div class="tl">
+    <div class="card rise" style="--d:2"><span class="m">เป้าที่ 1</span><h3>ยอดขายโต 25%</h3><p>จาก ฿38.4M เป็น ฿48M</p></div>
+    <div class="card rise" style="--d:3"><span class="m">เป้าที่ 2</span><h3>ลูกค้าใหม่ 12,000 ราย</h3><p>เพิ่มจากไตรมาสก่อน 30%</p></div>
+    <div class="card rise" style="--d:4"><span class="m">เป้าที่ 3</span><h3>ต้นทุนต่อลูกค้าใหม่ ไม่เกิน ฿540</h3><p>ลดจากเดิม ฿620</p></div>
+  </div>
+</section>
+
+<section class="slide">
+  <span class="tag rise" style="--d:0">02 · Scorecard</span>
+  <h2 class="rise" style="--d:1">ตัวเลขสำคัญ</h2>
+  <p class="sub rise" style="--d:2">เป้าหมายไตรมาส 4 เทียบผลไตรมาส 3</p>
+  <div class="g3" style="margin-top:30px;gap:28px">
+    <div class="card sc rise" style="--d:3"><div class="top">เป้ายอดขาย</div><div class="v count" data-to="48" data-pre="฿" data-suf="M">฿48M</div><div class="d"><span class="up">▲ 25%</span> vs Q3</div></div>
+    <div class="card sc rise" style="--d:4"><div class="top">งบการตลาด</div><div class="v count" data-to="6.5" data-dec="1" data-pre="฿" data-suf="M">฿6.5M</div><div class="d"><span class="dn">▲ 18%</span> vs Q3</div></div>
+    <div class="card sc rise" style="--d:5"><div class="top">ลูกค้าใหม่</div><div class="v count" data-to="12000">12,000</div><div class="d"><span class="up">▲ 30%</span> vs Q3</div></div>
+    <div class="card sc rise" style="--d:6"><div class="top">อัตราแปลงเป็นลูกค้า</div><div class="v count" data-to="3.8" data-dec="1" data-suf="%">3.8%</div><div class="d"><span class="up">▲ 0.6 จุด</span> vs Q3</div></div>
+    <div class="card sc rise" style="--d:7"><div class="top">ต้นทุนต่อลูกค้าใหม่</div><div class="v count" data-to="540" data-pre="฿">฿540</div><div class="d"><span class="up">▼ 13%</span> vs Q3</div></div>
+    <div class="card sc rise" style="--d:8"><div class="top">ROI ที่คาดหวัง</div><div class="v count" data-to="4.2" data-dec="1" data-suf="x">4.2x</div><div class="d"><span class="up">▲ 0.5x</span> vs Q3</div></div>
+  </div>
+</section>
+
+<section class="slide">
+  <span class="tag rise" style="--d:0">03 · ช่องทาง</span>
+  <h2 class="rise" style="--d:1">ลูกค้าใหม่ที่คาดว่าจะได้ แยกตามช่องทาง</h2>
+  <p class="sub rise" style="--d:2">รวม 12,000 ราย · ออนไลน์ให้ผลมากที่สุด</p>
+  <div class="chartbox rise chart-card" style="--d:3"><div data-chart="leads" style="width:100%;height:100%"></div></div>
+</section>
+
+<section class="slide">
+  <span class="tag rise" style="--d:0">04 · งบประมาณ</span>
+  <h2 class="rise" style="--d:1">แบ่งงบ ฿6.5M อย่างไร</h2>
+  <div class="bud rank" id="bud"></div>
+</section>
+
+<section class="slide">
+  <span class="tag rise" style="--d:0">05 · แคมเปญ</span>
+  <h2 class="rise" style="--d:1">3 แคมเปญ ตลอดไตรมาส</h2>
+  <div class="tl">
+    <div class="card rise" style="--d:2"><span class="m">ตุลาคม</span><h3>Back to Routine</h3><p>เปิดตัวสินค้าใหม่ ผ่านโซเชียลและอินฟลูเอนเซอร์</p></div>
+    <div class="card rise" style="--d:3"><span class="m">พฤศจิกายน</span><h3>Double 11 Sale</h3><p>โปรโมชันวันเลขเบิ้ล โฆษณาเน้นแปลงเป็นลูกค้า</p></div>
+    <div class="card rise" style="--d:4"><span class="m">ธันวาคม</span><h3>Year-End Gift</h3><p>ชุดของขวัญและอีเมลถึงลูกค้าเก่า</p></div>
+  </div>
+</section>
+
+<section class="slide">
+  <span class="tag rise" style="--d:0">06 · ความเสี่ยง</span>
+  <h2 class="rise" style="--d:1">ความเสี่ยงที่ต้องจับตา</h2>
+  <div class="nx">
+    <div class="card rise" style="--d:2"><span class="mark no">!</span><div><h3>ค่าโฆษณาสูงขึ้นช่วงปลายปี</h3><p>เตรียมกันงบ 10% ไว้ปรับระหว่างทาง</p></div></div>
+    <div class="card rise" style="--d:3"><span class="mark no">!</span><div><h3>สต๊อกไม่พอช่วงโปรโมชัน</h3><p>คุยกับทีมซัพพลายล่วงหน้าตั้งแต่ต้นเดือนตุลาคม</p></div></div>
+    <div class="card rise" style="--d:4"><span class="mark ok">✓</span><div><h3>รับมือด้วยรายงานทุกสัปดาห์</h3><p>ปรับแผนได้เร็ว ถ้าตัวเลขต่ำกว่าเป้าเกิน 10%</p></div></div>
+  </div>
+</section>
+
+<section class="slide">
+  <span class="tag rise" style="--d:0">07 · ขั้นต่อไป</span>
+  <h2 class="rise" style="--d:1">สิ่งที่ขออนุมัติวันนี้</h2>
+  <div class="nx">
+    <div class="card rise" style="--d:2"><span class="bignum">1</span><div><h3>อนุมัติงบ ฿6.5M</h3><p>เริ่มใช้ได้ตั้งแต่ 1 ตุลาคม</p></div></div>
+    <div class="card rise" style="--d:3"><span class="bignum">2</span><div><h3>อนุมัติ 3 แคมเปญ</h3><p>Back to Routine · Double 11 · Year-End Gift</p></div></div>
+    <div class="card rise" style="--d:4"><span class="bignum">3</span><div><h3>ประชุมติดตามผลทุกวันจันทร์</h3><p>รายงานตัวเลขเทียบเป้า ใช้เวลา 15 นาที</p></div></div>
+  </div>
+</section>
+
+</div></div>
+<nav id="bar" aria-label="ควบคุมสไลด์">
+  <div class="brand"><b>แผนการตลาด Q4 · ตัวอย่าง</b><span id="counter">1 / 1</span></div>
+  <div id="dots"></div>
+  <div class="btns">
+    <button type="button" id="b-prev" aria-label="หน้าก่อนหน้า"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <button type="button" id="b-play" aria-label="เล่นอัตโนมัติ"><svg viewBox="0 0 24 24" class="i-play"><path d="M7 4l13 8-13 8z"/></svg><svg viewBox="0 0 24 24" class="i-pause"><path d="M8 5v14M16 5v14"/></svg></button>
+    <button type="button" id="b-next" aria-label="หน้าถัดไป"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+    <button type="button" id="b-full" aria-label="เต็มจอ"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+  </div>
+</nav>
+</div>
+<script>
+/* ===== Slide engine: ไม่ต้องแก้ส่วนนี้ ===== */
+(function () {
+  'use strict';
+  var D = window.Deck = { charts: {}, anims: {} };
+  function $(s, r) { return (r || document).querySelector(s); }
+  function $$(s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); }
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var uid = 0;
+
+  /* ---------- helpers ---------- */
+  D.fmt = {
+    m: function (v) { return '$' + (Math.round(v * 100) / 100).toFixed(v % 1 ? 1 : 0).replace(/\.0$/, '') + 'M'; },
+    k: function (v) { return v >= 1000 ? (v / 1000) + 'k' : String(v); },
+    pct: function (v) { return Math.round(v * 10) / 10 + '%'; },
+    n: function (v) { return String(Math.round(v * 100) / 100); }
+  };
+  function niceStep(v) {
+    var p = Math.pow(10, Math.floor(Math.log(v) / Math.LN10)), f = v / p, c = [1, 2, 2.5, 5, 10];
+    for (var i = 0; i < c.length; i++) if (f <= c[i] + 1e-9) return c[i] * p;
+    return 10 * p;
+  }
+  function scale(max) { var st = niceStep(max / 4); return { step: st, max: st * 4 }; }
+  function smooth(pts) {
+    if (pts.length < 2) return '';
+    var d = 'M' + pts[0][0] + ',' + pts[0][1];
+    for (var i = 0; i < pts.length - 1; i++) {
+      var p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2;
+      d += ' C' + (p1[0] + (p2[0] - p0[0]) / 6) + ',' + (p1[1] + (p2[1] - p0[1]) / 6) + ' ' +
+        (p2[0] - (p3[0] - p1[0]) / 6) + ',' + (p2[1] - (p3[1] - p1[1]) / 6) + ' ' + p2[0] + ',' + p2[1];
+    }
+    return d;
+  }
+  function maxOf(a) { return Math.max.apply(null, a); }
+
+  /* ---------- กราฟแท่ง / เส้น / ผสม ---------- */
+  function xy(el, o) {
+    var W = el.clientWidth, H = el.clientHeight, fs = o.fs || 22, id = 'g' + (++uid);
+    var bars = o.bars || [], lines = o.lines || [], N = o.labels.length;
+    var hasY2 = lines.some(function (l) { return l.axis === 'y2'; });
+    var m = { l: 96, r: hasY2 ? 96 : 28, t: o.legend === false ? 24 : 70, b: 62 };
+    var pw = W - m.l - m.r, ph = H - m.t - m.b;
+    var ys = [], y2 = [];
+    bars.forEach(function (s) { ys = ys.concat(s.data); });
+    lines.forEach(function (s) { (s.axis === 'y2' ? y2 : ys).push.apply(s.axis === 'y2' ? y2 : ys, s.data); });
+    var sc = scale(maxOf(ys)), sc2 = hasY2 ? scale(maxOf(y2)) : null;
+    var fmt = o.fmt || D.fmt.n, fmt2 = o.fmt2 || D.fmt.pct;
+    var X = function (i) { return m.l + pw * (i + .5) / N; };
+    var Y = function (v) { return m.t + ph * (1 - v / sc.max); };
+    var Y2 = function (v) { return m.t + ph * (1 - v / sc2.max); };
+    var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '" role="img" aria-label="' + esc(o.title || 'กราฟ') + '"><defs>';
+    bars.concat(lines).forEach(function (sr, i) {
+      s += '<linearGradient id="' + id + 'b' + i + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:' + sr.color + '"/><stop offset="1" style="stop-color:' + sr.color + ';stop-opacity:' + (sr.area ? 0 : .45) + '"/></linearGradient>';
+    });
+    s += '</defs>';
+    for (var t = 0; t <= 4; t++) {
+      var yy = m.t + ph * (1 - t / 4);
+      s += '<line class="gl" x1="' + m.l + '" x2="' + (W - m.r) + '" y1="' + yy + '" y2="' + yy + '"/>';
+      s += '<text class="ax" x="' + (m.l - 14) + '" y="' + (yy + fs * .35) + '" text-anchor="end" font-size="' + fs + '">' + fmt(sc.step * t) + '</text>';
+      if (hasY2) s += '<text class="ax" x="' + (W - m.r + 14) + '" y="' + (yy + fs * .35) + '" font-size="' + fs + '">' + fmt2(sc2.step * t) + '</text>';
+    }
+    o.labels.forEach(function (lb, i) {
+      s += '<text class="ax" x="' + X(i) + '" y="' + (H - 20) + '" text-anchor="middle" font-size="' + fs + '">' + esc(lb) + '</text>';
+    });
+    var gw = pw / N, bw = Math.min(gw * .62 / Math.max(bars.length, 1), 120);
+    bars.forEach(function (sr, k) {
+      sr.data.forEach(function (v, i) {
+        var x = X(i) - bw * bars.length / 2 + k * bw, y = Y(v);
+        s += '<rect class="bar" style="fill:url(#' + id + 'b' + k + ');animation-delay:' + (i * 45) + 'ms" x="' + x + '" y="' + y + '" width="' + (bw - 4) + '" height="' + (m.t + ph - y) + '" rx="' + (o.radius === undefined ? 8 : o.radius) + '"><title>' + esc(sr.name + ' ' + o.labels[i] + ': ' + fmt(v)) + '</title></rect>';
+        if (o.valueLabels) s += '<text x="' + (x + (bw - 4) / 2) + '" y="' + (y - 12) + '" text-anchor="middle" font-size="' + (fs - 2) + '" style="fill:var(--ink)">' + fmt(v) + '</text>';
+      });
+    });
+    lines.forEach(function (sr, k) {
+      var yf = sr.axis === 'y2' ? Y2 : Y, kk = bars.length + k;
+      var pts = sr.data.map(function (v, i) { return [X(i), yf(v)]; });
+      var d = sr.straight ? 'M' + pts.map(function (p) { return p[0] + ',' + p[1]; }).join(' L') : smooth(pts);
+      if (sr.area) s += '<path class="area" d="' + d + ' L' + pts[pts.length - 1][0] + ',' + (m.t + ph) + ' L' + pts[0][0] + ',' + (m.t + ph) + ' Z" style="fill:url(#' + id + 'b' + kk + ')"/>';
+      s += '<path class="ln' + (sr.dashed ? ' dash' : '') + '" pathLength="1" d="' + d + '" style="stroke:' + sr.color + '"/>';
+      if (!sr.dashed) pts.forEach(function (p, i) {
+        s += '<circle class="pt" style="fill:' + sr.color + ';animation-delay:' + (700 + i * 40) + 'ms" cx="' + p[0] + '" cy="' + p[1] + '" r="7"><title>' + esc(sr.name + ' ' + o.labels[i] + ': ' + (sr.axis === 'y2' ? fmt2 : fmt)(sr.data[i])) + '</title></circle>';
+      });
+    });
+    if (o.legend !== false) {
+      var items = bars.concat(lines), x = W - m.r;
+      for (var i = items.length - 1; i >= 0; i--) {
+        var w = items[i].name.length * fs * .62 + fs * 2.4;
+        x -= w;
+        s += '<circle cx="' + (x + fs * .5) + '" cy="' + (fs) + '" r="' + (fs * .42) + '" style="fill:' + items[i].color + '"/><text class="ax" style="fill:var(--ink)" x="' + (x + fs * 1.2) + '" y="' + (fs * 1.35) + '" font-size="' + fs + '">' + esc(items[i].name) + '</text>';
+      }
+    }
+    el.innerHTML = s + '</svg>';
+  }
+
+  /* ---------- กราฟวงกลม / โดนัท ---------- */
+  function pie(el, o) {
+    var S = Math.min(el.clientWidth, el.clientHeight), R = S / 2 - 6, r = o.donut ? R * .62 : 0, c = S / 2;
+    var tot = o.data.reduce(function (a, d) { return a + d.value; }, 0), a = -Math.PI / 2;
+    var s = '<svg viewBox="0 0 ' + S + ' ' + S + '" width="' + S + '" height="' + S + '" role="img" aria-label="' + esc(o.title || 'กราฟวงกลม') + '">';
+    o.data.forEach(function (d, i) {
+      var b = a + d.value / tot * Math.PI * 2, large = b - a > Math.PI ? 1 : 0;
+      var p = function (rad, ang) { return (c + rad * Math.cos(ang)).toFixed(2) + ',' + (c + rad * Math.sin(ang)).toFixed(2); };
+      var path = r
+        ? 'M' + p(R, a) + ' A' + R + ',' + R + ' 0 ' + large + ' 1 ' + p(R, b) + ' L' + p(r, b) + ' A' + r + ',' + r + ' 0 ' + large + ' 0 ' + p(r, a) + ' Z'
+        : 'M' + c + ',' + c + ' L' + p(R, a) + ' A' + R + ',' + R + ' 0 ' + large + ' 1 ' + p(R, b) + ' Z';
+      s += '<path class="slice" style="fill:' + d.color + ';stroke:var(--gap-c);stroke-width:4;transform-origin:' + c + 'px ' + c + 'px;animation-delay:' + (i * 90) + 'ms" d="' + path + '"><title>' + esc(d.label + ': ' + d.value) + '</title></path>';
+      a = b;
+    });
+    if (o.donut && o.center) {
+      s += '<text class="pieC" x="' + c + '" y="' + (c + 14) + '" text-anchor="middle" font-size="' + (S * .15) + '" font-weight="800">' + esc(o.center[0]) + '</text>';
+      s += '<text class="ax" x="' + c + '" y="' + (c + S * .1) + '" text-anchor="middle" font-size="' + (S * .056) + '">' + esc(o.center[1] || '') + '</text>';
+    }
+    var leg = o.data.map(function (d) {
+      return '<div><i style="background:' + d.color + '"></i><span>' + esc(d.label) + '</span><b>' + (o.raw ? d.value : Math.round(d.value / tot * 100) + '%') + '</b></div>';
+    }).join('');
+    el.innerHTML = '<div class="pie-wrap">' + s + '</svg><div class="legend">' + leg + '</div></div>';
+  }
+  D.Charts = { xy: xy, pie: pie };
+
+  /* ---------- ตัวเลขวิ่ง ---------- */
+  function countUp(slide) {
+    $$('.count', slide).forEach(function (el) {
+      var to = parseFloat(el.dataset.to), dec = +(el.dataset.dec || 0), pre = el.dataset.pre || '', suf = el.dataset.suf || '';
+      var show = function (v) { el.textContent = pre + v.toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec }) + suf; };
+      if (reduce) { show(to); return; }
+      var t0 = null;
+      (function step(t) {
+        if (t0 === null) t0 = t;
+        var p = Math.min(1, (t - t0) / 1100), e = 1 - Math.pow(1 - p, 3);
+        show(to * e);
+        if (p < 1) requestAnimationFrame(step); else show(to);
+      })(performance.now());
+    });
+  }
+
+  /* ---------- main ---------- */
+  D.start = function () {
+    var slides = $$('.slide'), n = slides.length, cur = -1, timer = null;
+    var view = $('#view'), stage = $('#stage'), prog = $('#progress'), counter = $('#counter'), dotsEl = $('#dots');
+    var playBtn = $('#b-play'), runStops = [];
+
+    slides.forEach(function (_, i) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.setAttribute('aria-label', 'ไปหน้า ' + (i + 1));
+      b.addEventListener('click', function () { go(i); });
+      dotsEl.appendChild(b);
+    });
+    var dots = $$('button', dotsEl);
+
+    function fit() {
+      var s = Math.min(view.clientWidth / 1920, view.clientHeight / 1080);
+      stage.style.transform = 'translate(-50%,-50%) scale(' + s + ')';
+    }
+    function leave(k) {
+      slides[k].classList.remove('active');
+      runStops.forEach(function (f) { try { f(); } catch (e) {} });
+      runStops = [];
+    }
+    function enter(s) {
+      $$('[data-chart]', s).forEach(function (el) { var f = D.charts[el.dataset.chart]; if (f) { el.innerHTML = ''; f(el); } });
+      $$('[data-anim]', s).forEach(function (el) { var f = D.anims[el.dataset.anim]; if (f) { var stop = f(el); if (stop) runStops.push(stop); } });
+      countUp(s);
+    }
+    function go(k) {
+      k = Math.max(0, Math.min(n - 1, k));
+      if (k === cur) return;
+      if (cur >= 0) leave(cur);
+      cur = k;
+      slides[k].classList.add('active');
+      prog.style.width = ((k + 1) / n * 100) + '%';
+      counter.textContent = (k + 1) + ' / ' + n;
+      dots.forEach(function (d, i) { d.classList.toggle('on', i === k); });
+      enter(slides[k]);
+      try { history.replaceState(null, '', '#s' + (k + 1)); } catch (e) {}
+      if (k === n - 1) setPlay(false);
+    }
+    function next() { go(cur + 1); }
+    function prev() { go(cur - 1); }
+    function setPlay(on) {
+      if (timer) { clearInterval(timer); timer = null; }
+      if (on) timer = setInterval(function () { if (cur >= n - 1) setPlay(false); else next(); }, 7000);
+      playBtn.classList.toggle('playing', !!on);
+      playBtn.setAttribute('aria-label', on ? 'หยุดเล่นอัตโนมัติ' : 'เล่นอัตโนมัติ');
+    }
+    function full() {
+      var d = document, e = d.documentElement;
+      try {
+        if (d.fullscreenElement) d.exitFullscreen();
+        else if (e.requestFullscreen) e.requestFullscreen().catch(function () {});
+      } catch (x) {}
+    }
+    $('#b-prev').addEventListener('click', prev);
+    $('#b-next').addEventListener('click', next);
+    $('#b-full').addEventListener('click', full);
+    playBtn.addEventListener('click', function () { setPlay(!timer); });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      var t = e.target && e.target.tagName;
+      if (t === 'INPUT' || t === 'TEXTAREA') return;
+      var k = e.key;
+      if (k === 'ArrowRight' || k === 'ArrowDown' || k === 'PageDown' || k === ' ') { e.preventDefault(); next(); }
+      else if (k === 'ArrowLeft' || k === 'ArrowUp' || k === 'PageUp') { e.preventDefault(); prev(); }
+      else if (k === 'Home') go(0);
+      else if (k === 'End') go(n - 1);
+      else if (k === 'f' || k === 'F') full();
+      else if (k === 'p' || k === 'P') setPlay(!timer);
+    });
+    var tx = null, ty = null;
+    document.addEventListener('touchstart', function (e) { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend', function (e) {
+      if (tx === null) return;
+      var dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) { dx < 0 ? next() : prev(); }
+      tx = null;
+    }, { passive: true });
+
+    /* ปุ่มคัดลอก prompt */
+    document.addEventListener('click', function (e) {
+      var b = e.target.closest && e.target.closest('.copy');
+      if (!b) return;
+      var src = document.getElementById(b.dataset.target), text = src ? src.textContent.trim() : '';
+      var lab = b.querySelector('span'), old = lab.textContent;
+      var done = function () { lab.textContent = 'คัดลอกแล้ว'; setTimeout(function () { lab.textContent = old; }, 1800); };
+      var fallback = function () {
+        var ta = document.createElement('textarea');
+        ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); done(); } catch (x) {}
+        document.body.removeChild(ta);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, fallback);
+      else fallback();
+    });
+
+    window.addEventListener('resize', fit);
+    fit();
+    var m = /^#s(\d+)$/.exec(location.hash || '');
+    go(m ? +m[1] - 1 : 0);
+    window.addEventListener('hashchange', function () {
+      var h = /^#s(\d+)$/.exec(location.hash || ''); if (h) go(+h[1] - 1);
+    });
+  };
+})();
+
+</script>
+<script>
+(function () {
+  var D = window.Deck, C = D.Charts;
+  var ch = [['โซเชียลมีเดีย', 4200, 'var(--a1)'], ['ค้นหา (Search)', 3100, 'var(--a2)'], ['อีเมล', 1800, 'var(--a4)'], ['อินฟลูเอนเซอร์', 1700, 'var(--a3)'], ['หน้าร้าน', 1200, 'var(--a5)']];
+  D.charts.leads = function (el) {
+    C.xy(el, { labels: ch.map(function (c) { return c[0]; }), bars: [{ name: 'ลูกค้าใหม่ (ราย)', data: ch.map(function (c) { return c[1]; }), color: 'var(--a1)' }],
+      fmt: function (v) { return v.toLocaleString('en-US'); }, valueLabels: true, fs: 26, radius: 10, title: 'ลูกค้าใหม่ที่คาดว่าจะได้แยกตามช่องทาง' });
+  };
+  var B = [['โฆษณาออนไลน์', 2.9, 'var(--a1)'], ['อินฟลูเอนเซอร์', 1.3, 'var(--a2)'], ['อีเมลและ CRM', 0.7, 'var(--a4)'], ['กิจกรรมหน้าร้าน', 0.9, 'var(--a3)'], ['สำรองปรับแผน', 0.7, 'var(--a5)']];
+  document.getElementById('bud').innerHTML = B.map(function (r, i) {
+    return '<div class="rk rise" style="--d:' + (2 + i) + '"><span>' + r[0] + '</span><div class="tr"><i style="width:' + r[1] / 2.9 * 100 + '%;background:' + r[2] + ';animation-delay:' + (300 + i * 120) + 'ms"></i></div><b>฿' + r[1].toFixed(1) + 'M</b></div>';
+  }).join('');
+  D.start();
+})();
+
+</script>
+</body>
+</html>
