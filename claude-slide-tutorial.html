@@ -117,6 +117,16 @@ code{font-family:var(--font-m);font-size:.9em;padding:2px 12px;border-radius:10p
 .legend b{font-variant-numeric:tabular-nums}
 .pieC{fill:var(--ink);font-family:var(--font-d)}
 
+/* PDF export */
+.btns button.txt{width:auto;padding:0 14px;gap:8px;display:inline-flex;align-items:center;font-size:14px;font-weight:600;letter-spacing:.02em}
+.btns button.txt svg{width:18px;height:18px}
+#pdfov{position:fixed;inset:0;z-index:100;display:none;place-items:center;background:rgba(0,0,0,.6)}
+#pdfov.on{display:grid}
+#pdfov div{background:var(--bg);color:var(--ink);border:var(--bw) solid var(--tag-line);border-radius:20px;padding:26px 38px;font-size:20px;font-weight:600;text-align:center;box-shadow:var(--shadow);max-width:calc(100vw - 32px)}
+#pdfov small{display:block;margin-top:6px;font-size:15px;font-weight:400;color:var(--muted)}
+.pdfmode *,.pdfmode *::before,.pdfmode *::after{animation:none!important;transition:none!important}
+.pdfmode #bar{display:none!important}.pdfmode #view{bottom:0!important}
+
 /* โทนสี: กรมท่าเข้ม + ส้ม (ปรับสีได้ที่นี่ที่เดียว) */
 :root{
   --bg:#070a14;--ink:#eef1fb;--muted:#9099b6;--card:rgba(255,255,255,.045);--line:rgba(255,255,255,.11);
@@ -127,6 +137,7 @@ code{font-family:var(--font-m);font-size:.9em;padding:2px 12px;border-radius:10p
   --tag-bg:rgba(255,122,26,.09);--tag-line:rgba(255,122,26,.55);--code-bg:rgba(0,0,0,.38);--btn-bg:rgba(255,255,255,.04);
   --bar-bg:rgba(7,10,20,.85);--dot:rgba(255,255,255,.22);--grad-text:linear-gradient(90deg,#34d399,#22d3ee);
 }
+:root{--grad-solid:#22d3ee}
 
 .btns .i-pause{display:none}.btns .playing .i-pause{display:block}.btns .playing .i-play{display:none}
 
@@ -260,7 +271,7 @@ code{font-family:var(--font-m);font-size:.9em;padding:2px 12px;border-radius:10p
 </style>
 </head>
 <body>
-<div id="deck">
+<div id="deck" data-file="claude-slide-tutorial.pdf">
 <div class="glow"></div>
 <div id="progress"></div>
 <div id="view"><div id="stage">
@@ -307,7 +318,7 @@ code{font-family:var(--font-m);font-size:.9em;padding:2px 12px;border-radius:10p
     </div>
     <div class="items col">
       <div class="item rise" style="--d:4"><span class="bignum">1</span><div><h3>แถบความคืบหน้า</h3><p>เส้นสีด้านบน บอกว่าอยู่หน้าไหนจากทั้งหมด</p></div></div>
-      <div class="item rise" style="--d:5"><span class="bignum">2</span><div><h3>ปุ่มเลื่อนหน้า</h3><p>ย้อนกลับ · เล่นอัตโนมัติ · ถัดไป · เต็มจอ</p></div></div>
+      <div class="item rise" style="--d:5"><span class="bignum">2</span><div><h3>ปุ่มเลื่อนหน้า</h3><p>ย้อนกลับ · เล่นอัตโนมัติ · ถัดไป · PDF · เต็มจอ</p></div></div>
       <div class="item rise" style="--d:6"><span class="bignum">3</span><div><h3>กดคีย์บอร์ดได้</h3><p><kbd>←</kbd> <kbd>→</kbd> เลื่อนหน้า · <kbd>F</kbd> เต็มจอ · <kbd>P</kbd> เล่นอัตโนมัติ</p></div></div>
       <div class="item rise" style="--d:7"><span class="bignum">4</span><div><h3>ใช้บนมือถือได้</h3><p>ปัดซ้าย-ขวาเพื่อเปลี่ยนหน้า</p></div></div>
     </div>
@@ -641,10 +652,12 @@ code{font-family:var(--font-m);font-size:.9em;padding:2px 12px;border-radius:10p
     <button type="button" id="b-prev" aria-label="หน้าก่อนหน้า"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
     <button type="button" id="b-play" aria-label="เล่นอัตโนมัติ"><svg viewBox="0 0 24 24" class="i-play"><path d="M7 4l13 8-13 8z"/></svg><svg viewBox="0 0 24 24" class="i-pause"><path d="M8 5v14M16 5v14"/></svg></button>
     <button type="button" id="b-next" aria-label="หน้าถัดไป"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+    <button type="button" id="b-pdf" class="txt" aria-label="ดาวน์โหลดเป็น PDF" title="ดาวน์โหลดเป็น PDF"><svg viewBox="0 0 24 24"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg>PDF</button>
     <button type="button" id="b-full" aria-label="เต็มจอ"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
   </div>
 </nav>
 </div>
+<div id="pdfov" role="status"><div><span id="pdfmsg"></span><small id="pdfsub"></small></div></div>
 <script>
 /* ===== Slide engine: ไม่ต้องแก้ส่วนนี้ ===== */
 (function () {
@@ -769,14 +782,107 @@ code{font-family:var(--font-m);font-size:.9em;padding:2px 12px;border-radius:10p
     $$('.count', slide).forEach(function (el) {
       var to = parseFloat(el.dataset.to), dec = +(el.dataset.dec || 0), pre = el.dataset.pre || '', suf = el.dataset.suf || '';
       var show = function (v) { el.textContent = pre + v.toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec }) + suf; };
-      if (reduce) { show(to); return; }
+      if (reduce || D.pdfMode) { show(to); return; }
       var t0 = null;
       (function step(t) {
+        if (D.pdfMode) { show(to); return; }
         if (t0 === null) t0 = t;
         var p = Math.min(1, (t - t0) / 1100), e = 1 - Math.pow(1 - p, 3);
         show(to * e);
         if (p < 1) requestAnimationFrame(step); else show(to);
       })(performance.now());
+    });
+  }
+
+  /* ---------- PDF ---------- */
+  var exporting = false;
+  function loadScript(src) {
+    return new Promise(function (ok, bad) {
+      var s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = function () { bad(new Error('load ' + src)); };
+      document.head.appendChild(s);
+    });
+  }
+  function ensureLibs() {
+    var base = 'https://cdnjs.cloudflare.com/ajax/libs/';
+    var p = Promise.resolve();
+    if (!window.html2canvas) p = p.then(function () { return loadScript(base + 'html2canvas/1.4.1/html2canvas.min.js'); });
+    if (!(window.jspdf && window.jspdf.jsPDF)) p = p.then(function () { return loadScript(base + 'jspdf/2.5.1/jspdf.umd.min.js'); });
+    return p;
+  }
+  var CPROPS = ['fill', 'fill-opacity', 'stroke', 'stroke-width', 'stroke-opacity', 'stroke-dasharray', 'stroke-dashoffset', 'stroke-linecap', 'stroke-linejoin', 'opacity', 'stop-color', 'stop-opacity', 'font-family', 'font-size', 'font-weight', 'text-anchor'];
+  function fixClone(doc) {
+    var w = doc.defaultView, rx = /color\(srgb ([\d.e-]+) ([\d.e-]+) ([\d.e-]+)(?: \/ ([\d.e-]+))?\)/g;
+    var cv = function (s) { return s.replace(rx, function (_, r, g, b, a) { return 'rgba(' + Math.round(r * 255) + ',' + Math.round(g * 255) + ',' + Math.round(b * 255) + ',' + (a === undefined ? 1 : a) + ')'; }); };
+    doc.getElementById('stage').style.transform = 'translate(-50%,-50%) scale(1)';
+    Array.prototype.forEach.call(doc.querySelectorAll('*'), function (el) {
+      var cs = w.getComputedStyle(el);
+      ['backgroundColor', 'color'].forEach(function (p) { var v = cs[p]; if (v && v.indexOf('color(') > -1) el.style[p] = cv(v); });
+      if (cs.boxShadow && cs.boxShadow !== 'none') el.style.boxShadow = 'none';
+    });
+    Array.prototype.forEach.call(doc.querySelectorAll('svg *'), function (el) {
+      var cs = w.getComputedStyle(el);
+      CPROPS.forEach(function (p) { var v = cs.getPropertyValue(p); if (v) el.style.setProperty(p, v); });
+    });
+    Array.prototype.forEach.call(doc.querySelectorAll('.grad'), function (el) {
+      var c = w.getComputedStyle(doc.documentElement).getPropertyValue('--grad-solid') || '#fff';
+      el.style.background = 'none'; el.style.webkitTextFillColor = 'initial'; el.style.color = c.trim();
+    });
+  }
+  function tick(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+  function exportPdf(slides, go, getCur, getTimer, setPlay) {
+    if (exporting) return;
+    exporting = true;
+    var ov = $('#pdfov'), msg = $('#pdfmsg'), sub = $('#pdfsub');
+    var startAt = getCur(), wasPlaying = !!getTimer();
+    ov.classList.add('on'); msg.textContent = 'กำลังสร้าง PDF...'; sub.textContent = 'โหลดเครื่องมือ';
+    setPlay(false);
+    var deck = $('#deck'), bg = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim() || '#000';
+    var pdf = null, W = 1920, H = 1080;
+    ensureLibs().then(function () {
+      document.body.classList.add('pdfmode'); D.pdfMode = true;
+      var chain = Promise.resolve();
+      slides.forEach(function (s, i) {
+        chain = chain.then(function () {
+          sub.textContent = 'หน้า ' + (i + 1) + ' / ' + slides.length;
+          go(i);
+          return tick(220);
+        }).then(function () {
+          Array.prototype.forEach.call(s.querySelectorAll('.count'), function (el) { el.textContent = el.textContent; });
+          return window.html2canvas(deck, { width: W, height: H, windowWidth: W, windowHeight: H, scale: 1, backgroundColor: bg, useCORS: true, logging: false, onclone: fixClone });
+        }).then(function (cv) {
+          var img = cv.toDataURL('image/jpeg', 0.92);
+          if (!pdf) pdf = new window.jspdf.jsPDF({ orientation: 'landscape', unit: 'px', format: [W, H], hotfixes: ['px_scaling'], compress: true });
+          else pdf.addPage([W, H], 'landscape');
+          pdf.addImage(img, 'JPEG', 0, 0, W, H, undefined, 'FAST');
+        });
+      });
+      return chain;
+    }).then(function () {
+      D.pdfMode = false; document.body.classList.remove('pdfmode'); go(startAt);
+      var blob = pdf.output('blob'), name = deck.dataset.file || 'slides.pdf';
+      sub.textContent = 'กำลังบันทึกไฟล์';
+      var done = function () { ov.classList.remove('on'); };
+      var viaLink = function () {
+        var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name;
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000); done();
+      };
+      if (window.claude && window.claude.use) {
+        return window.claude.use('downloads').then(function (d) {
+          if (!d) { viaLink(); return; }
+          return d.save({ filename: name, data: blob }).then(done, function (e) {
+            if (e && e.code === 'declined') { done(); return; }
+            msg.textContent = 'บันทึกไฟล์ไม่สำเร็จ'; sub.textContent = (e && e.message) || ''; return tick(3500).then(done);
+          });
+        });
+      }
+      viaLink();
+    }).catch(function (e) {
+      D.pdfMode = false; document.body.classList.remove('pdfmode'); try { go(startAt); } catch (x) {}
+      msg.textContent = 'สร้าง PDF ไม่สำเร็จ'; sub.textContent = 'ต้องต่ออินเทอร์เน็ตเพื่อโหลดเครื่องมือสร้าง PDF แล้วลองอีกครั้ง';
+      return tick(4500).then(function () { ov.classList.remove('on'); });
+    }).then(function () {
+      exporting = false; if (wasPlaying) setPlay(true);
     });
   }
 
@@ -879,6 +985,10 @@ code{font-family:var(--font-m);font-size:.9em;padding:2px 12px;border-radius:10p
       if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, fallback);
       else fallback();
     });
+
+    D.go = go; D.getCur = function () { return cur; };
+    var pdfBtn = $('#b-pdf');
+    if (pdfBtn) pdfBtn.addEventListener('click', function () { exportPdf(slides, go, function () { return cur; }, function () { return timer; }, setPlay); });
 
     window.addEventListener('resize', fit);
     fit();
