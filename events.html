@@ -104,14 +104,15 @@ footer{margin-top:36px;color:var(--muted);font-size:.8rem;text-align:center}
 const EVENTS = [
   {
     id: "yoky-1",
-    title: "โยกี้พาเพื่อนเที่ยว",
-    date: "2026-11-07",
+    title: "โยกี้พาเพื่อนๆ เที่ยว (ตามใจยัยจี๊ด)",
+    date: "2026-11-05",
+    start: "18:00",
     organizer: "Yoky",
-    location: "ยังไม่แน่นอน",
-    mapUrl: "",
+    location: "ดูตามลิงก์ Google Maps",
+    mapUrl: "https://maps.app.goo.gl/GrS1tWdoNLYkzZDz5?g_st=ic",
     capacity: null,
     attendees: [],
-    note: "Location คิดว่าอาจจะโซนรถไฟฟ้าสายสีเขียว เล็งไว้ ศาลาแดง ไม่ก็สยามค่ะ ร้านหาอีกทีค่าา\nใครอยากทำอะไรรีเควสได้เลยค่ะ"
+    note: "MRT: สุขุมวิท\nBTS: อโศก\nใครอยากทำอะไรรีเควสได้เลยค่ะ"
   },
   {
     id: "hong-2",
@@ -143,7 +144,9 @@ const iso = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`
 const evs = EVENTS.map((e,i)=>({...e,color:COLORS[i%COLORS.length]})).sort((a,b)=>(a.date+(a.start||"")).localeCompare(b.date+(b.start||"")));
 const todayStr = iso(new Date());
 const fmtDate = d => { const x = parse(d); return `วัน${DOW[x.getDay()]}ที่ ${x.getDate()} ${MON_S[x.getMonth()]} ${x.getFullYear()}`; };
-const fmtTime = e => e.start ? `${e.start}${e.end?"–"+e.end:""} น.` : "ทั้งวัน";
+const fmtTime = e => e.start ? (e.end ? `${e.start}–${e.end} น.` : `${e.start} น. เป็นต้นไป`) : "ทั้งวัน";
+/* ไม่ระบุเวลาจบ: ใช้ start + 2 ชม. เฉพาะตอนเพิ่มลงปฏิทิน */
+const endTime = e => { if(e.end) return e.end; const [h,m]=e.start.split(":").map(Number); return `${pad(Math.min(h+2,23))}:${pad(h+2>23?59:m)}`; };
 const people = e => {
   const n = e.attendees.length;
   return e.capacity ? `${n}/${e.capacity} คน` : (n ? `${n} คน` : "ยังไม่กำหนดจำนวน");
@@ -158,7 +161,7 @@ cur = new Date(cur.getFullYear(), cur.getMonth(), 1);
 function stamp(e, which){
   const d = e.date.replace(/-/g,"");
   if(!e.start) return which==="s" ? d : iso(new Date(parse(e.date).getTime()+864e5)).replace(/-/g,"");
-  const t = (which==="s"?e.start:(e.end||e.start)).replace(":","");
+  const t = (which==="s"?e.start:endTime(e)).replace(":","");
   return `${d}T${t}00`;
 }
 function googleUrl(e){
@@ -175,7 +178,7 @@ function outlookUrl(e){
   const f = (d,t) => t ? `${d}T${t}:00+07:00` : d;
   const p = new URLSearchParams({
     path:"/calendar/action/compose", rru:"addevent", subject:e.title,
-    startdt:f(e.date,e.start), enddt:e.start ? f(e.date,e.end||e.start) : iso(new Date(parse(e.date).getTime()+864e5)),
+    startdt:f(e.date,e.start), enddt:e.start ? f(e.date,endTime(e)) : iso(new Date(parse(e.date).getTime()+864e5)),
     location:e.location, body:`ผู้จัด: ${e.organizer}\n${e.note||""}${e.mapUrl?"\n"+e.mapUrl:""}`
   });
   if(!e.start) p.set("allday","true");
