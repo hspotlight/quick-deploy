@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Sleepless | คู่มือจัดการการนอนสำหรับคนทำงานกะดึก</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Sleepless คู่มือช่วยคนทำงานกะดึกจัดตารางนอน พักผ่อนให้เป็นระบบ และลดอาการสมองตื้อระหว่างกะ">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* Single warm light theme by design (client palette) */
+  :root {
+    --bg: #fdfaf5;
+    --text: #2b2620;
+    --text-soft: #5e564c;
+    --primary: #2e7d5b;
+    --primary-dark: #1f5c42;
+    --primary-light: #e6f2ec;
+    --accent: #e8842c;
+    --peach: #ffede0;
+    --white: #ffffff;
+    --border: #ece4d8;
+    --on-dark: #ffffff;
+    --on-dark-soft: rgba(255, 255, 255, 0.78);
+    --radius: 18px;
+    --radius-lg: 20px;
+    --shadow: 0 10px 30px rgba(43, 38, 32, 0.08);
+    --shadow-lg: 0 18px 44px rgba(43, 38, 32, 0.14);
+    --max: 1040px;
+    --font: "Noto Sans Thai", "Leelawadee UI", "Thonburi", Tahoma, sans-serif;
+    color-scheme: light;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  h1, h2, h3, p, ul, blockquote { margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.75;
+    color: var(--text);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: inherit; }
+  a:focus-visible, .btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+  .container {
+    width: 100%;
+    max-width: calc(var(--max) + 48px);
+    margin: 0 auto;
+    padding-left: max(24px, env(safe-area-inset-left, 0px));
+    padding-right: max(24px, env(safe-area-inset-right, 0px));
+  }
+
+  section { padding-block: 88px; }
+
+  .section-head {
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto 48px;
+  }
+
+  .eyebrow {
+    display: inline-block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--primary);
+    background: var(--primary-light);
+    padding: 4px 14px;
+    border-radius: 999px;
+    margin-bottom: 14px;
+  }
+
+  h1, h2, h3 { line-height: 1.35; text-wrap: balance; }
+
+  h2 {
+    font-size: clamp(1.6rem, 3.2vw, 2.2rem);
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .section-head p { color: var(--text-soft); }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 14px 30px;
+    border-radius: 999px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  }
+  .btn:hover { transform: translateY(-3px); }
+
+  .btn-primary {
+    background: var(--primary);
+    color: var(--on-dark);
+    box-shadow: 0 8px 20px rgba(46, 125, 91, 0.28);
+  }
+  .btn-primary:hover {
+    background: var(--primary-dark);
+    box-shadow: 0 12px 26px rgba(46, 125, 91, 0.34);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--primary-dark);
+    border-color: var(--primary);
+  }
+  .btn-ghost:hover { background: var(--primary-light); }
+
+  .btn-block { width: 100%; }
+
+  /* Hero */
+  .hero { padding-block: 96px 88px; }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+    gap: 56px;
+    align-items: center;
+  }
+  .hero-grid > * { min-width: 0; }
+
+  .kicker {
+    display: inline-block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.02em;
+    margin-bottom: 16px;
+  }
+
+  .hero h1 {
+    font-size: clamp(2rem, 4.6vw, 3.1rem);
+    font-weight: 800;
+    margin-bottom: 20px;
+  }
+  .hero h1 .hl { color: var(--primary); }
+
+  .hero-lead {
+    font-size: 1.1rem;
+    color: var(--text-soft);
+    font-weight: 300;
+    max-width: 520px;
+    margin-bottom: 32px;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+
+  .hero-note { font-size: 0.85rem; color: var(--text-soft); }
+
+  .hero-visual { display: flex; justify-content: center; }
+
+  .book {
+    position: relative;
+    width: 280px;
+    max-width: 100%;
+    aspect-ratio: 3 / 4.2;
+    border-radius: 8px 18px 18px 8px;
+    background: linear-gradient(160deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: var(--on-dark);
+    padding: 36px 28px;
+    box-shadow: var(--shadow-lg), inset 10px 0 0 rgba(0, 0, 0, 0.14);
+    transform: rotate(4deg);
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .book:hover { transform: rotate(2deg) translateY(-4px); }
+
+  .book::before {
+    content: "";
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: var(--peach);
+    top: 34px;
+    right: -30px;
+    box-shadow: -26px 6px 0 0 var(--primary);
+  }
+
+  .book-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.85;
+    position: relative;
+  }
+  .book-stars {
+    position: absolute;
+    left: 30px;
+    top: 80px;
+    font-size: 0.9rem;
+    letter-spacing: 14px;
+    opacity: 0.6;
+  }
+  .book-title {
+    font-size: 2.6rem;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-top: auto;
+    position: relative;
+  }
+  .book-sub {
+    font-size: 0.95rem;
+    font-weight: 300;
+    margin-top: 10px;
+    opacity: 0.92;
+    position: relative;
+  }
+  .book-author {
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-top: 22px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    position: relative;
+  }
+
+  /* Grids & cards */
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .grid-3 > * { min-width: 0; }
+
+  .card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px 28px;
+    box-shadow: var(--shadow);
+  }
+
+  .problem .emoji {
+    font-size: 2.2rem;
+    line-height: 1;
+    margin-bottom: 18px;
+    display: inline-flex;
+    width: 64px;
+    height: 64px;
+    align-items: center;
+    justify-content: center;
+    background: var(--peach);
+    border-radius: 16px;
+  }
+
+  .card h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 8px; }
+  .card p { color: var(--text-soft); font-size: 0.97rem; }
+
+  /* Solution */
+  .solution { background: var(--primary-dark); color: var(--on-dark); }
+  .solution .eyebrow { background: rgba(255, 255, 255, 0.12); color: var(--peach); }
+  .solution .section-head p { color: var(--on-dark-soft); }
+
+  .steps { counter-reset: step; }
+
+  .step {
+    counter-increment: step;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: var(--radius);
+    padding: 32px 28px;
+  }
+  .step::before {
+    content: counter(step, decimal-leading-zero);
+    display: block;
+    font-size: 2.4rem;
+    font-weight: 800;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 18px;
+    font-variant-numeric: tabular-nums;
+  }
+  .step h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 8px; }
+  .step p { color: var(--on-dark-soft); font-size: 0.97rem; }
+
+  /* Reviews */
+  .review { display: flex; flex-direction: column; }
+  .stars { color: var(--accent); font-size: 1.05rem; letter-spacing: 2px; margin-bottom: 12px; }
+  .review blockquote { color: var(--text); font-size: 0.98rem; margin-bottom: 22px; flex: 1; }
+  .reviewer { display: flex; align-items: center; gap: 12px; }
+  .avatar {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: var(--primary-light);
+    color: var(--primary-dark);
+    font-weight: 700;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .reviewer strong { display: block; font-weight: 600; line-height: 1.4; }
+  .reviewer span { font-size: 0.85rem; color: var(--text-soft); }
+
+  .disclaimer {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--text-soft);
+    margin-top: 28px;
+  }
+
+  /* What you get */
+  .get { background: var(--peach); }
+
+  .get-box {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    padding: 44px;
+    box-shadow: var(--shadow);
+  }
+
+  .get-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px 36px;
+  }
+  .get-list li { display: flex; gap: 14px; align-items: flex-start; min-width: 0; }
+
+  .check {
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: var(--on-dark);
+    font-weight: 700;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+  }
+  .get-list strong { display: block; font-weight: 600; }
+  .get-list span { font-size: 0.93rem; color: var(--text-soft); }
+
+  /* Pricing */
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    align-items: stretch;
+    padding-top: 14px;
+  }
+  .pricing-grid > * { min-width: 0; }
+
+  .plan {
+    position: relative;
+    background: var(--white);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 36px 28px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+  }
+  .plan.featured {
+    border-color: var(--primary);
+    transform: translateY(-14px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .badge {
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--accent);
+    color: var(--on-dark);
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 4px 18px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .plan h3 { font-size: 1.2rem; font-weight: 700; }
+  .plan-desc { font-size: 0.9rem; color: var(--text-soft); margin-bottom: 18px; }
+
+  .price {
+    font-size: 2.4rem;
+    font-weight: 800;
+    color: var(--primary-dark);
+    line-height: 1.2;
+    margin-bottom: 22px;
+    font-variant-numeric: tabular-nums;
+  }
+  .price small { font-size: 1rem; font-weight: 500; color: var(--text-soft); }
+
+  .plan ul { list-style: none; margin-bottom: 28px; flex: 1; }
+  .plan li {
+    font-size: 0.95rem;
+    padding: 7px 0 7px 28px;
+    position: relative;
+    border-bottom: 1px dashed var(--border);
+  }
+  .plan li:last-child { border-bottom: none; }
+  .plan li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: var(--primary);
+    font-weight: 700;
+  }
+  .plan .btn-ghost { width: 100%; }
+
+  /* Guarantee */
+  .guarantee { padding-block: 24px 88px; }
+
+  .guarantee-box {
+    display: flex;
+    gap: 28px;
+    align-items: center;
+    background: var(--primary-light);
+    border: 2px dashed var(--primary);
+    border-radius: var(--radius-lg);
+    padding: 36px 40px;
+    max-width: 820px;
+    margin: 0 auto;
+  }
+  .guarantee-box > div:last-child { min-width: 0; }
+
+  .shield {
+    flex-shrink: 0;
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: var(--on-dark);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.1;
+    box-shadow: 0 8px 20px rgba(46, 125, 91, 0.28);
+  }
+  .shield b { font-size: 2rem; font-weight: 800; }
+  .shield span { font-size: 0.8rem; }
+
+  .guarantee-box h3 { font-size: 1.3rem; font-weight: 700; margin-bottom: 6px; color: var(--primary-dark); }
+  .guarantee-box p { color: var(--text-soft); }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--border);
+    padding-block: 32px;
+    text-align: center;
+    font-size: 0.88rem;
+    color: var(--text-soft);
+  }
+  footer .health-note {
+    font-size: 0.8rem;
+    max-width: 640px;
+    margin: 0 auto 8px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .btn, .book { transition: none; }
+    .btn:hover, .book:hover { transform: none; }
+  }
+
+  /* Responsive */
+  @media (max-width: 820px) {
+    section { padding-block: 64px; }
+    .hero { padding-block: 64px; }
+
+    .hero-grid,
+    .grid-3,
+    .get-list,
+    .pricing-grid { grid-template-columns: 1fr; }
+
+    .hero-visual { display: none; }
+
+    .plan.featured { transform: none; }
+    .pricing-grid { gap: 32px; }
+
+    .get-box { padding: 28px 22px; }
+
+    .guarantee { padding-block: 16px 64px; }
+    .guarantee-box {
+      flex-direction: column;
+      text-align: center;
+      padding: 32px 24px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .container {
+      padding-left: max(16px, env(safe-area-inset-left, 0px));
+      padding-right: max(16px, env(safe-area-inset-right, 0px));
+    }
+    .hero-actions .btn { width: 100%; }
+  }
+</style>
+</head>
+<body>
+<!-- 1. Hero -->
+<header class="hero">
+  <div class="container hero-grid">
+    <div>
+      <span class="kicker">🌙 สำหรับคนที่ทำงานตอนคนอื่นหลับ</span>
+      <h1>ทำงานกะดึกได้ <span class="hl">โดยไม่ต้องแลกกับสมองที่ตื้อ</span> ทุกวัน</h1>
+      <p class="hero-lead">
+        Sleepless คือคู่มือจัดการการนอนที่ออกแบบมาเพื่อพนักงานกะดึกโดยเฉพาะ
+        ช่วยให้คุณวางตารางนอนที่เข้ากับกะงานจริง จัดสภาพแวดล้อมให้นอนกลางวันได้ง่ายขึ้น
+        และรู้ว่าควรทำอะไรในแต่ละช่วงของวัน
+      </p>
+      <div class="hero-actions">
+        <a href="#pricing" class="btn btn-primary">ดูแพ็กเกจและราคา</a>
+        <a href="#problem" class="btn btn-ghost">นี่ใช่ปัญหาของฉันไหม?</a>
+      </div>
+      <p class="hero-note">ไฟล์ดิจิทัล ดาวน์โหลดได้ทันทีหลังชำระเงิน · รับประกันความพอใจ 14 วัน</p>
+    </div>
+    <div class="hero-visual" aria-hidden="true">
+      <div class="book">
+        <span class="book-label">Night Shift Guide</span>
+        <span class="book-stars">✦ ✦ ✦</span>
+        <span class="book-title">Sleepless</span>
+        <span class="book-sub">คู่มือนอนให้เป็นระบบ<br>สำหรับคนทำงานกะดึก</span>
+        <span class="book-author">โดย Mr. Poop</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- 2. Problem -->
+  <section id="problem" class="problem">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">เคยเป็นแบบนี้ไหม?</span>
+        <h2>เมื่อเวลานอนของคุณไม่เหมือนใคร</h2>
+        <p>คนทำงานกะดึกหลายคนเจอปัญหาคล้ายกัน และส่วนใหญ่ไม่ได้เกิดจากความขี้เกียจ แต่เพราะยังไม่มีระบบที่เหมาะกับชีวิตกลับด้าน</p>
+      </div>
+      <div class="grid-3">
+        <article class="card">
+          <div class="emoji">😵‍💫</div>
+          <h3>ตีสามแล้วสมองเริ่มดับ</h3>
+          <p>ช่วงท้ายกะทั้งง่วงทั้งตื้อ อ่านอะไรต้องอ่านซ้ำ ตัดสินใจช้าลง ทั้งที่งานยังไม่จบ</p>
+        </article>
+        <article class="card">
+          <div class="emoji">☀️</div>
+          <h3>กลับบ้านแล้วนอนไม่หลับ</h3>
+          <p>เหนื่อยแทบขาดใจ แต่พอล้มตัวลงกลับตาค้าง แสงแดด เสียงรถ เสียงคนในบ้านทำให้หลับๆ ตื่นๆ</p>
+        </article>
+        <article class="card">
+          <div class="emoji">🔄</div>
+          <h3>วันหยุดยิ่งรวน</h3>
+          <p>พยายามกลับมาใช้ชีวิตแบบคนอื่นในวันหยุด แล้วพอถึงวันทำงานก็ต้องเริ่มปรับใหม่ทุกสัปดาห์</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Solution -->
+  <section class="solution">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Sleepless ช่วยอย่างไร</span>
+        <h2>3 ขั้นตอน ปรับการนอนให้เข้ากับกะงานของคุณ</h2>
+        <p>ไม่ต้องเปลี่ยนงาน ไม่ต้องเปลี่ยนชีวิตทั้งหมด แค่มีแผนที่ชัดและทำได้จริง</p>
+      </div>
+      <div class="grid-3 steps">
+        <article class="step">
+          <h3>รู้จักจังหวะของตัวเอง</h3>
+          <p>สำรวจรูปแบบการนอน พลังงาน และกะงานของคุณด้วยแบบบันทึกง่ายๆ เพื่อหาจุดที่ควรปรับก่อน</p>
+        </article>
+        <article class="step">
+          <h3>วางตารางนอนที่ใช่</h3>
+          <p>เลือกแผนตามรูปแบบกะ (กะดึกประจำ กะหมุนเวียน หรือกะยาว) พร้อมแนวทางงีบ แสง และคาเฟอีนในแต่ละช่วง</p>
+        </article>
+        <article class="step">
+          <h3>ทำให้เป็นนิสัย</h3>
+          <p>ใช้เช็กลิสต์ก่อนนอน–หลังตื่น และวิธีรับมือวันหยุด เพื่อให้ร่างกายไม่ต้องเริ่มต้นใหม่ทุกสัปดาห์</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Reviews -->
+  <section class="reviews">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">เสียงจากผู้อ่าน</span>
+        <h2>คนทำงานกะดึกพูดถึง Sleepless</h2>
+      </div>
+      <div class="grid-3">
+        <article class="card review">
+          <div class="stars" aria-label="5 ดาว">★★★★★</div>
+          <blockquote>“ชอบที่ไม่ได้บอกให้นอน 8 ชั่วโมงแบบเดิมๆ แต่มีแผนสำหรับคนเลิกงานตอนเช้าจริงๆ ลองจัดห้องตามเช็กลิสต์แล้วรู้สึกหลับได้ต่อเนื่องขึ้น”</blockquote>
+          <div class="reviewer">
+            <div class="avatar">น</div>
+            <div>
+              <strong>นภัสสร</strong>
+              <span>พยาบาลเวรดึก · 29 ปี</span>
+            </div>
+          </div>
+        </article>
+        <article class="card review">
+          <div class="stars" aria-label="5 ดาว">★★★★★</div>
+          <blockquote>“กะผมหมุนทุกสองสัปดาห์ เลยชอบส่วนที่สอนปรับตัวช่วงเปลี่ยนกะ อ่านเข้าใจง่าย ไม่ต้องใช้อุปกรณ์อะไรเพิ่ม”</blockquote>
+          <div class="reviewer">
+            <div class="avatar">ธ</div>
+            <div>
+              <strong>ธนากร</strong>
+              <span>ช่างเทคนิคโรงงาน · 34 ปี</span>
+            </div>
+          </div>
+        </article>
+        <article class="card review">
+          <div class="stars" aria-label="4 ดาว">★★★★☆</div>
+          <blockquote>“เรื่องจังหวะดื่มกาแฟช่วยได้เยอะ เมื่อก่อนดื่มตลอดกะแล้วกลับบ้านนอนไม่ได้ ตอนนี้วางแผนได้ดีขึ้น อยากให้มีตัวอย่างเมนูมื้อดึกเพิ่มอีกนิด”</blockquote>
+          <div class="reviewer">
+            <div class="avatar">พ</div>
+            <div>
+              <strong>พิมพ์ชนก</strong>
+              <span>พนักงาน Call Center · 26 ปี</span>
+            </div>
+          </div>
+        </article>
+      </div>
+      <p class="disclaimer">รีวิวเป็นตัวอย่างประกอบหน้าเว็บ ผลลัพธ์ขึ้นอยู่กับแต่ละบุคคล</p>
+    </div>
+  </section>
+
+  <!-- 5. What you get -->
+  <section class="get">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">สิ่งที่คุณจะได้รับ</span>
+        <h2>ทุกอย่างที่ต้องใช้ ในไฟล์เดียว</h2>
+      </div>
+      <div class="get-box">
+        <ul class="get-list">
+          <li>
+            <span class="check">✓</span>
+            <div>
+              <strong>eBook คู่มือ Sleepless</strong>
+              <span>อธิบายเรื่องการนอนกับนาฬิกาชีวิตแบบเข้าใจง่าย เน้นสิ่งที่นำไปใช้ได้ทันที</span>
+            </div>
+          </li>
+          <li>
+            <span class="check">✓</span>
+            <div>
+              <strong>แผนตารางนอน 3 รูปแบบ</strong>
+              <span>สำหรับกะดึกประจำ กะหมุนเวียน และกะยาว 12 ชั่วโมง</span>
+            </div>
+          </li>
+          <li>
+            <span class="check">✓</span>
+            <div>
+              <strong>เช็กลิสต์จัดห้องนอนกลางวัน</strong>
+              <span>ลดแสง เสียง และอุณหภูมิ ด้วยวิธีที่ทำได้ในงบไม่มาก</span>
+            </div>
+          </li>
+          <li>
+            <span class="check">✓</span>
+            <div>
+              <strong>ไกด์คาเฟอีนและมื้ออาหารระหว่างกะ</strong>
+              <span>รู้ว่าควรดื่ม ควรกินอะไร ช่วงไหน เพื่อไม่ให้รบกวนเวลานอน</span>
+            </div>
+          </li>
+          <li>
+            <span class="check">✓</span>
+            <div>
+              <strong>แบบบันทึกการนอน (Sleep Log)</strong>
+              <span>พิมพ์ใช้หรือกรอกในมือถือ ช่วยให้เห็นรูปแบบของตัวเองชัดขึ้น</span>
+            </div>
+          </li>
+          <li>
+            <span class="check">✓</span>
+            <div>
+              <strong>แผนรับมือวันหยุด</strong>
+              <span>ใช้เวลากับครอบครัวและเพื่อนได้ โดยไม่ทำให้ตารางนอนพังทั้งสัปดาห์</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Pricing -->
+  <section id="pricing" class="pricing">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">แพ็กเกจและราคา</span>
+        <h2>เลือกแบบที่เหมาะกับคุณ</h2>
+        <p>ชำระครั้งเดียว ได้ไฟล์ทันที เก็บไว้อ่านได้ตลอด</p>
+      </div>
+      <div class="pricing-grid">
+        <article class="plan">
+          <h3>Basic</h3>
+          <p class="plan-desc">อยากเริ่มเข้าใจการนอนของตัวเอง</p>
+          <div class="price">฿190 <small>/ ครั้งเดียว</small></div>
+          <ul>
+            <li>eBook คู่มือ Sleepless</li>
+            <li>แผนตารางนอน 1 รูปแบบ</li>
+            <li>เช็กลิสต์จัดห้องนอนกลางวัน</li>
+          </ul>
+          <!-- TODO: เปลี่ยนลิงก์ชำระเงินของแพ็กเกจ Basic -->
+          <a href="https://example.com/pay/basic" class="btn btn-ghost">ซื้อแพ็กเกจ Basic</a>
+        </article>
+
+        <article class="plan featured">
+          <span class="badge">คุ้มที่สุด</span>
+          <h3>Complete</h3>
+          <p class="plan-desc">ได้ครบทุกเครื่องมือ พร้อมใช้จริง</p>
+          <div class="price">฿390 <small>/ ครั้งเดียว</small></div>
+          <ul>
+            <li>eBook คู่มือ Sleepless</li>
+            <li>แผนตารางนอนครบ 3 รูปแบบ</li>
+            <li>เช็กลิสต์จัดห้องนอนกลางวัน</li>
+            <li>ไกด์คาเฟอีนและมื้ออาหาร</li>
+            <li>แบบบันทึกการนอน (Sleep Log)</li>
+            <li>แผนรับมือวันหยุด</li>
+          </ul>
+          <!-- TODO: เปลี่ยนลิงก์ชำระเงินของแพ็กเกจ Complete -->
+          <a href="https://example.com/pay/complete" class="btn btn-primary btn-block">ซื้อแพ็กเกจ Complete</a>
+        </article>
+
+        <article class="plan">
+          <h3>Team</h3>
+          <p class="plan-desc">สำหรับทีมหรือแผนกที่ทำงานกะ</p>
+          <div class="price">฿1,490 <small>/ 5 ท่าน</small></div>
+          <ul>
+            <li>ทุกอย่างในแพ็กเกจ Complete</li>
+            <li>สิทธิ์ใช้งานสำหรับ 5 ท่าน</li>
+            <li>ตารางวางแผนกะสำหรับหัวหน้าทีม</li>
+            <li>อัปเดตเนื้อหาฟรีเมื่อมีเวอร์ชันใหม่</li>
+          </ul>
+          <!-- TODO: เปลี่ยนลิงก์ชำระเงินของแพ็กเกจ Team -->
+          <a href="https://example.com/pay/team" class="btn btn-ghost">ซื้อแพ็กเกจ Team</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. Guarantee -->
+  <section class="guarantee">
+    <div class="container">
+      <div class="guarantee-box">
+        <div class="shield">
+          <b>14</b>
+          <span>วัน</span>
+        </div>
+        <div>
+          <h3>รับประกันความพอใจ 14 วัน</h3>
+          <p>ลองอ่านและใช้งานได้เต็มที่ หากภายใน 14 วันคุณรู้สึกว่าเนื้อหาไม่เหมาะกับคุณ แจ้งเราได้เลย เราจะคืนเงินให้เต็มจำนวน ไม่ต้องอธิบายเหตุผลยืดยาว</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- 8. Footer -->
+<footer>
+  <div class="container">
+    <p class="health-note">เนื้อหาใน Sleepless เป็นข้อมูลทั่วไปเพื่อการดูแลตนเอง ไม่ใช่การวินิจฉัยหรือรักษาโรค หากมีปัญหาการนอนเรื้อรังหรือรุนแรง ควรปรึกษาแพทย์</p>
+    <p>© 2026 Sleepless โดย Mr. Poop สงวนลิขสิทธิ์</p>
+  </div>
+</footer>
+</body>
+</html>
